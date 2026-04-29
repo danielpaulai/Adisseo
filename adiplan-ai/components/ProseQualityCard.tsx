@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronUp,
   Languages,
+  Library,
   Loader2,
   ShieldAlert,
   ShieldCheck,
@@ -22,6 +23,7 @@ import {
   type SlopReport,
 } from "@/lib/slop-detector";
 import { scoreBrandVoice } from "@/lib/brand-voice";
+import { scoreCitations } from "@/lib/citation-checker";
 
 interface Props {
   /** All the prose to score (concat all the text fields the studio produced). */
@@ -61,12 +63,16 @@ export function ProseQualityCard({
   // Instant client-side passes
   const slop: SlopReport = useMemo(() => scoreSlop(text), [text]);
   const brand = useMemo(() => scoreBrandVoice(text, brandVoice), [text, brandVoice]);
+  const cites = useMemo(() => scoreCitations(text), [text]);
 
-  // Composite when grammar isn't ready yet — weights renormalised to slop+brand.
-  const compositeLocal = Math.round(slop.score * (5 / 8) + brand.compliance * 100 * (3 / 8));
+  // Composite when grammar isn't ready yet — weights renormalised to slop+brand+cites.
+  // 40% slop / 25% brand / 20% cites + 15% grammar (set to 100 until server returns).
+  const compositeLocal = Math.round(
+    slop.score * 0.4 + brand.compliance * 100 * 0.25 + cites.score * 0.2 + 100 * 0.15
+  );
   const composite = server?.composite ?? compositeLocal;
   const passesGate = server?.passesGate ?? (!brand.hasClaimBreach && compositeLocal >= 60);
-  const summary = server?.summary ?? localSummary(compositeLocal, brand.hasClaimBreach);
+  const summary = server?.summary ?? localSummary(compositeLocal, brand.hasClaimBreach, cites.score, text);
 
   // Debounced server call for grammar
   useEffect(() => {
@@ -164,7 +170,7 @@ export function ProseQualityCard({
       </div>
 
       {/* Sub-scores strip */}
-      <div className="mt-3 grid grid-cols-3 gap-2">
+      <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
         <SubScore
           icon={<Sparkles size={12} />}
           label="Slop"
@@ -186,6 +192,12 @@ export function ProseQualityCard({
           }
         />
         <SubScore
+          icon={<Library size={12} />}
+          label="Citations"
+          score={cites.score}
+          band={cites.band}
+        />
+        <SubScore
           icon={<Languages size={12} />}
           label="Grammar"
           score={Math.round((server?.grammar.compliance ?? 1) * 100)}
@@ -200,6 +212,22 @@ export function ProseQualityCard({
           }
         />
       </div>
+
+      {/* Citation strip */}
+      {cites.cited > 0 && (
+        <div className="mt-2 rounded-md border border-white/60 bg-white/70 px-2 py-1.5 text-[10px] text-adisseo-ink">
+          <span className="font-semibold text-adisseo-ink-strong">
+            {cites.resolved} Vault-resolved
+          </span>{" "}
+          · {cites.external} external · {cites.unverified} unverified ·{" "}
+          {cites.meanWordsPerCite > 0 ? `${cites.meanWordsPerCite}w / cite` : "single cite"}
+        </div>
+      )}
+      {cites.cited === 0 && text.split(/\s+/).filter(Boolean).length >= 60 && (
+        <div className="mt-2 rounded-md border border-rose-200 bg-rose-50 px-2 py-1.5 text-[10px] text-rose-700">
+          <span className="font-semibold">No citations detected.</span> Pull at least one Vault entry to anchor the claim.
+        </div>
+      )}
 
       {/* Violation list */}
       {violations.length > 0 && (
@@ -301,10 +329,18 @@ function SubScore({
   );
 }
 
-function localSummary(score: number, claimBreach: boolean): string {
+function localSummary(
+  score: number,
+  claimBreach: boolean,
+  citeScore: number,
+  text: string
+): string {
   if (claimBreach) return "Regulatory claim-language breach — hard fail.";
+  const longEnough = text.split(/\s+/).filter(Boolean).length >= 60;
   if (score < 40) return `${score}/100 — saturated; rewrite from scratch.`;
   if (score < 60) return `${score}/100 — below brand floor; iterate.`;
+  if (longEnough && citeScore < 40)
+    return `${score}/100 — prose passes but unanchored. Pull a Vault entry.`;
   if (score < 75) return `${score}/100 — passes the gate but expect HQ comments.`;
   return `${score}/100 — brand-clean. Ship it.`;
 }

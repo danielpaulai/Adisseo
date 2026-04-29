@@ -27,6 +27,9 @@ import {
   Activity,
   HelpCircle,
   ClipboardList,
+  Telescope,
+  Coffee,
+  Library,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -240,12 +243,57 @@ const MODULES = [
     layer: "Phase 1 · Trust layer",
     title: "Prose-quality scorer + brand-voice gate",
     blurb:
-      "Three checks compose into one composite gate before anything reaches HQ: slop-detector (16 LLM-tic rule families, ported from slop-guard), brand-voice (Adisseo / DSM / Cargill / Kemin banned-terms + claim guardrails), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked from Send-to-HQ. Below 80 — cannot be graded above benchmark in the engagement tracker. The platform now has measurable taste.",
+      "Four checks compose into one composite gate before anything reaches HQ: slop-detector (16 LLM-tic rule families, ported from slop-guard), brand-voice (Adisseo / DSM / Cargill / Kemin banned-terms + claim guardrails), citation depth (Vault-resolved references), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked from Send-to-HQ. Below 80 — cannot be graded above benchmark in the engagement tracker.",
     moves: [
       "16 slop rules, 0–100 score, instant client-side",
       "Per-tenant brand-voice configs (4 customers seeded)",
+      "Citation-depth scoring against the Vault",
       "Hard fail on regulatory claim language",
-      "Engagement tracker quality-gates the benchmark",
+    ],
+  },
+  {
+    href: "/vault",
+    icon: Database,
+    num: "18",
+    layer: "Phase 2 · Research depth",
+    title: "Adisseo Vault",
+    blurb:
+      "The customer knowledge base every studio anchors against. ~20 seeded entries spanning controlled trials, field observations, regulatory references, integrator quotes, peer-reviewed publications and product specs across all 4 species and 9 APAC regions. Studios pull a citation with one click; the trust layer scores how well each deliverable is anchored.",
+    moves: [
+      "6 vault kinds (trial / field / regulatory / publication / quote / spec)",
+      "Verified-vs-external two-tier trust",
+      "Canonical citation format with vault-id",
+      "TF search + species/region/kind filters",
+    ],
+  },
+  {
+    href: "/research-deep",
+    icon: Telescope,
+    num: "19",
+    layer: "Phase 2 · Research depth",
+    title: "Deep-research agent",
+    blurb:
+      "gpt-researcher-style multi-step retrieval. Decomposes a question into 6 sub-queries (numbers, regulation, competitor, integrator-voice, mechanism, timing), runs each against the Vault, and composes a footnoted briefing with confidence scoring. Studios call this before drafting so claims start anchored.",
+    moves: [
+      "6-axis sub-query taxonomy",
+      "Footnoted [^N]-style briefing composition",
+      "Diversity + resolved-rate confidence score",
+      "Trust-layer rescores its own briefing",
+    ],
+  },
+  {
+    href: "/digest",
+    icon: Coffee,
+    num: "20",
+    layer: "Phase 2 · Distribution",
+    title: "04:00 species-manager digest",
+    blurb:
+      "gpt-newspaper-style overnight competitor briefing. Per species manager: 3 stories pulled from APAC competitors, each pre-paired with the Vault entry that backs the response, plus the recommended deliverable kind for today. In production, a 04:00 cron lands this in their inbox.",
+    moves: [
+      "Per-manager filtered to species + region overlap",
+      "Each story Vault-anchored automatically",
+      "Today's-play recommendation per story",
+      "Hand-off to News Bridge / Research Deep / Studio",
     ],
   },
 ];
@@ -257,9 +305,9 @@ const ROADMAP = [
     icon: ShieldCheck,
   },
   {
-    title: "Phase 2 · Research depth + Vault (Weeks 4–7)",
-    body: "GPT-Researcher / GPT-Newspaper agents that cite 5+ sources for every deliverable, plus a per-customer 'Vault' of approved trial protocols and anchor data so studios stop hallucinating numbers.",
-    icon: Cpu,
+    title: "Phase 2 · Research depth + Vault (LIVE)",
+    body: "Vault, deep-research agent, citation-depth sub-score and the 04:00 digest all shipped. Studios now call /api/research-deep before drafting; every deliverable gets scored on how well it's anchored to a Vault entry. Production work-list: pgvector + BM25 hybrid retriever, Mistral OCR ingest of internal Adisseo PDFs, real cron for the 04:00 digest.",
+    icon: Telescope,
   },
   {
     title: "Phase 3 · UI / UX upgrade + brand-voice fingerprinting (Weeks 8–13)",
@@ -301,6 +349,10 @@ const ROADMAP = [
 const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[] = [
   {
     label: "Phase 1 · Trust layer (slop-guard + vale-style + LanguageTool)",
+    status: "wired",
+  },
+  {
+    label: "Phase 2 · Vault + deep-research agent + citation depth + 04:00 digest",
     status: "wired",
   },
   {
@@ -562,7 +614,7 @@ export default function PresentationPage() {
         id="shipped"
         num="04"
         title="What AdiPlan AI ships today"
-        subtitle="17 live modules — every one runnable in the browser, no setup required"
+        subtitle="20 live modules — every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {MODULES.map((m) => (

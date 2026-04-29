@@ -23,6 +23,7 @@ import {
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectRuminantsProse } from "@/lib/studio-prose";
 
 type BrochureResponse = {
@@ -347,6 +348,12 @@ export default function RuminantsStudioPage() {
               </ul>
             </div>
           )}
+
+          <AnchorInVault
+            species="ruminants"
+            defaultQuery={studioTopic || "Hokkaido heat-stress"}
+            compact
+          />
 
           {response && (
             <ProseQualityCard

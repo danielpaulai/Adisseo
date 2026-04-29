@@ -18,6 +18,9 @@ import {
   ShieldCheck,
   HelpCircle,
   ClipboardList,
+  Library,
+  Telescope,
+  Coffee,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -207,10 +210,41 @@ const modules: Module[] = [
     stage: "Phase 1 · Trust layer",
     title: "Prose-quality scorer + brand-voice gate",
     blurb:
-      "Every studio deliverable runs through three checks before it can hit the HQ queue: slop-detector (16 LLM-tic rule families), brand-voice (per-customer banned-terms + claim guardrails), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked. Below 80 — won't be graded above benchmark in the engagement tracker.",
+      "Every studio deliverable runs through four checks before it can hit the HQ queue: slop-detector (16 LLM-tic rule families), brand-voice (per-customer banned-terms + claim guardrails), citation depth (Vault-resolved references), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked. Below 80 — won't be graded above benchmark in the engagement tracker.",
     cta: "Score live prose",
     ready: true,
     highlight: true,
+  },
+  {
+    href: "/vault",
+    icon: Library,
+    stage: "Phase 2 · Research depth",
+    title: "Adisseo Vault",
+    blurb:
+      "The customer knowledge base every studio anchors against. Trial protocols, field observations, regulatory references, integrator quotes, peer-reviewed papers, product specs. Studios pull a citation with one click; trust layer measures how well each deliverable is anchored.",
+    cta: "Browse the Vault",
+    ready: true,
+  },
+  {
+    href: "/research-deep",
+    icon: Telescope,
+    stage: "Phase 2 · Research depth",
+    title: "Deep-research agent",
+    blurb:
+      "gpt-researcher-style multi-step retrieval. Decomposes a question into 6 sub-queries (numbers, regulation, competitor, integrator-voice, mechanism, timing), runs each against the Vault, and composes a footnoted briefing. Studios call this before drafting so claims start anchored.",
+    cta: "Try the agent",
+    ready: true,
+    highlight: true,
+  },
+  {
+    href: "/digest",
+    icon: Coffee,
+    stage: "Phase 2 · Distribution",
+    title: "04:00 species-manager digest",
+    blurb:
+      "gpt-newspaper-style overnight competitor briefing. Per species manager: 3 stories pulled from APAC competitors, each pre-paired with the Vault entry that backs the response, plus the recommended deliverable kind for today. In production this fires on a 04:00 cron and lands in their inbox.",
+    cta: "Preview the digest",
+    ready: true,
   },
 ];
 

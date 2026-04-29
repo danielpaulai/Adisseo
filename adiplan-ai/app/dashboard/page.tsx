@@ -235,6 +235,24 @@ export default function DashboardPage() {
             >
               Trust layer
             </Link>
+            <Link
+              href="/vault"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Vault
+            </Link>
+            <Link
+              href="/research-deep"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Research
+            </Link>
+            <Link
+              href="/digest"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Digest
+            </Link>
           </nav>
         </div>
       </header>

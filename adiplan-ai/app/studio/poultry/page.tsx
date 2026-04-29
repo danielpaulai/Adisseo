@@ -23,6 +23,7 @@ import {
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectPoultryProse } from "@/lib/studio-prose";
 import { useAdiPlanStore } from "@/lib/store";
 
@@ -372,6 +373,8 @@ export default function PoultryStudioPage() {
                   ))}
                 </ul>
               </div>
+
+              <AnchorInVault species="poultry" defaultQuery={response.pack.email.subject} compact />
 
               <ProseQualityCard
                 text={collectPoultryProse(response.pack)}

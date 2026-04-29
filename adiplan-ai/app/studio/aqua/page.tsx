@@ -18,6 +18,7 @@ import { aquaMagazines, type AquaLanguage } from "@/lib/aqua-leaflet";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectAquaProse } from "@/lib/studio-prose";
 
 type LeafletResponse = {
@@ -332,6 +333,12 @@ export default function AquaStudioPage() {
               <Download size={14} /> Download PDF
             </button>
           )}
+
+          <AnchorInVault
+            species="aqua"
+            defaultQuery={studioTopic}
+            compact
+          />
 
           {response && (
             <ProseQualityCard

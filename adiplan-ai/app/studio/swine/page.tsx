@@ -20,6 +20,7 @@ import { swineAccounts } from "@/lib/swine-accounts";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectSwineProse } from "@/lib/studio-prose";
 
 type Scene = {
@@ -388,6 +389,12 @@ export default function SwineStudioPage() {
               {error}
             </p>
           )}
+
+          <AnchorInVault
+            species="swine"
+            defaultQuery={studioTopic || "ASF nursery recovery"}
+            compact
+          />
 
           {response && (
             <>
