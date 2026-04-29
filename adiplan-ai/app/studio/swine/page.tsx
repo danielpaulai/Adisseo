@@ -220,6 +220,13 @@ export default function SwineStudioPage() {
       if (!res.ok) throw new Error("Generation failed");
       const data: ShortResponse = await res.json();
       setResponse(data);
+      useAdiPlanStore.getState().pushActivity({
+        kind: "swine",
+        title: `Swine short: ${studioTopic.slice(0, 64) || "untitled"}`,
+        detail: `${studioLanguage.toUpperCase()}${studioAccount ? ` \u00b7 ${studioAccount}` : ""}`,
+        href: "/studio/swine",
+        tone: "crimson",
+      });
     } catch {
       setError("Generation failed. Check API keys or try again.");
     } finally {

@@ -2,6 +2,36 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { StrategicFrame } from "@/lib/strategic-frame";
+
+/* ============================================================================
+ * War-room activity log — every meaningful action surfaces on /dashboard so the
+ * regional sales meeting can see, at a glance: what news got matched, what
+ * frame got composed, what deliverables shipped this morning.
+ * ========================================================================== */
+export type ActivityKind =
+  | "match"
+  | "frame"
+  | "aqua"
+  | "poultry"
+  | "ruminants"
+  | "swine"
+  | "billboard"
+  | "voice-memo";
+
+export type ActivityEntry = {
+  id: string;
+  kind: ActivityKind;
+  title: string;
+  /** Optional sub-line — language, audience, format. */
+  detail?: string;
+  /** Where to click back to. */
+  href?: string;
+  /** ISO timestamp. */
+  at: string;
+  /** Optional badge color override. */
+  tone?: "crimson" | "cyan" | "orange" | "ink";
+};
 
 export type LadderRung = {
   id: string;
@@ -72,6 +102,15 @@ interface AdiPlanStore {
   setStudioTopic: (t: string) => void;
   setStudioLanguage: (l: AdiPlanStore["studioLanguage"]) => void;
   setStudioAccount: (a: string) => void;
+
+  /** Most recent strategic frame composed in this session (for Billboard reuse + war-room). */
+  composedFrame: StrategicFrame | null;
+  setComposedFrame: (f: StrategicFrame | null) => void;
+
+  /** War-room activity log (most-recent-first, capped at 30). */
+  activity: ActivityEntry[];
+  pushActivity: (entry: Omit<ActivityEntry, "id" | "at"> & { id?: string; at?: string }) => void;
+  clearActivity: () => void;
 }
 
 export const useAdiPlanStore = create<AdiPlanStore>()(
@@ -117,6 +156,28 @@ export const useAdiPlanStore = create<AdiPlanStore>()(
       setStudioTopic: (t) => set({ studioTopic: t }),
       setStudioLanguage: (l) => set({ studioLanguage: l }),
       setStudioAccount: (a) => set({ studioAccount: a }),
+
+      composedFrame: null,
+      setComposedFrame: (f) => set({ composedFrame: f }),
+
+      activity: [],
+      pushActivity: (entry) =>
+        set((s) => {
+          const id =
+            entry.id ?? `act-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+          const at = entry.at ?? new Date().toISOString();
+          const next: ActivityEntry = {
+            id,
+            at,
+            kind: entry.kind,
+            title: entry.title,
+            detail: entry.detail,
+            href: entry.href,
+            tone: entry.tone,
+          };
+          return { activity: [next, ...s.activity].slice(0, 30) };
+        }),
+      clearActivity: () => set({ activity: [] }),
     }),
     { name: "adiplan-ai-state-v1" }
   )

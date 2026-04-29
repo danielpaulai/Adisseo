@@ -114,6 +114,14 @@ export default function StrategicFramePage() {
       if (!res.ok) throw new Error("Compose failed");
       const data = (await res.json()) as ComposeResponse;
       setResponse(data);
+      useAdiPlanStore.getState().setComposedFrame(data.frame);
+      useAdiPlanStore.getState().pushActivity({
+        kind: "frame",
+        title: `Composed frame: ${data.frame.oneLineSummary || data.frame.cbi}`,
+        detail: `${data.frame.persona} \u00b7 ${data.frame.region}`,
+        href: "/strategic-frame",
+        tone: "crimson",
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Compose failed");
     } finally {

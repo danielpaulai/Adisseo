@@ -135,6 +135,13 @@ export default function PoultryStudioPage() {
       if (!res.ok) throw new Error("Generation failed");
       const data: PackResponse = await res.json();
       setResponse(data);
+      useAdiPlanStore.getState().pushActivity({
+        kind: "poultry",
+        title: `Poultry pack: ${data.pack?.email?.subject?.slice(0, 64) ?? campaignId}`,
+        detail: `Email + carousel \u00b7 ${audienceId}`,
+        href: "/studio/poultry",
+        tone: "cyan",
+      });
       // Render both in parallel — keep things snappy
       await Promise.all([renderEmail(data), renderCarousel(data)]);
     } catch (e) {

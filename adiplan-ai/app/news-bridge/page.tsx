@@ -118,6 +118,13 @@ export default function NewsBridgePage() {
         swineLanguage: hints.swineLanguage,
         swineAccountId: hints.swineAccountId,
       });
+      useAdiPlanStore.getState().pushActivity({
+        kind: "match",
+        title: `Matched: ${article.title}`,
+        detail: `${article.competitor} \u00b7 \u2192 ${data.match.cbi} / ${data.match.persona}`,
+        href: "/news-bridge",
+        tone: "ink",
+      });
     } catch {
       setError("Match request failed. Check API keys or try again.");
     } finally {

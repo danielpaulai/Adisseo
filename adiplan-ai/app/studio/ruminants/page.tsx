@@ -111,6 +111,13 @@ export default function RuminantsStudioPage() {
       if (!res.ok) throw new Error("Generation failed");
       const data: BrochureResponse = await res.json();
       setResponse(data);
+      useAdiPlanStore.getState().pushActivity({
+        kind: "ruminants",
+        title: `Ruminants brochure: ${data.brochure?.coverHook?.slice(0, 64) ?? campaignId}`,
+        detail: `${language.toUpperCase()} \u00b7 ${campaignId} \u00b7 ${audienceId}`,
+        href: "/studio/ruminants",
+        tone: "ink",
+      });
       await renderPdf(data.brochure);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Generation failed");

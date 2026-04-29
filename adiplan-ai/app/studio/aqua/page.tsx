@@ -144,6 +144,13 @@ export default function AquaStudioPage() {
       if (!res.ok) throw new Error("Generation failed");
       const data: LeafletResponse = await res.json();
       setResponse(data);
+      useAdiPlanStore.getState().pushActivity({
+        kind: "aqua",
+        title: `Aqua leaflet: ${data.leaflet?.headline?.slice(0, 64) ?? "untitled"}`,
+        detail: `${language.toUpperCase()} \u00b7 ${magazineId}`,
+        href: "/studio/aqua",
+        tone: "cyan",
+      });
       await renderPdf(data.leaflet);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Generation failed");

@@ -11,6 +11,10 @@ import {
   ArrowRight,
   Sparkles,
   Grid3x3,
+  Bookmark,
+  Mic,
+  Activity,
+  PlayCircle,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -124,14 +128,51 @@ const modules: Module[] = [
     cta: "Open Ruminants Studio",
     ready: true,
   },
+  {
+    href: "/studio/billboard",
+    icon: Bookmark,
+    stage: "05 · Creating",
+    title: "Billboard Campaign generator",
+    blurb:
+      "AdiPlan billboard test in one button — Headline + Adisseo Differentiation + Reason to Believe + Visual brief, scored on Unique / Important / Believable. A2 portrait, A1 convention or square LinkedIn key visual.",
+    cta: "Compose a billboard",
+    ready: true,
+  },
+  {
+    href: "/studio/voice-memo",
+    icon: Mic,
+    stage: "Studio · Voice Memo",
+    title: "Voice memo → deliverable",
+    blurb:
+      "Antoine records 30s on his phone. Whisper transcribes. The transcript seeds whichever species studio you point it at — manga brochure, leaflet, vertical short, billboard. Authorship stays with the manager.",
+    cta: "Open Voice Memo Studio",
+    ready: true,
+  },
+  {
+    href: "/dashboard",
+    icon: Activity,
+    stage: "Activation · Sales War Room",
+    title: "What got shipped this session",
+    blurb:
+      "Every news match, composed strategic frame, and species deliverable — most-recent first, with conversion ratios. Open this on the big screen during the regional sales meeting.",
+    cta: "Open the war room",
+    ready: true,
+  },
 ];
 
 const upcoming = [
-  { species: null, text: "Module 05 — Billboard Campaign generator" },
   { species: null, text: "Engagement tracker — Malaysia-ASF viewer-time funnel" },
   {
     species: null,
     text: "Live scraper API — wired (set SCRAPER_API_URL to swap from seeded articles)",
+  },
+  {
+    species: null,
+    text: "Mistral OCR 3 — internal Adisseo PDF ingest into Copilot",
+  },
+  {
+    species: null,
+    text: "LangGraph orchestration — overnight competitor digest agent",
   },
 ] as const;
 
@@ -162,7 +203,34 @@ export default function Home() {
             marketing framework. Built for Ricardo Communod (Adisseo APAC), demoing to
             the global team.
           </p>
-          <div className="flex flex-wrap gap-2 pt-2 text-[11px]">
+          <div className="flex flex-wrap items-center gap-3 pt-3">
+            <Link
+              href="/presentation"
+              className="group flex items-center gap-2 rounded-lg bg-adisseo-ink-strong px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+            >
+              <BookOpen size={14} />
+              Open the deep deck
+              <ArrowRight
+                size={14}
+                className="transition group-hover:translate-x-0.5"
+              />
+            </Link>
+            <Link
+              href="/demo"
+              className="flex items-center gap-2 rounded-lg border border-adisseo-line bg-white px-4 py-2.5 text-sm font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+            >
+              <PlayCircle size={14} /> Take the 2-min walkthrough{" "}
+              <ArrowRight size={14} />
+            </Link>
+            <Link
+              href="/news-bridge"
+              className="flex items-center gap-2 rounded-lg border border-dashed border-adisseo-line bg-white/60 px-4 py-2.5 text-sm font-semibold text-adisseo-muted transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+            >
+              Or jump straight to News Bridge <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="flex flex-wrap gap-2 pt-3 text-[11px]">
             <span className="rounded-full bg-adisseo-crimson/10 px-3 py-1 font-medium text-adisseo-crimson">
               xyflow + d3-force
             </span>
