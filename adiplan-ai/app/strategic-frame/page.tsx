@@ -14,6 +14,7 @@ import {
   Copy,
   Printer,
   Newspaper,
+  FileDown,
 } from "lucide-react";
 import { useAdiPlanStore } from "@/lib/store";
 import type { ScrapedArticle } from "@/lib/scraper-api";
@@ -50,9 +51,32 @@ export default function StrategicFramePage() {
   const [error, setError] = useState<string | null>(null);
   const [copyOk, setCopyOk] = useState(false);
 
+  const studioPrefill = useAdiPlanStore((s) => s.studioPrefill);
+
   // Pull the selected article so we can decorate the header.
+  // Special case: when the user arrives from /personas-matrix the
+  // articleId is synthetic (`matrix-...`) and no real article exists,
+  // so we synthesise one from the studio prefill that the matrix wrote.
   useEffect(() => {
     if (!selectedArticleId) return;
+
+    if (selectedArticleId.startsWith("matrix-") && match) {
+      setArticle({
+        id: selectedArticleId,
+        competitor: studioPrefill?.competitor ?? "Internal · Personas matrix",
+        title: studioPrefill?.articleTitle ?? `${match.persona} × ${match.cbi}`,
+        summary: match.cbiRationale,
+        url: "",
+        publishedAt:
+          studioPrefill?.publishedAt ?? new Date().toISOString().slice(0, 10),
+        species: match.speciesFit,
+        tags: [],
+        region: "APAC",
+        language: "en",
+      });
+      return;
+    }
+
     fetch("/api/articles")
       .then((r) => r.json())
       .then((data: { articles: ScrapedArticle[] }) => {
@@ -60,7 +84,7 @@ export default function StrategicFramePage() {
         setArticle(a ?? null);
       })
       .catch(() => undefined);
-  }, [selectedArticleId]);
+  }, [selectedArticleId, match, studioPrefill]);
 
   const compose = useCallback(async () => {
     if (!match || !article) {
@@ -146,6 +170,37 @@ export default function StrategicFramePage() {
     navigator.clipboard.writeText(text);
     setCopyOk(true);
     setTimeout(() => setCopyOk(false), 1500);
+  };
+
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const downloadPdf = async () => {
+    if (!response) return;
+    setDownloadingPdf(true);
+    try {
+      const res = await fetch("/api/render-strategic-frame", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ frame: response.frame }),
+      });
+      if (!res.ok) throw new Error(`PDF render failed (${res.status})`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const slug = response.frame.competitor
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      a.download = `adiplan-strategic-frame-${slug || "brief"}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "PDF download failed");
+    } finally {
+      setDownloadingPdf(false);
+    }
   };
 
   return (
@@ -354,10 +409,22 @@ export default function StrategicFramePage() {
                 <Copy size={12} /> {copyOk ? "Copied" : "Copy as text"}
               </button>
               <button
+                onClick={downloadPdf}
+                disabled={downloadingPdf || !response}
+                className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+              >
+                {downloadingPdf ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <FileDown size={12} />
+                )}
+                {downloadingPdf ? "Rendering" : "Download PDF"}
+              </button>
+              <button
                 onClick={() => window.print()}
                 className="flex items-center gap-2 rounded-lg border border-adisseo-line bg-white px-3 py-2 text-xs font-semibold text-adisseo-ink-strong hover:border-adisseo-crimson"
               >
-                <Printer size={12} /> Print / save as PDF
+                <Printer size={12} /> Browser print
               </button>
             </div>
           </article>

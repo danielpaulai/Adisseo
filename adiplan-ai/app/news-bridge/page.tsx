@@ -3,7 +3,18 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Loader2, Newspaper, Sparkles, Target, Users, Layers } from "lucide-react";
+import {
+  ArrowRight,
+  Loader2,
+  Newspaper,
+  Sparkles,
+  Target,
+  Users,
+  Layers,
+  RefreshCw,
+  Radio,
+  AlertTriangle,
+} from "lucide-react";
 import { useAdiPlanStore } from "@/lib/store";
 import type { ScrapedArticle } from "@/lib/scraper-api";
 import { Logo } from "@/components/Logo";
@@ -27,10 +38,19 @@ type MatchResponse = {
   meta: { usedModel: string };
 };
 
+type FeedMeta = {
+  source: "live" | "live-cache" | "live-failed-fallback" | "demo";
+  count: number;
+  fetchedAt: string;
+  warning?: string;
+};
+
 export default function NewsBridgePage() {
   const router = useRouter();
   const [articles, setArticles] = useState<ScrapedArticle[]>([]);
+  const [feedMeta, setFeedMeta] = useState<FeedMeta | null>(null);
   const [loadingMatch, setLoadingMatch] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [response, setResponse] = useState<MatchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,12 +59,31 @@ export default function NewsBridgePage() {
   const setStudioTopic = useAdiPlanStore((s) => s.setStudioTopic);
   const setStudioPrefill = useAdiPlanStore((s) => s.setStudioPrefill);
 
+  const loadFeed = async (force = false) => {
+    try {
+      const r = await fetch(`/api/articles${force ? "?refresh=1" : ""}`);
+      const data = await r.json();
+      setArticles(data.articles);
+      setFeedMeta({
+        source: data.source,
+        count: data.count,
+        fetchedAt: data.fetchedAt,
+        warning: data.warning,
+      });
+    } catch {
+      setError("Could not load articles");
+    }
+  };
+
   useEffect(() => {
-    fetch("/api/articles")
-      .then((r) => r.json())
-      .then((data) => setArticles(data.articles))
-      .catch(() => setError("Could not load articles"));
+    loadFeed();
   }, []);
+
+  const refreshFeed = async () => {
+    setRefreshing(true);
+    await loadFeed(true);
+    setRefreshing(false);
+  };
 
   const matchArticle = async (article: ScrapedArticle) => {
     setLoadingMatch(true);
@@ -144,6 +183,8 @@ export default function NewsBridgePage() {
             </p>
             <span className="text-xs">({articles.length} articles)</span>
           </div>
+
+          <FeedStatusBadge meta={feedMeta} refreshing={refreshing} onRefresh={refreshFeed} />
 
           {error && (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
@@ -360,5 +401,75 @@ export default function NewsBridgePage() {
         </section>
       </div>
     </main>
+  );
+}
+
+function FeedStatusBadge({
+  meta,
+  refreshing,
+  onRefresh,
+}: {
+  meta: FeedMeta | null;
+  refreshing: boolean;
+  onRefresh: () => void;
+}) {
+  if (!meta) return null;
+  const ago = (() => {
+    const ms = Date.now() - new Date(meta.fetchedAt).getTime();
+    if (ms < 60_000) return `${Math.max(1, Math.round(ms / 1000))}s ago`;
+    if (ms < 3_600_000) return `${Math.round(ms / 60_000)}m ago`;
+    return `${Math.round(ms / 3_600_000)}h ago`;
+  })();
+
+  let label = "";
+  let dotColor = "bg-emerald-500";
+  let pillBg = "bg-emerald-50 border-emerald-200 text-emerald-900";
+  if (meta.source === "live") {
+    label = `Live · ${meta.count} articles · fetched ${ago}`;
+  } else if (meta.source === "live-cache") {
+    label = `Live (cached) · ${meta.count} articles · ${ago}`;
+    dotColor = "bg-emerald-400";
+  } else if (meta.source === "live-failed-fallback") {
+    label = `Live failed → seeded fallback · ${meta.count} articles`;
+    dotColor = "bg-amber-500";
+    pillBg = "bg-amber-50 border-amber-200 text-amber-900";
+  } else {
+    label = `Demo mode · ${meta.count} seeded articles`;
+    dotColor = "bg-slate-400";
+    pillBg = "bg-slate-50 border-slate-200 text-slate-700";
+  }
+
+  return (
+    <div className="mb-3 flex items-center justify-between gap-3">
+      <span
+        className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-medium ${pillBg}`}
+      >
+        <span className={`relative flex h-2 w-2`}>
+          {meta.source === "live" && (
+            <span className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${dotColor}`} />
+          )}
+          <span className={`relative inline-flex h-2 w-2 rounded-full ${dotColor}`} />
+        </span>
+        <Radio size={11} />
+        {label}
+      </span>
+      <button
+        onClick={onRefresh}
+        disabled={refreshing}
+        className="flex items-center gap-1.5 rounded-md border border-adisseo-line bg-white px-2.5 py-1.5 text-[11px] font-medium text-adisseo-muted transition hover:border-adisseo-crimson hover:text-adisseo-crimson disabled:opacity-50"
+      >
+        {refreshing ? (
+          <Loader2 size={11} className="animate-spin" />
+        ) : (
+          <RefreshCw size={11} />
+        )}
+        {refreshing ? "Refreshing" : "Refresh"}
+      </button>
+      {meta.warning && (
+        <span className="flex items-center gap-1 text-[11px] text-amber-800">
+          <AlertTriangle size={11} /> {meta.warning}
+        </span>
+      )}
+    </div>
   );
 }

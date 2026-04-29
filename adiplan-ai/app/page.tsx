@@ -10,6 +10,7 @@ import {
   Target,
   ArrowRight,
   Sparkles,
+  Grid3x3,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -65,8 +66,18 @@ const modules: Module[] = [
     stage: "03 · Strategic Frame",
     title: "Total Value Solution composer",
     blurb:
-      "Synthesises the matched CBI + persona into an Enterprise Persona, an Enterprise Insight, and a Pain × Promise × Proof × Proposition card pack. Sits between News Bridge and the species Studios — what regional sales actually shares before the deliverables ship.",
+      "Synthesises the matched CBI + persona into an Enterprise Persona, an Enterprise Insight, and a Pain × Promise × Proof × Proposition card pack. Now ships as a 1-page A4 PDF brief via @react-pdf/renderer — no browser print needed.",
     cta: "Compose a frame",
+    ready: true,
+  },
+  {
+    href: "/personas-matrix",
+    icon: Grid3x3,
+    stage: "04 · Upstream prioritisation",
+    title: "Enterprise Personas × CSF matrix",
+    blurb:
+      "5 personas × 6 customer success factors. The diagonal marks where persona priority and Adisseo's strength meet — those are the cells you should always lead with. Click any cell to inspect the lead claim, flagship, and recommended deliverable, then jump straight into a Strategic Frame.",
+    cta: "Open the matrix",
     ready: true,
   },
   {
@@ -116,10 +127,12 @@ const modules: Module[] = [
 ];
 
 const upcoming = [
-  { species: null, text: "Module 04 — Enterprise Personas CSF diagonal matrix" },
   { species: null, text: "Module 05 — Billboard Campaign generator" },
   { species: null, text: "Engagement tracker — Malaysia-ASF viewer-time funnel" },
-  { species: null, text: "Live scraper API — replace the 8 seeded articles" },
+  {
+    species: null,
+    text: "Live scraper API — wired (set SCRAPER_API_URL to swap from seeded articles)",
+  },
 ] as const;
 
 export default function Home() {
