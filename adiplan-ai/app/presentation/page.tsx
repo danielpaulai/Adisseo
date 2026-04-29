@@ -191,12 +191,22 @@ const MODULES = [
       "Every news match, composed strategic frame, and species deliverable — most-recent first, with conversion ratios. Open it on the big screen during the regional sales meeting.",
     moves: ["Match → Frame → Ship funnel", "Per-kind counts", "Persisted across reload"],
   },
+  {
+    href: "/engagement-tracker",
+    icon: Target,
+    num: "13",
+    layer: "Activation · Engagement",
+    title: "Malaysia-ASF engagement tracker",
+    blurb:
+      "The metric Ricardo named on the call. 9 historical deliverables, 4-stage funnel (views → qualified → conversations → conversions), each row graded against the 43% Malaysia benchmark.",
+    moves: ["Per-species + per-kind aggregates", "Above / At / Below grading", "Q4 2025 – Q1 2026 dataset"],
+  },
 ];
 
 const ROADMAP = [
   {
-    title: "Engagement tracker",
-    body: "Malaysia-ASF viewer-time funnel from Ricardo's call. Track which deliverables get viewed, who views >2.5min (the qualified-viewer threshold), conversion attribution back to articles.",
+    title: "Live measurement plumbing",
+    body: "The engagement tracker is shipped with seed data. Next: hook real PDF-viewer scroll-depth, Swine-short watch-time, and LinkedIn-carousel scroll-depth APIs into the funnel \u2014 no more seed numbers.",
     icon: Database,
   },
   {
@@ -234,7 +244,10 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
     label: "Voice synthesis on Swine shorts (env-driven, awaiting ElevenLabs key)",
     status: "wired",
   },
-  { label: "Engagement tracker (Malaysia-ASF viewer-time funnel)", status: "deferred" },
+  {
+    label: "Live engagement measurement (real watch-time / scroll-depth APIs)",
+    status: "in-progress",
+  },
   { label: "Mistral OCR 3 ingestion of internal Adisseo PDFs", status: "deferred" },
   { label: "LangGraph long-running orchestration", status: "deferred" },
   { label: "Brand-guardrail approval workflow", status: "deferred" },
@@ -470,7 +483,7 @@ export default function PresentationPage() {
         id="shipped"
         num="04"
         title="What AdiPlan AI ships today"
-        subtitle="12 live modules — every one runnable in the browser, no setup required"
+        subtitle="13 live modules — every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {MODULES.map((m) => (
@@ -502,7 +515,7 @@ export default function PresentationPage() {
       {/* ============================== 06 · NUMBERS ============================== */}
       <Section id="numbers" num="06" title="By the numbers" subtitle="What's actually shipped, in figures">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <Stat n="12" label="Live modules" />
+          <Stat n="13" label="Live modules" />
           <Stat n="17" label="API routes" />
           <Stat n="6" label="Languages" sub="EN · JP · ZH · VI · ID · TH" />
           <Stat n="5" label="Deliverable formats" sub="leaflet · email · carousel · manga · short" />

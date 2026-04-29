@@ -21,6 +21,7 @@ import type { ScrapedArticle } from "@/lib/scraper-api";
 import type { StrategicFrame } from "@/lib/strategic-frame";
 import type { SpeciesKey } from "@/lib/adiplan";
 import { Logo, SpeciesIcon } from "@/components/Logo";
+import { toast } from "sonner";
 
 type ComposeResponse = {
   frame: StrategicFrame;
@@ -122,8 +123,13 @@ export default function StrategicFramePage() {
         href: "/strategic-frame",
         tone: "crimson",
       });
+      toast.success("Strategic frame composed", {
+        description: data.frame.oneLineSummary?.slice(0, 96),
+      });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Compose failed");
+      const msg = e instanceof Error ? e.message : "Compose failed";
+      setError(msg);
+      toast.error("Frame compose failed", { description: msg });
     } finally {
       setLoading(false);
     }

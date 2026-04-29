@@ -59,11 +59,20 @@ const STEPS = [
   {
     n: "05",
     title: "Open the war room on the big screen",
-    body: "Switch to /dashboard. The session’s articles matched, frames composed, and deliverables shipped are all there — with conversion ratios. This is what regional sales sees on Monday morning.",
+    body: "Switch to /dashboard. The session’s articles matched, frames composed, and deliverables shipped are all there — with conversion ratios. Hit “Pre-load demo activity” if you need a fuller view for screenshots. This is what regional sales sees on Monday morning.",
     href: "/dashboard",
     cta: "Open the war room",
     icon: Activity,
     estTime: "~10s",
+  },
+  {
+    n: "06",
+    title: "Land on the Malaysia-ASF benchmark",
+    body: "End on /engagement-tracker — the metric Ricardo named on the call. 9 historical APAC deliverables, 4-stage funnel, each row graded against the 43% qualified-to-conversion benchmark. This is the number every species manager will be measured on.",
+    href: "/engagement-tracker",
+    cta: "Open the engagement tracker",
+    icon: Target,
+    estTime: "~20s",
   },
 ];
 
@@ -112,16 +121,16 @@ export default function DemoPage() {
           The fastest path to &ldquo;wow&rdquo;
         </h1>
         <p className="mt-3 max-w-2xl text-base text-adisseo-muted">
-          Five clicks. About two minutes. From a scraped competitor headline
-          all the way to a downloadable PDF — in the language of the
-          country, in the voice of the species manager, on a war-room
-          dashboard.
+          Six clicks. About two and a half minutes. From a scraped competitor
+          headline all the way to a downloadable PDF — in the language of
+          the country, in the voice of the species manager — and the
+          engagement number every deliverable will be measured against.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-2 text-[11px] text-adisseo-muted">
           <Clock size={12} />
-          <span className="font-semibold text-adisseo-ink-strong">~2 minutes total</span>
+          <span className="font-semibold text-adisseo-ink-strong">~2.5 minutes total</span>
           <span>·</span>
-          <span>5 steps</span>
+          <span>6 steps</span>
           <span>·</span>
           <span>1 demo path</span>
         </div>

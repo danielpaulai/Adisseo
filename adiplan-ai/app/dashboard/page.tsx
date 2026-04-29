@@ -20,6 +20,100 @@ import {
 import { useAdiPlanStore, type ActivityEntry, type ActivityKind } from "@/lib/store";
 import { Logo } from "@/components/Logo";
 
+/* ----------------------------------------------------------------------------
+ * Demo-seed payload — populates the war-room with realistic recent activity
+ * so it isn't empty in cold-start screenshots / first-impressions of the demo.
+ * Mirrors the data model in /engagement-tracker but as session activity.
+ * ---------------------------------------------------------------------------- */
+
+const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
+  {
+    kind: "match",
+    title: "Matched: Cargill SE-Asia ASF webinar Q3 2025",
+    detail:
+      "Cargill · → Disease-resilience nutrition / Integrator vet desk",
+    href: "/news-bridge",
+    tone: "ink",
+    at: new Date(Date.now() - 12 * 60_000).toISOString(),
+  },
+  {
+    kind: "frame",
+    title:
+      "Composed frame: Add the nutrition layer to the recovery story. Or someone else will.",
+    detail: "Integrator vet desk · China",
+    href: "/strategic-frame",
+    tone: "crimson",
+    at: new Date(Date.now() - 10 * 60_000).toISOString(),
+  },
+  {
+    kind: "swine",
+    title: "Swine short: PRRS recovery vertical · ZH (WeChat)",
+    detail: "ZH · cn-charoen-pokphand",
+    href: "/studio/swine",
+    tone: "crimson",
+    at: new Date(Date.now() - 9 * 60_000).toISOString(),
+  },
+  {
+    kind: "match",
+    title: "Matched: Kemin AGP-Free webinar Jan 2026",
+    detail: "Kemin · → Regulatory shift / Integrator nutrition manager",
+    href: "/news-bridge",
+    tone: "ink",
+    at: new Date(Date.now() - 7 * 60_000).toISOString(),
+  },
+  {
+    kind: "frame",
+    title:
+      "Composed frame: Hold the FCR floor. Reclaim the uniformity ceiling.",
+    detail: "Integrator vet desk · APAC",
+    href: "/strategic-frame",
+    tone: "crimson",
+    at: new Date(Date.now() - 6 * 60_000).toISOString(),
+  },
+  {
+    kind: "poultry",
+    title: "Poultry pack: AGP-Free integrator emailer",
+    detail: "Email + carousel · integrator-nutrition-manager",
+    href: "/studio/poultry",
+    tone: "cyan",
+    at: new Date(Date.now() - 5 * 60_000).toISOString(),
+  },
+  {
+    kind: "billboard",
+    title: "Billboard composed: Move the cycle. Reclaim the uniformity ceiling.",
+    detail: "A2 portrait — trade booth · deterministic",
+    href: "/studio/billboard",
+    tone: "orange",
+    at: new Date(Date.now() - 4 * 60_000).toISOString(),
+  },
+  {
+    kind: "match",
+    title: "Matched: Hokkaido Dairy Times · summer-yield issue",
+    detail:
+      "Hokkaido Dairy Times · → Heat stress / Hokkaido dairy R&D buyer",
+    href: "/news-bridge",
+    tone: "ink",
+    at: new Date(Date.now() - 3 * 60_000).toISOString(),
+  },
+  {
+    kind: "frame",
+    title:
+      "Composed frame: Hold the milk through summer. Without writing a capex memo.",
+    detail: "Hokkaido dairy R&D buyer · Hokkaido",
+    href: "/strategic-frame",
+    tone: "crimson",
+    at: new Date(Date.now() - 2 * 60_000).toISOString(),
+  },
+  {
+    kind: "ruminants",
+    title: "Ruminants brochure: Heat-stress manga brochure",
+    detail: "JA · heat-stress · hokkaido-dairy",
+    href: "/studio/ruminants",
+    tone: "ink",
+    at: new Date(Date.now() - 1 * 60_000).toISOString(),
+  },
+];
+
 const KIND_ICON: Record<ActivityKind, React.ComponentType<{ size?: number }>> = {
   match: Newspaper,
   frame: Target,
@@ -52,8 +146,17 @@ const TONE_BG: Record<NonNullable<ActivityEntry["tone"]>, string> = {
 export default function DashboardPage() {
   const activity = useAdiPlanStore((s) => s.activity);
   const clearActivity = useAdiPlanStore((s) => s.clearActivity);
+  const pushActivity = useAdiPlanStore((s) => s.pushActivity);
   const composedFrame = useAdiPlanStore((s) => s.composedFrame);
   const match = useAdiPlanStore((s) => s.match);
+
+  const seedDemo = () => {
+    // Replay in chronological order so the most-recent ends up on top.
+    const ordered = [...DEMO_SEED].sort(
+      (a, b) => new Date(a.at!).getTime() - new Date(b.at!).getTime()
+    );
+    for (const e of ordered) pushActivity(e);
+  };
 
   const counts = activity.reduce<Record<ActivityKind, number>>(
     (acc, a) => {
@@ -107,6 +210,12 @@ export default function DashboardPage() {
               className="text-adisseo-muted hover:text-adisseo-crimson"
             >
               Strategic Frame
+            </Link>
+            <Link
+              href="/engagement-tracker"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Engagement
             </Link>
           </nav>
         </div>
@@ -205,16 +314,25 @@ export default function DashboardPage() {
             <h3 className="text-sm font-bold text-adisseo-ink-strong">
               Deliverable mix
             </h3>
-            {activity.length > 0 && (
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => {
-                  if (confirm("Clear the war-room activity log?")) clearActivity();
-                }}
-                className="flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-muted hover:border-adisseo-crimson hover:text-adisseo-crimson"
+                onClick={seedDemo}
+                className="flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-crimson hover:border-adisseo-crimson"
+                title="Pre-load 10 realistic activity entries so the war-room isn't empty in cold-start screenshots."
               >
-                <Trash2 size={10} /> Clear log
+                Pre-load demo activity
               </button>
-            )}
+              {activity.length > 0 && (
+                <button
+                  onClick={() => {
+                    if (confirm("Clear the war-room activity log?")) clearActivity();
+                  }}
+                  className="flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-muted hover:border-adisseo-crimson hover:text-adisseo-crimson"
+                >
+                  <Trash2 size={10} /> Clear log
+                </button>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">
             {(Object.keys(KIND_LABEL) as ActivityKind[]).map((k) => {
@@ -246,6 +364,7 @@ export default function DashboardPage() {
             <EmptyState
               match={!!match}
               composedFrame={!!composedFrame}
+              onSeedDemo={seedDemo}
             />
           ) : (
             <ol className="space-y-2">
@@ -327,10 +446,11 @@ function Stat({
 
 function EmptyState({
   match,
-  composedFrame,
+  onSeedDemo,
 }: {
   match: boolean;
   composedFrame: boolean;
+  onSeedDemo: () => void;
 }) {
   return (
     <div className="rounded-3xl border border-dashed border-adisseo-line bg-white p-10 text-center">
@@ -342,9 +462,16 @@ function EmptyState({
       </p>
       <p className="mt-2 mx-auto max-w-md text-xs text-adisseo-muted">
         Every news match, composed strategic frame, and species deliverable
-        will appear here as you work. Start the demo path:
+        will appear here as you work. Start the demo path — or pre-load a
+        realistic 10-entry session for screenshots:
       </p>
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs">
+        <button
+          onClick={onSeedDemo}
+          className="flex items-center gap-1 rounded-md bg-adisseo-ink-strong px-3 py-2 font-semibold text-white hover:opacity-90"
+        >
+          Pre-load demo activity <ArrowRight size={11} />
+        </button>
         <Link
           href="/news-bridge"
           className="flex items-center gap-1 rounded-md bg-adisseo-crimson px-3 py-2 font-semibold text-white hover:opacity-90"

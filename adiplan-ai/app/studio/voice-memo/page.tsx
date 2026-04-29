@@ -17,6 +17,7 @@ import {
 import { useAdiPlanStore } from "@/lib/store";
 import { Logo } from "@/components/Logo";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
+import { toast } from "sonner";
 
 type SpeciesTarget = "ruminants" | "aqua" | "poultry" | "swine" | "billboard";
 
@@ -111,8 +112,18 @@ export default function VoiceMemoStudioPage() {
       }
       setResp(data);
       setTranscript(data.transcript);
+      toast.success(
+        data.source === "whisper"
+          ? "Transcribed via Whisper"
+          : "Transcribed (demo stub)",
+        {
+          description: `${data.transcript.length} chars \u00b7 ${data.bytes ?? "?"} bytes`,
+        }
+      );
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Transcription failed");
+      const msg = e instanceof Error ? e.message : "Transcription failed";
+      setError(msg);
+      toast.error("Transcription failed", { description: msg });
     } finally {
       setTranscribing(false);
     }

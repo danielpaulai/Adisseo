@@ -158,13 +158,26 @@ const modules: Module[] = [
     cta: "Open the war room",
     ready: true,
   },
+  {
+    href: "/engagement-tracker",
+    icon: Target,
+    stage: "Activation · Engagement",
+    title: "Malaysia-ASF engagement tracker",
+    blurb:
+      "The metric Ricardo named on the call: 7 qualified viewers (>2.5min) → 3 conversions on the swine asset. Institutionalised across every shipped deliverable, graded against the 43% benchmark.",
+    cta: "Open the tracker",
+    ready: true,
+  },
 ];
 
 const upcoming = [
-  { species: null, text: "Engagement tracker — Malaysia-ASF viewer-time funnel" },
   {
     species: null,
     text: "Live scraper API — wired (set SCRAPER_API_URL to swap from seeded articles)",
+  },
+  {
+    species: null,
+    text: "Brand-guardrail approval workflow — send-to-Ricardo + watermarked log",
   },
   {
     species: null,
@@ -173,6 +186,10 @@ const upcoming = [
   {
     species: null,
     text: "LangGraph orchestration — overnight competitor digest agent",
+  },
+  {
+    species: null,
+    text: "Auto-distribute to LinkedIn / WeChat / WhatsApp — HQ-approval gated",
   },
 ] as const;
 

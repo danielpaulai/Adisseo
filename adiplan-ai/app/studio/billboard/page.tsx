@@ -20,6 +20,7 @@ import {
   type BillboardPack,
 } from "@/lib/billboards";
 import { Logo } from "@/components/Logo";
+import { toast } from "sonner";
 
 type GenerateResp = {
   pack: BillboardPack;
@@ -83,8 +84,13 @@ export default function BillboardStudioPage() {
         href: "/studio/billboard",
         tone: "orange",
       });
+      toast.success("Billboard composed", {
+        description: `Unique ${data.pack.scoring.unique}/5 · Important ${data.pack.scoring.important}/5 · Believable ${data.pack.scoring.believable}/5`,
+      });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Generation failed");
+      const msg = e instanceof Error ? e.message : "Generation failed";
+      setError(msg);
+      toast.error("Billboard generate failed", { description: msg });
     } finally {
       setGenerating(false);
     }

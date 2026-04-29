@@ -19,6 +19,7 @@ import { useAdiPlanStore } from "@/lib/store";
 import type { ScrapedArticle } from "@/lib/scraper-api";
 import { Logo } from "@/components/Logo";
 import { deriveStudioContext } from "@/lib/studio-context";
+import { toast } from "sonner";
 
 type MatchResponse = {
   article: ScrapedArticle;
@@ -125,8 +126,14 @@ export default function NewsBridgePage() {
         href: "/news-bridge",
         tone: "ink",
       });
+      toast.success(`Matched \u2192 ${data.match.cbi}`, {
+        description: `${data.match.persona} \u00b7 ${data.match.recommendedFormats[0] ?? "deliverable"}`,
+      });
     } catch {
       setError("Match request failed. Check API keys or try again.");
+      toast.error("Match request failed", {
+        description: "Check the OpenAI / Anthropic key, or try a different article.",
+      });
     } finally {
       setLoadingMatch(false);
     }
