@@ -29,6 +29,7 @@ export type TraceKind =
   | "voice-memo-transcribe"
   | "voice-fingerprint-build"
   | "og-card"
+  | "distribute"
   | "other";
 
 export type TraceStatus = "success" | "warn" | "error";

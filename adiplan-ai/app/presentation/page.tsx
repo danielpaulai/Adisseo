@@ -33,6 +33,7 @@ import {
   Fingerprint,
   Image as ImageIcon,
   Eye,
+  Building2,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -344,6 +345,36 @@ const MODULES = [
       "Per-span drill-down with payload preview",
     ],
   },
+  {
+    href: "/tenants",
+    icon: Building2,
+    num: "24",
+    layer: "Phase 4 · Multi-tenant",
+    title: "Tenant directory (Adisseo / DSM / Cargill / Kemin)",
+    blurb:
+      "AdiPlan runs four tenants out of the box. Adisseo is live; DSM-Firmenich, Cargill, and Kemin are blueprinted with their own brand voice, Vault scope, trust floor, approved channels, and reviewer label. Switching the tenant in the top-bar rescopes ProseQualityCard, Vault, Distribution, Approval queue, and Engagement.",
+    moves: [
+      "TenantSwitcher chip in every top-bar — single source of truth",
+      "Vault entries tagged by tenantId; cross-tenant entries stay invisible",
+      "Per-tenant trust floors (Adisseo 60, DSM 70, Cargill 65, Kemin 65)",
+      "Per-tenant approved-channel matrix surfaced on /distribution",
+    ],
+  },
+  {
+    href: "/distribution",
+    icon: Radio,
+    num: "25",
+    layer: "Phase 4 · Distribution",
+    title: "Distribution rails — LinkedIn / WeChat / WhatsApp / email / trade-mag",
+    blurb:
+      "Approved-and-ready deliverables route through tenant-specific channel gates. Trust composite must clear the floor, HQ approval must be green, species must be in tenant scope, channel must be approved. Every dispatch logs trust, channel, audience, and any blocker reason — legal can audit who shipped what.",
+    moves: [
+      "Five channels seeded (LinkedIn / WeChat / WhatsApp / email / trade-mag)",
+      "Per-tenant approved-channel list enforced at the API",
+      "Mock dispatch with realistic latency simulation",
+      "Distribution log + observability spans for every push",
+    ],
+  },
 ];
 
 const ROADMAP = [
@@ -363,8 +394,8 @@ const ROADMAP = [
     icon: Fingerprint,
   },
   {
-    title: "Phase 4 · Multi-tenant + distribution rails (Weeks 14–24)",
-    body: "Tenant-aware (DSM / Cargill / Kemin) with per-tenant brand-voice configs. Auto-distribute approved deliverables to LinkedIn / WeChat / WhatsApp once the trust gate + HQ approval both clear.",
+    title: "Phase 4 · Multi-tenant + distribution rails (LIVE)",
+    body: "Four tenants modelled (Adisseo live; DSM-Firmenich, Cargill, Kemin blueprinted). Tenant id flows through ProseQualityCard, Vault, Approval queue, and Distribution. Five distribution channels (LinkedIn / WeChat / WhatsApp / email / trade-mag) gated on tenant approval, trust floor, HQ approval, and species scope. Every dispatch logs to the distribution audit table + the observability ring.",
     icon: Radio,
   },
   {
@@ -432,7 +463,11 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
     status: "wired",
   },
   {
-    label: "Phase 4 · Multi-tenant + auto-distribution to LinkedIn / WeChat / WhatsApp",
+    label: "Phase 4 · Multi-tenant + distribution rails",
+    status: "wired",
+  },
+  {
+    label: "Phase 5 · Live LinkedIn / WeChat / WhatsApp API integration (currently mocked)",
     status: "deferred",
   },
 ];
@@ -666,7 +701,7 @@ export default function PresentationPage() {
         id="shipped"
         num="04"
         title="What AdiPlan AI ships today"
-        subtitle="23 live modules — every one runnable in the browser, no setup required"
+        subtitle="25 live modules — every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {MODULES.map((m) => (

@@ -26,8 +26,13 @@ export type VaultKind =
 
 export type VaultSpecies = "aqua" | "poultry" | "ruminants" | "swine" | "cross";
 
+/** Tenant id this vault entry belongs to. Defaults to "adisseo" for back-compat. */
+export type VaultTenantId = "adisseo" | "dsm-firmenich" | "cargill" | "kemin";
+
 export interface VaultEntry {
   id: string;
+  /** Tenant scope. Phase 4 — defaults to "adisseo" for the seeded set. */
+  tenantId?: VaultTenantId;
   kind: VaultKind;
   /** Short human-readable title used in citation cards. */
   title: string;
@@ -138,7 +143,7 @@ export const seededVault: VaultEntry[] = [
     kind: "trial",
     title: "AGP-Free broiler trial · ID-Q1 2026",
     summary:
-      "Indonesian integrator commercial trial (4 farms, 220k birds) replacing AGP with Adisseo's eubiotic protocol. FCR 1.62 vs. 1.71 control (\u22120.09 points). 7-day mortality 1.8% vs. 2.4%. Trial protocol and EU registration on file.",
+      "Indonesian integrator commercial trial (4 farms, 220k birds) replacing AGP with Adisseo's eubiotic protocol. FCR 1.62 vs. 1.71 control (−0.09 points). 7-day mortality 1.8% vs. 2.4%. Trial protocol and EU registration on file.",
     metrics: [
       { label: "FCR delta", value: "-0.09", unit: "points" },
       { label: "Mortality delta", value: "-0.6", unit: "pp" },
@@ -366,6 +371,160 @@ export const seededVault: VaultEntry[] = [
     species: ["poultry", "swine"],
     tags: ["methionine", "spec"],
   },
+
+  /* =========================================================================
+   * Phase 4 — multi-tenant seed entries.
+   *
+   * These illustrate that other tenants would carry their own Vault entries
+   * with their own naming, tone, and regional anchors. Adisseo never sees
+   * these in their default scope; they only appear when a user switches the
+   * active tenant in the top-bar.
+   * ========================================================================= */
+
+  // --- DSM-Firmenich ------------------------------------------------------
+  {
+    id: "v-dsm-balancius-2026",
+    tenantId: "dsm-firmenich",
+    kind: "trial",
+    title: "Balancius EU broiler trial · NL Q1 2026",
+    summary:
+      "DSM Balancius enzyme tested across 6 commercial Dutch broiler farms (n=144,000 birds). FCR improvement of 3.1 points and 1.4pp mortality reduction vs. control. Compliant with EU Reg. 2018/848.",
+    metrics: [
+      { label: "FCR improvement", value: "3.1", unit: "points" },
+      { label: "Mortality reduction", value: "1.4", unit: "pp" },
+    ],
+    sourceUrl: "internal://dsm/vault/balancius-nl-q1-2026.pdf",
+    verified: true,
+    date: "2026-03-12",
+    regions: ["EU", "NL"],
+    species: ["poultry"],
+    tags: ["enzyme", "broiler", "EU compliance"],
+    attribution: "DSM-Firmenich Animal Nutrition R&D, Kaiseraugst",
+  },
+  {
+    id: "v-dsm-bovaer-2026",
+    tenantId: "dsm-firmenich",
+    kind: "publication",
+    title: "Bovaer (3-NOP) methane suppression · peer-reviewed meta-analysis",
+    summary:
+      "Pooled meta-analysis across 14 dairy trials shows 27% enteric methane suppression with no significant milk-yield trade-off. Used as the primary Vault anchor for all Bovaer claims under the EU Sustainable Dairy framework.",
+    metrics: [
+      { label: "Methane suppression", value: "27", unit: "%" },
+      { label: "Milk yield delta", value: "0.0", unit: "kg/cow/day" },
+    ],
+    sourceUrl: "https://doi.org/10.3168/jds.2025.bovaer-meta",
+    verified: true,
+    date: "2025-11-04",
+    regions: ["EU", "Global"],
+    species: ["ruminants"],
+    tags: ["methane", "Bovaer", "sustainability"],
+    attribution: "Journal of Dairy Science, Vol. 108, 2025",
+  },
+  {
+    id: "v-dsm-fra-fish-2025",
+    tenantId: "dsm-firmenich",
+    kind: "field",
+    title: "Atlantic salmon Fra fish-meal substitute · Norway field result",
+    summary:
+      "Norwegian salmon farm field observation (3 sites) — Fra fish-meal substitute held growth performance within 2% of control while reducing fish-meal inclusion by 35%.",
+    sourceUrl: "internal://dsm/vault/salmon-fra-no-2025.pdf",
+    verified: true,
+    date: "2025-09-22",
+    regions: ["NO", "EU"],
+    species: ["aqua"],
+    tags: ["salmon", "alternative protein", "sustainability"],
+    attribution: "DSM-Firmenich Aquaculture, Bergen",
+  },
+
+  // --- Cargill ------------------------------------------------------------
+  {
+    id: "v-cargill-promote-2026",
+    tenantId: "cargill",
+    kind: "trial",
+    title: "Provimi Promote feed additive · Mexico swine trial",
+    summary:
+      "Mexican commercial swine trial across 4 nursery sites (n=14,200 piglets). Promote additive reduced post-weaning mortality by 0.8pp and improved nursery FCR by 2.4 points.",
+    metrics: [
+      { label: "Mortality reduction", value: "0.8", unit: "pp" },
+      { label: "FCR improvement", value: "2.4", unit: "points" },
+    ],
+    sourceUrl: "internal://cargill/vault/promote-mx-q1-2026.pdf",
+    verified: true,
+    date: "2026-02-18",
+    regions: ["MX", "LATAM"],
+    species: ["swine"],
+    tags: ["nursery", "promote", "swine"],
+    attribution: "Cargill Animal Nutrition, Minneapolis R&D",
+  },
+  {
+    id: "v-cargill-tilapia-br-2025",
+    tenantId: "cargill",
+    kind: "field",
+    title: "EWOS tilapia field observation · Brazil 2025",
+    summary:
+      "Brazilian commercial tilapia farm result. EWOS feed program held growth rate at +6% vs. control across two grow-out cycles. Bulk-tank fillet yield ratio improved by 1.2pp.",
+    sourceUrl: "internal://cargill/vault/tilapia-br-2025.pdf",
+    verified: true,
+    date: "2025-10-30",
+    regions: ["BR", "LATAM"],
+    species: ["aqua"],
+    tags: ["tilapia", "EWOS", "growth"],
+    attribution: "Cargill Aqua Nutrition, São Paulo",
+  },
+  {
+    id: "v-cargill-quote-mx-2026",
+    tenantId: "cargill",
+    kind: "quote",
+    title: "Mexican KOL quote · Promote post-weaning protocol",
+    summary:
+      '"After running the Promote nursery protocol across 4 sites, we held mortality below 2% during the high-stress window. The CRM team is now selling on this number." — head of nutrition, Granjas Carroll de México.',
+    sourceUrl: "internal://cargill/vault/quote-gcm-2026.pdf",
+    verified: true,
+    date: "2026-04-04",
+    regions: ["MX"],
+    species: ["swine"],
+    tags: ["KOL", "nursery", "Mexico"],
+    attribution: "Granjas Carroll de México · head of nutrition",
+  },
+
+  // --- Kemin --------------------------------------------------------------
+  {
+    id: "v-kemin-clostat-2026",
+    tenantId: "kemin",
+    kind: "publication",
+    title: "CLOSTAT (Bacillus subtilis) broiler peer-review",
+    summary:
+      "Peer-reviewed paper across 8 university trials shows CLOSTAT reduces necrotic enteritis incidence by 41% and improves bird uniformity by 2.8pp.",
+    metrics: [
+      { label: "NE reduction", value: "41", unit: "%" },
+      { label: "Uniformity gain", value: "2.8", unit: "pp" },
+    ],
+    sourceUrl: "https://doi.org/10.3382/ps.2026.clostat-meta",
+    verified: true,
+    date: "2026-01-18",
+    regions: ["Global"],
+    species: ["poultry"],
+    tags: ["probiotic", "necrotic enteritis", "broiler"],
+    attribution: "Poultry Science, Vol. 105, 2026",
+  },
+  {
+    id: "v-kemin-myco-2025",
+    tenantId: "kemin",
+    kind: "trial",
+    title: "TOXFIN mycotoxin-binder Thailand swine trial",
+    summary:
+      "Thai integrator trial — 4 sites, 21,000 grow-finish pigs. TOXFIN reduced DON-related growth depression by 22% and stabilised feed-conversion variance.",
+    metrics: [
+      { label: "DON-related growth depression reduction", value: "22", unit: "%" },
+    ],
+    sourceUrl: "internal://kemin/vault/toxfin-th-2025.pdf",
+    verified: true,
+    date: "2025-12-09",
+    regions: ["TH", "APAC"],
+    species: ["swine"],
+    tags: ["mycotoxin", "TOXFIN", "Thailand"],
+    attribution: "Kemin AgriFoods APAC, Bangkok",
+  },
 ];
 
 /* ============================================================================
@@ -377,6 +536,8 @@ export interface VaultQuery {
   species?: VaultSpecies | "all";
   region?: string | "all";
   kind?: VaultKind | "all";
+  /** Tenant scope. Defaults to "all" (no tenant filter). */
+  tenantId?: VaultTenantId | "all";
   /** Only verified entries. */
   verifiedOnly?: boolean;
   /** Cap results. */
@@ -416,6 +577,10 @@ export function searchVault(query: VaultQuery, vault: VaultEntry[] = seededVault
   const verifiedOnly = !!query.verifiedOnly;
 
   let pool = vault.slice();
+  if (query.tenantId && query.tenantId !== "all") {
+    // Untagged entries default to "adisseo" for back-compat.
+    pool = pool.filter((e) => (e.tenantId ?? "adisseo") === query.tenantId);
+  }
   if (query.species && query.species !== "all") {
     pool = pool.filter((e) => e.species.includes(query.species as VaultSpecies));
   }

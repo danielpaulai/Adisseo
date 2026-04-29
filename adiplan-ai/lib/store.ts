@@ -4,6 +4,27 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { StrategicFrame } from "@/lib/strategic-frame";
 import type { VoiceProfile } from "@/lib/voice-profile";
+import type { TenantId, DistributionChannel } from "@/lib/tenant";
+
+/* ============================================================================
+ * Phase 4 — multi-tenant + distribution rails
+ * ========================================================================== */
+export interface DistributionLog {
+  id: string;
+  tenantId: TenantId;
+  channel: DistributionChannel;
+  /** Human-readable deliverable label. */
+  deliverable: string;
+  /** Approval id this dispatch references (must be approved). */
+  approvalId?: string;
+  trustScore?: number;
+  status: "queued" | "shipped" | "blocked";
+  /** Reason if blocked. */
+  blockReason?: string;
+  audience?: string;
+  /** ISO. */
+  shippedAt: string;
+}
 
 /* ============================================================================
  * War-room activity log — every meaningful action surfaces on /dashboard so the
@@ -175,6 +196,18 @@ interface AdiPlanStore {
   /** Currently active manager id, used by ProseQualityCard for voice scoring. */
   activeManagerId: string | null;
   setActiveManager: (id: string | null) => void;
+
+  /** Phase 4 — active tenant scope (Adisseo / DSM / Cargill / Kemin). */
+  activeTenantId: TenantId;
+  setActiveTenant: (id: TenantId) => void;
+
+  /** Phase 4 — distribution log (audit of every channel push). */
+  distribution: DistributionLog[];
+  pushDistribution: (entry: Omit<DistributionLog, "id" | "shippedAt"> & {
+    id?: string;
+    shippedAt?: string;
+  }) => string;
+  clearDistribution: () => void;
 }
 
 export const useAdiPlanStore = create<AdiPlanStore>()(
@@ -285,6 +318,30 @@ export const useAdiPlanStore = create<AdiPlanStore>()(
         }),
       activeManagerId: null,
       setActiveManager: (id) => set({ activeManagerId: id }),
+
+      activeTenantId: "adisseo",
+      setActiveTenant: (id) => set({ activeTenantId: id }),
+
+      distribution: [],
+      pushDistribution: (entry) => {
+        const id = entry.id ?? `dist-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+        const shippedAt = entry.shippedAt ?? new Date().toISOString();
+        const next: DistributionLog = {
+          id,
+          shippedAt,
+          tenantId: entry.tenantId,
+          channel: entry.channel,
+          deliverable: entry.deliverable,
+          approvalId: entry.approvalId,
+          trustScore: entry.trustScore,
+          status: entry.status,
+          blockReason: entry.blockReason,
+          audience: entry.audience,
+        };
+        set((s) => ({ distribution: [next, ...s.distribution].slice(0, 80) }));
+        return id;
+      },
+      clearDistribution: () => set({ distribution: [] }),
     }),
     { name: "adiplan-ai-state-v1" }
   )

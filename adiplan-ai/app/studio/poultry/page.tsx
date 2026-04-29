@@ -378,7 +378,6 @@ export default function PoultryStudioPage() {
 
               <ProseQualityCard
                 text={collectPoultryProse(response.pack)}
-                brandVoice="adisseo"
                 language="en"
                 onGateChange={(passes, score) => {
                   setGatePasses(passes);

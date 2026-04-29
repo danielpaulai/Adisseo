@@ -30,11 +30,16 @@ import {
   MANAGER_OPTIONS,
 } from "@/lib/voice-profile";
 import { useAdiPlanStore } from "@/lib/store";
+import { getTenant } from "@/lib/tenant";
 import { Fingerprint } from "lucide-react";
 
 interface Props {
   /** All the prose to score (concat all the text fields the studio produced). */
   text: string;
+  /**
+   * Brand voice override. If omitted, the active tenant's brand voice is
+   * used (Phase 4 — tenant-aware scoring).
+   */
   brandVoice?: BrandVoiceId;
   language?: LtLanguage;
   /** Called whenever the gate flips so studios can disable Send-to-HQ. */
@@ -57,7 +62,7 @@ interface Props {
  */
 export function ProseQualityCard({
   text,
-  brandVoice = "adisseo",
+  brandVoice,
   language = "en",
   onGateChange,
   compact = false,
@@ -67,9 +72,17 @@ export function ProseQualityCard({
   const [showAll, setShowAll] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Phase 4 — fall back to the active tenant's brand voice when none is passed.
+  const activeTenantId = useAdiPlanStore((s) => s.activeTenantId);
+  const effectiveBrandVoice: BrandVoiceId =
+    brandVoice ?? getTenant(activeTenantId).brandVoice;
+
   // Instant client-side passes
   const slop: SlopReport = useMemo(() => scoreSlop(text), [text]);
-  const brand = useMemo(() => scoreBrandVoice(text, brandVoice), [text, brandVoice]);
+  const brand = useMemo(
+    () => scoreBrandVoice(text, effectiveBrandVoice),
+    [text, effectiveBrandVoice]
+  );
   const cites = useMemo(() => scoreCitations(text), [text]);
 
   // Voice-match (Phase 3) — only scored if there's an active manager.
@@ -108,7 +121,7 @@ export function ProseQualityCard({
         const res = await fetch("/api/score-prose", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text, brandVoice, language }),
+          body: JSON.stringify({ text, brandVoice: effectiveBrandVoice, language }),
         });
         if (res.ok) setServer((await res.json()) as ProseQualityResponse);
       } finally {
@@ -118,7 +131,7 @@ export function ProseQualityCard({
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [text, brandVoice, language]);
+  }, [text, effectiveBrandVoice, language]);
 
   useEffect(() => {
     onGateChange?.(passesGate, composite);

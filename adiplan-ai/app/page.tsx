@@ -24,10 +24,13 @@ import {
   Fingerprint,
   Image as ImageIcon,
   Eye,
+  Building2,
+  Share2,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
 import { LiveExampleCTA } from "@/components/LiveExampleCTA";
+import { TenantSwitcher } from "@/components/TenantSwitcher";
 
 type Module = {
   href: string;
@@ -279,16 +282,32 @@ const modules: Module[] = [
     cta: "Open the trace ring",
     ready: true,
   },
+  {
+    href: "/tenants",
+    icon: Building2,
+    stage: "Phase 4 · Multi-tenant",
+    title: "Tenant directory (Adisseo / DSM / Cargill / Kemin)",
+    blurb:
+      "AdiPlan is tenant-aware. Each tenant carries its own brand voice, Vault scope, trust floor, approved channels, and reviewer label. Switch the tenant in the top-bar and every consumer rescopes — ProseQualityCard, Vault, Distribution, Engagement, Approval queue.",
+    cta: "Browse tenants",
+    ready: true,
+  },
+  {
+    href: "/distribution",
+    icon: Share2,
+    stage: "Phase 4 · Distribution",
+    title: "Distribution rails (LinkedIn / WeChat / WhatsApp / email / trade-mag)",
+    blurb:
+      "Approved-and-ready deliverables route through tenant-specific channel gates. Trust composite must clear the floor, HQ approval must be green, species must be in tenant scope. Every dispatch logs to the audit table — legal can show who shipped what, when, where.",
+    cta: "Open distribution rails",
+    ready: true,
+  },
 ];
 
 const upcoming = [
   {
     species: null,
-    text: "Phase 4 · Multi-tenant (DSM / Cargill / Kemin) with per-tenant brand-voice configs and per-tenant Vaults",
-  },
-  {
-    species: null,
-    text: "Auto-distribute to LinkedIn / WeChat / WhatsApp — HQ-approval + trust-gate enforced",
+    text: "Phase 5 · Auto-distribute to live LinkedIn / WeChat / WhatsApp APIs (currently mocked dispatch with full gating logic)",
   },
   {
     species: null,
@@ -298,18 +317,25 @@ const upcoming = [
     species: null,
     text: "Voice profiles trained on actual manager writing samples (currently seeded with believable defaults)",
   },
+  {
+    species: null,
+    text: "Per-tenant Vault ingestion pipeline (pgvector + Mistral OCR) — replace seeded entries with real customer R&D archive",
+  },
 ] as const;
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-adisseo-bg">
       <header className="border-b border-adisseo-line bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4">
           <Logo size="md" />
-          <span className="text-xs text-adisseo-muted">
-            Demo target:{" "}
-            <span className="font-medium text-adisseo-ink-strong">Thu May 7, 2026</span>
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="hidden text-xs text-adisseo-muted sm:inline">
+              Demo target:{" "}
+              <span className="font-medium text-adisseo-ink-strong">Thu May 7, 2026</span>
+            </span>
+            <TenantSwitcher compact />
+          </div>
         </div>
       </header>
 

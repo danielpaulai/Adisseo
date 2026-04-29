@@ -29,6 +29,9 @@ import {
 } from "@/lib/vault";
 import { formatCitation } from "@/lib/citation-checker";
 import { toast } from "sonner";
+import { useAdiPlanStore } from "@/lib/store";
+import { TenantSwitcher } from "@/components/TenantSwitcher";
+import { getTenant } from "@/lib/tenant";
 
 const KIND_ICON: Record<VaultKind, React.ComponentType<{ size?: number }>> = {
   trial: Beaker,
@@ -47,18 +50,33 @@ export default function VaultPage() {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [selected, setSelected] = useState<VaultEntry | null>(null);
 
+  const activeTenantId = useAdiPlanStore((s) => s.activeTenantId);
+  const tenant = getTenant(activeTenantId);
+
   const regions = useMemo(() => vaultRegions(), []);
   const hits = useMemo(
-    () => searchVault({ text, species, region, kind, verifiedOnly, limit: 24 }),
-    [text, species, region, kind, verifiedOnly]
+    () =>
+      searchVault({
+        text,
+        species,
+        region,
+        kind,
+        verifiedOnly,
+        tenantId: activeTenantId,
+        limit: 24,
+      }),
+    [text, species, region, kind, verifiedOnly, activeTenantId]
   );
 
   const stats = useMemo(() => {
+    const scoped = seededVault.filter(
+      (e) => (e.tenantId ?? "adisseo") === activeTenantId
+    );
     const byKind: Partial<Record<VaultKind, number>> = {};
-    for (const e of seededVault) byKind[e.kind] = (byKind[e.kind] ?? 0) + 1;
-    const verified = seededVault.filter((e) => e.verified).length;
-    return { total: seededVault.length, verified, byKind };
-  }, []);
+    for (const e of scoped) byKind[e.kind] = (byKind[e.kind] ?? 0) + 1;
+    const verified = scoped.filter((e) => e.verified).length;
+    return { total: scoped.length, verified, byKind };
+  }, [activeTenantId]);
 
   function copyCitation(entry: VaultEntry) {
     const c = formatCitation(entry);
@@ -84,6 +102,13 @@ export default function VaultPage() {
             <Link href="/digest" className="text-adisseo-muted hover:text-adisseo-crimson">
               Daily digest
             </Link>
+            <Link href="/distribution" className="text-adisseo-muted hover:text-adisseo-crimson">
+              Distribution
+            </Link>
+            <Link href="/tenants" className="text-adisseo-muted hover:text-adisseo-crimson">
+              Tenants
+            </Link>
+            <TenantSwitcher compact />
           </nav>
         </div>
       </header>
@@ -98,12 +123,18 @@ export default function VaultPage() {
               Phase 2 · Research depth
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
-              Adisseo Vault
+              {tenant.name} Vault
             </h1>
             <p className="text-sm text-adisseo-muted">
               The customer knowledge base every studio anchors against.
               Trial protocols, field observations, regulatory references,
               integrator quotes, peer-reviewed papers, product specs.
+              <span
+                className="ml-2 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white"
+                style={{ backgroundColor: tenant.accent }}
+              >
+                Tenant scope
+              </span>
             </p>
           </div>
         </div>

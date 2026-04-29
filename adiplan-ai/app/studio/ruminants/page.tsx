@@ -358,7 +358,6 @@ export default function RuminantsStudioPage() {
           {response && (
             <ProseQualityCard
               text={collectRuminantsProse(response.brochure)}
-              brandVoice="adisseo"
               language={(response.brochure.language === "ja" ? "ja" : "en") as "ja" | "en"}
               onGateChange={(passes, score) => {
                 setGatePasses(passes);

@@ -345,7 +345,6 @@ export default function BillboardStudioPage() {
               <>
                 <ProseQualityCard
                   text={collectBillboardProse(pack)}
-                  brandVoice="adisseo"
                   language="en"
                   onGateChange={(passes, score) => {
                     setGatePasses(passes);

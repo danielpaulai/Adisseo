@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useAdiPlanStore, type ActivityEntry, type ActivityKind } from "@/lib/store";
 import { Logo } from "@/components/Logo";
+import { TenantSwitcher } from "@/components/TenantSwitcher";
 
 /* ----------------------------------------------------------------------------
  * Demo-seed payload — populates the war-room with realistic recent activity
@@ -271,6 +272,19 @@ export default function DashboardPage() {
             >
               Observability
             </Link>
+            <Link
+              href="/tenants"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Tenants
+            </Link>
+            <Link
+              href="/distribution"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Distribution
+            </Link>
+            <TenantSwitcher compact />
           </nav>
         </div>
       </header>

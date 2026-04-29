@@ -243,7 +243,7 @@ export default function ResearchDeepPage() {
 
               {/* Trust layer scoring of the composed briefing */}
               <div className="mt-4">
-                <ProseQualityCard text={response.briefing} brandVoice="adisseo" language="en" />
+                <ProseQualityCard text={response.briefing} language="en" />
               </div>
             </div>
 

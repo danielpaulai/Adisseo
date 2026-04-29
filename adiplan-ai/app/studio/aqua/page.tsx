@@ -343,7 +343,6 @@ export default function AquaStudioPage() {
           {response && (
             <ProseQualityCard
               text={collectAquaProse(response.leaflet)}
-              brandVoice="adisseo"
               language={(["en", "vi", "id", "th", "zh"].includes(response.leaflet.language)
                 ? response.leaflet.language
                 : "en") as "en" | "vi" | "id" | "th" | "zh"}

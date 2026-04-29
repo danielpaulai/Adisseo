@@ -400,7 +400,6 @@ export default function SwineStudioPage() {
             <>
               <ProseQualityCard
                 text={collectSwineProse(response.short)}
-                brandVoice="adisseo"
                 language={(["en", "zh", "vi", "th", "id"].includes(studioLanguage)
                   ? studioLanguage
                   : "en") as "en" | "zh" | "vi" | "th" | "id"}
