@@ -18,10 +18,13 @@ export type StakeholderLadder = {
 export type MatchedArticle = {
   articleId: string;
   cbi: string;
+  cbiId: string;
   cbiRationale: string;
   persona: string;
+  personaId: string;
   personaRationale: string;
   recommendedFormats: string[];
+  recommendedFormatIds?: string[];
   speciesFit: ("aqua" | "poultry" | "ruminants" | "swine")[];
   matchedAt: string;
 };

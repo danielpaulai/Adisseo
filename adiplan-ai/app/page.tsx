@@ -7,6 +7,7 @@ import {
   FileText,
   Mail,
   BookOpen,
+  Target,
   ArrowRight,
   Sparkles,
 } from "lucide-react";
@@ -59,6 +60,16 @@ const modules: Module[] = [
     highlight: true,
   },
   {
+    href: "/strategic-frame",
+    icon: Target,
+    stage: "03 · Strategic Frame",
+    title: "Total Value Solution composer",
+    blurb:
+      "Synthesises the matched CBI + persona into an Enterprise Persona, an Enterprise Insight, and a Pain × Promise × Proof × Proposition card pack. Sits between News Bridge and the species Studios — what regional sales actually shares before the deliverables ship.",
+    cta: "Compose a frame",
+    ready: true,
+  },
+  {
     href: "/studio/swine",
     icon: Clapperboard,
     species: "swine",
@@ -105,10 +116,10 @@ const modules: Module[] = [
 ];
 
 const upcoming = [
-  { species: null, text: "Module 03 — Enterprise Personas (CSF diagonal matrix)" },
-  { species: null, text: "Module 04 — Total Value Solution composer" },
+  { species: null, text: "Module 04 — Enterprise Personas CSF diagonal matrix" },
   { species: null, text: "Module 05 — Billboard Campaign generator" },
   { species: null, text: "Engagement tracker — Malaysia-ASF viewer-time funnel" },
+  { species: null, text: "Live scraper API — replace the 8 seeded articles" },
 ] as const;
 
 export default function Home() {

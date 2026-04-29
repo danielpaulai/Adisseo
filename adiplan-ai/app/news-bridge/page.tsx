@@ -294,6 +294,27 @@ export default function NewsBridgePage() {
                   </ul>
                 </div>
 
+                {/* Strategic-frame composer hand-off */}
+                <button
+                  onClick={() => router.push("/strategic-frame")}
+                  className="group flex w-full items-center justify-between rounded-xl border border-adisseo-crimson bg-adisseo-crimson/5 p-4 text-left transition hover:bg-adisseo-crimson hover:text-white"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
+                      <Sparkles size={16} />
+                    </span>
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson group-hover:text-white">
+                        Strategic Frame · Total Value Solution
+                      </p>
+                      <p className="text-sm font-semibold text-adisseo-ink-strong group-hover:text-white">
+                        Compose the AdiPlan answer before the species deliverables ship
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight size={16} className="text-adisseo-crimson group-hover:text-white" />
+                </button>
+
                 <div className="flex items-center justify-between border-t border-adisseo-line pt-4">
                   <div className="text-xs text-adisseo-muted">
                     Species fit: {response.match.speciesFit.join(", ") || "n/a"}
