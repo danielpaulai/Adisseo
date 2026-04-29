@@ -21,6 +21,7 @@ import {
   type PoultryDeliverablePack,
 } from "@/lib/poultry-pack";
 import { Logo, SpeciesIcon } from "@/components/Logo";
+import { SendToHQButton } from "@/components/SendToHQButton";
 import { useAdiPlanStore } from "@/lib/store";
 
 type PackResponse = {
@@ -367,6 +368,18 @@ export default function PoultryStudioPage() {
                   ))}
                 </ul>
               </div>
+
+              <SendToHQButton
+                kind="poultry-pack"
+                title={`Poultry pack \u00b7 ${response.pack.email.subject}`}
+                summary={`Audience ${response.pack.audienceId} \u00b7 campaign ${response.pack.campaignId} \u00b7 email + 5-slide carousel`}
+                href="/studio/poultry"
+                payload={{
+                  campaign: response.pack.campaignId,
+                  audience: response.pack.audienceId,
+                }}
+              />
+
 
               <div className="border-t border-adisseo-line pt-3 text-[10px] text-adisseo-muted">
                 Model:{" "}

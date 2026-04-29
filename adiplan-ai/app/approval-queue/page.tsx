@@ -1,0 +1,462 @@
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  ClipboardList,
+  Clock,
+  Filter,
+  ShieldCheck,
+  XCircle,
+} from "lucide-react";
+import { toast } from "sonner";
+import { Logo } from "@/components/Logo";
+import { useAdiPlanStore, type ApprovalRequest, type ApprovalStatus } from "@/lib/store";
+
+const KIND_LABEL: Record<ApprovalRequest["kind"], string> = {
+  "aqua-leaflet": "Aqua leaflet",
+  "poultry-pack": "Poultry pack",
+  "ruminants-brochure": "Ruminants brochure",
+  "swine-short": "Swine short",
+  billboard: "Billboard",
+  "voice-memo": "Voice memo",
+  "strategic-frame": "Strategic frame",
+};
+
+const KIND_TONE: Record<ApprovalRequest["kind"], string> = {
+  "aqua-leaflet": "bg-sky-100 text-sky-800",
+  "poultry-pack": "bg-amber-100 text-amber-800",
+  "ruminants-brochure": "bg-emerald-100 text-emerald-800",
+  "swine-short": "bg-rose-100 text-rose-800",
+  billboard: "bg-orange-100 text-orange-800",
+  "voice-memo": "bg-violet-100 text-violet-800",
+  "strategic-frame": "bg-stone-200 text-stone-800",
+};
+
+const QUICK_COMMENTS = [
+  "On-brand. Ship it.",
+  "Adjust headline tone — drop the superlative.",
+  "Sub the proof point with the APAC trial figure.",
+  "Re-anchor the CTA on the ASF mortality benchmark.",
+];
+
+const DEMO_SEED: Omit<ApprovalRequest, "id" | "sentAt" | "status">[] = [
+  {
+    kind: "poultry-pack",
+    title: "Poultry email + carousel · ASF outbreak playbook",
+    summary: "5-slide LinkedIn carousel + sales email · EN · SE-Asia distributors",
+    sender: "Vish · Poultry",
+    href: "/studio/poultry",
+    payload: { language: "en", audience: "SE-Asia distributors" },
+  },
+  {
+    kind: "ruminants-brochure",
+    title: "Ruminants manga brochure · Hokkaido methane",
+    summary: "2-page manga brochure · JP · Japanese dairy co-ops",
+    sender: "Antoine · Ruminants",
+    href: "/studio/ruminants",
+    payload: { language: "ja", audience: "JP dairy co-ops" },
+  },
+  {
+    kind: "billboard",
+    title: "Billboard · “Move the cycle. Be the answer this quarter.”",
+    summary: "A2 portrait · EN · SE-Asia airport hoarding test",
+    sender: "AdiPlan AI",
+    href: "/studio/billboard",
+    payload: { format: "A2", language: "en" },
+  },
+];
+
+export default function ApprovalQueuePage() {
+  const approvals = useAdiPlanStore((s) => s.approvals);
+  const decideApproval = useAdiPlanStore((s) => s.decideApproval);
+  const requestApproval = useAdiPlanStore((s) => s.requestApproval);
+  const clearApprovals = useAdiPlanStore((s) => s.clearApprovals);
+  const pushActivity = useAdiPlanStore((s) => s.pushActivity);
+
+  const [filter, setFilter] = useState<"all" | ApprovalStatus>("all");
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [comment, setComment] = useState("");
+
+  const filtered = useMemo(
+    () => (filter === "all" ? approvals : approvals.filter((a) => a.status === filter)),
+    [approvals, filter]
+  );
+
+  const counts = useMemo(() => {
+    const c = { pending: 0, approved: 0, rejected: 0 };
+    for (const a of approvals) c[a.status]++;
+    return c;
+  }, [approvals]);
+
+  const active = activeId ? approvals.find((a) => a.id === activeId) ?? null : null;
+
+  const seedDemo = () => {
+    for (const e of DEMO_SEED) requestApproval(e);
+    toast.success("Demo queue seeded", {
+      description: `${DEMO_SEED.length} review requests added`,
+    });
+  };
+
+  const decide = (id: string, decision: "approved" | "rejected") => {
+    if (!comment.trim() && decision === "rejected") {
+      toast.error("Add a reviewer comment before rejecting");
+      return;
+    }
+    const req = approvals.find((a) => a.id === id);
+    decideApproval(id, decision, comment.trim() || "Approved as-is.", "Ricardo Communod");
+    if (req) {
+      pushActivity({
+        kind: "frame",
+        title: `${decision === "approved" ? "Approved" : "Rejected"} · ${KIND_LABEL[req.kind]}`,
+        detail: req.title,
+        href: req.href,
+        tone: decision === "approved" ? "cyan" : "crimson",
+      });
+    }
+    toast.success(decision === "approved" ? "Approved" : "Rejected", {
+      description: req?.title,
+    });
+    setComment("");
+    setActiveId(null);
+  };
+
+  return (
+    <main className="min-h-screen bg-adisseo-bg">
+      <header className="border-b border-adisseo-line bg-white">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <Logo size="sm" />
+          <nav className="flex items-center gap-4 text-xs">
+            <Link href="/" className="text-adisseo-muted hover:text-adisseo-crimson">
+              Home
+            </Link>
+            <Link
+              href="/dashboard"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              War Room
+            </Link>
+            <Link
+              href="/engagement-tracker"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Engagement
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        {/* Hero */}
+        <div className="mb-8 flex items-start gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-cyan text-white">
+            <ShieldCheck size={16} />
+          </span>
+          <div className="flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
+              HQ desk · brand-guardrail review
+            </p>
+            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+              Approval queue
+            </h1>
+            <p className="text-sm text-adisseo-muted">
+              Every species deliverable lands here before it leaves. The
+              approval log auto-feeds the engagement tracker, so we know which
+              assets shipped under HQ guardrails.
+            </p>
+          </div>
+          <button
+            onClick={seedDemo}
+            className="rounded-lg border border-adisseo-line bg-white px-3 py-2 text-xs font-semibold text-adisseo-ink-strong transition hover:border-adisseo-cyan hover:text-adisseo-cyan"
+          >
+            Seed demo queue
+          </button>
+        </div>
+
+        {/* Stats */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <Stat
+            label="Pending"
+            value={counts.pending}
+            icon={<Clock size={14} />}
+            tone="amber"
+          />
+          <Stat
+            label="Approved"
+            value={counts.approved}
+            icon={<CheckCircle2 size={14} />}
+            tone="emerald"
+          />
+          <Stat
+            label="Rejected"
+            value={counts.rejected}
+            icon={<XCircle size={14} />}
+            tone="rose"
+          />
+          <Stat
+            label="Total reviewed"
+            value={counts.approved + counts.rejected}
+            icon={<ClipboardList size={14} />}
+            tone="ink"
+          />
+        </div>
+
+        {/* Filters */}
+        <div className="mb-4 flex items-center gap-2 text-xs">
+          <Filter size={12} className="text-adisseo-muted" />
+          {(["all", "pending", "approved", "rejected"] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`rounded-full border px-3 py-1 font-semibold uppercase tracking-widest transition ${
+                filter === f
+                  ? "border-adisseo-cyan bg-adisseo-cyan text-white"
+                  : "border-adisseo-line bg-white text-adisseo-muted hover:border-adisseo-cyan hover:text-adisseo-cyan"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+          {approvals.length > 0 && (
+            <button
+              onClick={() => {
+                clearApprovals();
+                toast.success("Queue cleared");
+              }}
+              className="ml-auto text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Clear queue
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
+          {/* List */}
+          <div className="rounded-2xl border border-adisseo-line bg-white">
+            {filtered.length === 0 ? (
+              <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
+                <ShieldCheck size={28} className="text-adisseo-muted" />
+                <p className="text-sm font-semibold text-adisseo-ink-strong">
+                  Nothing in the {filter === "all" ? "queue" : filter}.
+                </p>
+                <p className="text-xs text-adisseo-muted">
+                  Generate something in a studio and click "Send to HQ for
+                  brand review", or seed the demo queue above.
+                </p>
+              </div>
+            ) : (
+              <ul className="divide-y divide-adisseo-line">
+                {filtered.map((a) => (
+                  <li
+                    key={a.id}
+                    onClick={() => {
+                      if (a.status === "pending") {
+                        setActiveId(a.id);
+                        setComment("");
+                      } else {
+                        setActiveId(a.id === activeId ? null : a.id);
+                      }
+                    }}
+                    className={`cursor-pointer px-4 py-3 transition hover:bg-adisseo-bg ${
+                      activeId === a.id ? "bg-adisseo-bg" : ""
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <StatusPill status={a.status} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${KIND_TONE[a.kind]}`}
+                          >
+                            {KIND_LABEL[a.kind]}
+                          </span>
+                          <span className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                            from {a.sender}
+                          </span>
+                          <span className="text-[10px] text-adisseo-muted">
+                            {new Date(a.sentAt).toLocaleString()}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm font-semibold text-adisseo-ink-strong">
+                          {a.title}
+                        </p>
+                        <p className="mt-0.5 text-xs text-adisseo-muted">
+                          {a.summary}
+                        </p>
+                        {a.reviewerComment && (
+                          <p
+                            className={`mt-2 rounded-md border px-2 py-1 text-[11px] ${
+                              a.status === "approved"
+                                ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                                : "border-rose-200 bg-rose-50 text-rose-800"
+                            }`}
+                          >
+                            <span className="font-semibold">
+                              {a.reviewer ?? "Ricardo"}:
+                            </span>{" "}
+                            "{a.reviewerComment}"
+                          </p>
+                        )}
+                      </div>
+                      {a.href && (
+                        <Link
+                          href={a.href}
+                          onClick={(e) => e.stopPropagation()}
+                          className="shrink-0 text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan hover:underline"
+                        >
+                          Open <ArrowRight size={10} className="inline" />
+                        </Link>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Review pane */}
+          <div className="rounded-2xl border border-adisseo-line bg-white p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
+              HQ review
+            </p>
+            {active ? (
+              <>
+                <h3 className="mt-2 text-base font-bold text-adisseo-ink-strong">
+                  {active.title}
+                </h3>
+                <p className="mt-1 text-xs text-adisseo-muted">{active.summary}</p>
+
+                {active.payload && (
+                  <dl className="mt-3 grid grid-cols-2 gap-2 rounded-lg bg-adisseo-bg p-2 text-[10px]">
+                    {Object.entries(active.payload).map(([k, v]) => (
+                      <div key={k}>
+                        <dt className="font-semibold uppercase tracking-widest text-adisseo-muted">
+                          {k}
+                        </dt>
+                        <dd className="text-adisseo-ink-strong">{String(v)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+
+                {active.status === "pending" ? (
+                  <>
+                    <p className="mt-4 text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                      Reviewer comment
+                    </p>
+                    <textarea
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder="Brand-guardrail note (optional for approve, required for reject)"
+                      className="mt-1 h-24 w-full resize-none rounded-lg border border-adisseo-line bg-white px-3 py-2 text-xs text-adisseo-ink-strong focus:border-adisseo-cyan focus:outline-none"
+                    />
+
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {QUICK_COMMENTS.map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => setComment(c)}
+                          className="rounded-full border border-adisseo-line bg-white px-2 py-0.5 text-[10px] text-adisseo-muted hover:border-adisseo-cyan hover:text-adisseo-cyan"
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 flex gap-2">
+                      <button
+                        onClick={() => decide(active.id, "approved")}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:opacity-90"
+                      >
+                        <CheckCircle2 size={14} /> Approve
+                      </button>
+                      <button
+                        onClick={() => decide(active.id, "rejected")}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:opacity-90"
+                      >
+                        <XCircle size={14} /> Reject
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mt-4 rounded-lg border border-adisseo-line bg-adisseo-bg p-3 text-xs">
+                    <p className="font-semibold text-adisseo-ink-strong">
+                      Decision: {active.status}
+                    </p>
+                    {active.reviewedAt && (
+                      <p className="mt-1 text-[10px] text-adisseo-muted">
+                        Reviewed by {active.reviewer ?? "Ricardo"} ·{" "}
+                        {new Date(active.reviewedAt).toLocaleString()}
+                      </p>
+                    )}
+                    {active.reviewerComment && (
+                      <p className="mt-2 text-[11px]">{`"${active.reviewerComment}"`}</p>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="mt-2 text-xs text-adisseo-muted">
+                Pick a request from the queue to review it. Each approval is
+                logged to the war room and the engagement tracker grades it
+                against the Malaysia-ASF benchmark.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  icon,
+  tone,
+}: {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+  tone: "amber" | "emerald" | "rose" | "ink";
+}) {
+  const cls =
+    tone === "amber"
+      ? "bg-amber-50 text-amber-800 border-amber-200"
+      : tone === "emerald"
+        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+        : tone === "rose"
+          ? "bg-rose-50 text-rose-800 border-rose-200"
+          : "bg-white text-adisseo-ink-strong border-adisseo-line";
+  return (
+    <div className={`rounded-2xl border p-3 ${cls}`}>
+      <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest opacity-80">
+        {icon} {label}
+      </div>
+      <p className="mt-1 text-2xl font-bold">{value}</p>
+    </div>
+  );
+}
+
+function StatusPill({ status }: { status: ApprovalStatus }) {
+  const map = {
+    pending: { cls: "bg-amber-100 text-amber-800", icon: <Clock size={11} />, label: "Pending" },
+    approved: {
+      cls: "bg-emerald-100 text-emerald-800",
+      icon: <CheckCircle2 size={11} />,
+      label: "Approved",
+    },
+    rejected: { cls: "bg-rose-100 text-rose-800", icon: <XCircle size={11} />, label: "Rejected" },
+  } as const;
+  const s = map[status];
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${s.cls}`}
+    >
+      {s.icon}
+      {s.label}
+    </span>
+  );
+}

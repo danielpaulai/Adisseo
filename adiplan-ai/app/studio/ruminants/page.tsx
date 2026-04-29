@@ -21,6 +21,7 @@ import {
   type RuminantsLanguage,
 } from "@/lib/ruminants-brochure";
 import { Logo, SpeciesIcon } from "@/components/Logo";
+import { SendToHQButton } from "@/components/SendToHQButton";
 
 type BrochureResponse = {
   brochure: RuminantsBrochureData;
@@ -335,6 +336,19 @@ export default function RuminantsStudioPage() {
                 ))}
               </ul>
             </div>
+          )}
+
+          {response && (
+            <SendToHQButton
+              kind="ruminants-brochure"
+              title={`Ruminants manga \u00b7 ${response.brochure.topic ?? "Hokkaido"}`}
+              summary={`${(response.brochure.language ?? "ja").toUpperCase()} \u00b7 manga 2-page brochure`}
+              href="/studio/ruminants"
+              payload={{
+                language: response.brochure.language,
+                topic: response.brochure.topic,
+              }}
+            />
           )}
 
           {response && (

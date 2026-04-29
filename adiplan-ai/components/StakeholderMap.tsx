@@ -16,16 +16,27 @@ import {
   useEdgesState,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { forceSimulation, forceManyBody, forceCenter, forceLink, forceCollide } from "d3-force";
+import {
+  forceSimulation,
+  forceManyBody,
+  forceCenter,
+  forceLink,
+  forceCollide,
+} from "d3-force";
 import Link from "next/link";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight, X, MapPin, Layers as LayersIcon, Filter } from "lucide-react";
 import {
   seededStakeholders,
   seededEdges,
   personaColors,
   influenceRadius,
   trendLabel,
+  edgeKindColor,
+  edgeKindLabel,
   type Stakeholder,
+  type StakeholderRegion,
+  type StakeholderSpecies,
+  type InfluenceEdgeKind,
 } from "@/lib/stakeholders";
 import { useAdiPlanStore } from "@/lib/store";
 import { Logo } from "@/components/Logo";
@@ -43,6 +54,15 @@ function StakeholderNode({ data }: NodeProps<StakeholderNodeType>) {
   const r = influenceRadius[stakeholder.influence];
   const color = personaColors[stakeholder.persona];
   const size = r * 2;
+  const ringDelta =
+    stakeholder.trend === "growing" ? 22 : stakeholder.trend === "shrinking" ? -16 : 0;
+  const ringSize = size + ringDelta;
+  const ringLabel =
+    stakeholder.trend === "growing"
+      ? "future +"
+      : stakeholder.trend === "shrinking"
+        ? "future –"
+        : null;
 
   return (
     <div
@@ -51,22 +71,36 @@ function StakeholderNode({ data }: NodeProps<StakeholderNodeType>) {
     >
       <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
       {stakeholder.trend !== "not-changing" && (
-        <div
-          className="absolute rounded-full border-2 border-dashed"
-          style={{
-            width: size + (stakeholder.trend === "growing" ? 22 : -16),
-            height: size + (stakeholder.trend === "growing" ? 22 : -16),
-            borderColor: color,
-            opacity: 0.55,
-          }}
-        />
+        <>
+          <div
+            className="absolute rounded-full border-2 border-dashed"
+            style={{
+              width: ringSize,
+              height: ringSize,
+              borderColor: color,
+              opacity: 0.55,
+            }}
+          />
+          {ringLabel && (
+            <span
+              className="absolute rounded-full bg-white px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest shadow-sm"
+              style={{
+                color,
+                top: stakeholder.trend === "growing" ? -ringSize / 2 - 2 : -2,
+                right: -8,
+              }}
+            >
+              {ringLabel}
+            </span>
+          )}
+        </>
       )}
       <button
         onClick={(e) => {
           e.stopPropagation();
           onToggle(stakeholder.id);
         }}
-        className="flex items-center justify-center rounded-full text-center text-white shadow-md transition hover:scale-105"
+        className="flex flex-col items-center justify-center rounded-full text-center text-white shadow-md transition hover:scale-105"
         style={{
           width: size,
           height: size,
@@ -78,9 +112,16 @@ function StakeholderNode({ data }: NodeProps<StakeholderNodeType>) {
           outline: selected ? "3px solid #0F1B2D" : "none",
           outlineOffset: 3,
         }}
-        title={`${stakeholder.label} · ${stakeholder.persona} · ${trendLabel[stakeholder.trend]}`}
+        title={`${stakeholder.label} · ${stakeholder.persona} · ${trendLabel[stakeholder.trend]}${stakeholder.regions ? ` · ${stakeholder.regions.join(",")}` : ""}`}
       >
         <span>{stakeholder.label}</span>
+        {stakeholder.regions && stakeholder.regions.length > 0 && (
+          <span className="mt-0.5 text-[8px] font-bold uppercase tracking-widest opacity-80">
+            {stakeholder.regions.length > 4
+              ? "APAC"
+              : stakeholder.regions.join("·")}
+          </span>
+        )}
       </button>
       {selected && (
         <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-adisseo-ink text-white shadow ring-2 ring-white">
@@ -125,8 +166,40 @@ function computeLayout() {
   return positions;
 }
 
+const ALL_REGIONS: StakeholderRegion[] = [
+  "CN",
+  "JP",
+  "ID",
+  "TH",
+  "VN",
+  "MY",
+  "IN",
+  "KR",
+  "PH",
+  "Global",
+];
+const ALL_SPECIES: StakeholderSpecies[] = ["aqua", "poultry", "ruminants", "swine"];
+const ALL_EDGE_KINDS: InfluenceEdgeKind[] = [
+  "advises",
+  "specs",
+  "approves",
+  "regulates",
+  "funds",
+  "sells-to",
+];
+
 export default function StakeholderMap() {
   const [filterPersona, setFilterPersona] = useState<string>("all");
+  const [filterRegion, setFilterRegion] = useState<StakeholderRegion | "all">("all");
+  const [filterSpecies, setFilterSpecies] = useState<StakeholderSpecies | "all">("all");
+  const [edgeKindFilter, setEdgeKindFilter] = useState<Record<InfluenceEdgeKind, boolean>>(
+    () =>
+      ALL_EDGE_KINDS.reduce(
+        (acc, k) => ({ ...acc, [k]: true }),
+        {} as Record<InfluenceEdgeKind, boolean>
+      )
+  );
+
   const selectedIds = useAdiPlanStore((s) => s.selectedStakeholderIds);
   const toggleStakeholder = useAdiPlanStore((s) => s.toggleStakeholder);
   const clearStakeholders = useAdiPlanStore((s) => s.clearStakeholders);
@@ -146,14 +219,29 @@ export default function StakeholderMap() {
 
   const initialEdges: Edge[] = useMemo(
     () =>
-      seededEdges.map((e, i) => ({
-        id: `e-${i}`,
-        source: e.source,
-        target: e.target,
-        animated: false,
-        style: { stroke: "#94a3b8", strokeWidth: 1 + (e.weight ?? 1) * 0.6 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: "#94a3b8" },
-      })),
+      seededEdges.map((e, i) => {
+        const color = e.kind ? edgeKindColor[e.kind] : "#94a3b8";
+        return {
+          id: `e-${i}`,
+          source: e.source,
+          target: e.target,
+          animated: false,
+          label: e.kind ? edgeKindLabel[e.kind] : undefined,
+          labelStyle: {
+            fontSize: 9,
+            fontWeight: 700,
+            fill: color,
+            letterSpacing: 0.4,
+            textTransform: "uppercase" as const,
+          },
+          labelBgStyle: { fill: "#FFFFFF", opacity: 0.85 },
+          labelBgPadding: [2, 4] as [number, number],
+          labelBgBorderRadius: 3,
+          style: { stroke: color, strokeWidth: 1 + (e.weight ?? 1) * 0.7 },
+          markerEnd: { type: MarkerType.ArrowClosed, color },
+          data: { kind: e.kind },
+        };
+      }),
     []
   );
 
@@ -170,23 +258,36 @@ export default function StakeholderMap() {
     );
   }, [selectedIds, setNodes]);
 
+  // Persona / region / species filters → hide nodes + edges
   useEffect(() => {
-    if (filterPersona === "all") {
-      setNodes((nds) => nds.map((n) => ({ ...n, hidden: false })));
-      setEdges((eds) => eds.map((e) => ({ ...e, hidden: false })));
-      return;
-    }
     const visibleIds = new Set(
-      seededStakeholders.filter((s) => s.persona === filterPersona).map((s) => s.id)
+      seededStakeholders
+        .filter((s) => filterPersona === "all" || s.persona === filterPersona)
+        .filter((s) => {
+          if (filterRegion === "all") return true;
+          if (!s.regions || s.regions.length === 0) return true; // no region tag = pan-APAC
+          return s.regions.includes(filterRegion);
+        })
+        .filter((s) => {
+          if (filterSpecies === "all") return true;
+          if (!s.species || s.species.length === 0) return true;
+          return s.species.includes(filterSpecies);
+        })
+        .map((s) => s.id)
     );
     setNodes((nds) => nds.map((n) => ({ ...n, hidden: !visibleIds.has(n.id) })));
     setEdges((eds) =>
-      eds.map((e) => ({
-        ...e,
-        hidden: !(visibleIds.has(e.source) && visibleIds.has(e.target)),
-      }))
+      eds.map((e) => {
+        const kind = (e.data as { kind?: InfluenceEdgeKind } | undefined)?.kind;
+        const kindOk = !kind || edgeKindFilter[kind];
+        return {
+          ...e,
+          hidden:
+            !(visibleIds.has(e.source) && visibleIds.has(e.target)) || !kindOk,
+        };
+      })
     );
-  }, [filterPersona, setNodes, setEdges]);
+  }, [filterPersona, filterRegion, filterSpecies, edgeKindFilter, setNodes, setEdges]);
 
   const personas = useMemo(
     () => Array.from(new Set(seededStakeholders.map((s) => s.persona))),
@@ -195,10 +296,10 @@ export default function StakeholderMap() {
 
   const resetLayout = useCallback(() => {
     const fresh = computeLayout();
-    setNodes((nds) =>
-      nds.map((n) => ({ ...n, position: fresh[n.id] ?? n.position }))
-    );
+    setNodes((nds) => nds.map((n) => ({ ...n, position: fresh[n.id] ?? n.position })));
   }, [setNodes]);
+
+  const selectedStakeholders = seededStakeholders.filter((s) => selectedIds.includes(s.id));
 
   return (
     <div className="flex h-screen flex-col">
@@ -215,29 +316,44 @@ export default function StakeholderMap() {
             </h1>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <select
+        <div className="flex flex-wrap items-center gap-2">
+          <FilterSelect
+            icon={<Filter size={12} />}
+            label="Persona"
             value={filterPersona}
-            onChange={(e) => setFilterPersona(e.target.value)}
-            className="rounded-md border border-adisseo-line px-3 py-2 text-sm"
-          >
-            <option value="all">All personas</option>
-            {personas.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
+            onChange={setFilterPersona}
+            options={[{ value: "all", label: "All personas" }, ...personas.map((p) => ({ value: p, label: p }))]}
+          />
+          <FilterSelect
+            icon={<MapPin size={12} />}
+            label="Region"
+            value={filterRegion}
+            onChange={(v) => setFilterRegion(v as StakeholderRegion | "all")}
+            options={[
+              { value: "all", label: "All APAC" },
+              ...ALL_REGIONS.map((r) => ({ value: r, label: r })),
+            ]}
+          />
+          <FilterSelect
+            icon={<LayersIcon size={12} />}
+            label="Species"
+            value={filterSpecies}
+            onChange={(v) => setFilterSpecies(v as StakeholderSpecies | "all")}
+            options={[
+              { value: "all", label: "All species" },
+              ...ALL_SPECIES.map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) })),
+            ]}
+          />
           <button
             onClick={resetLayout}
-            className="rounded-md border border-adisseo-line px-3 py-2 text-sm font-medium text-adisseo-ink hover:bg-adisseo-line/40"
+            className="rounded-md border border-adisseo-line px-3 py-2 text-xs font-medium text-adisseo-ink hover:bg-adisseo-line/40"
           >
             Re-run layout
           </button>
           {selectedIds.length > 0 && (
             <button
               onClick={clearStakeholders}
-              className="rounded-md px-3 py-2 text-sm font-medium text-adisseo-muted hover:text-adisseo-ink"
+              className="rounded-md px-3 py-2 text-xs font-medium text-adisseo-muted hover:text-adisseo-ink"
             >
               Clear ({selectedIds.length})
             </button>
@@ -252,9 +368,7 @@ export default function StakeholderMap() {
           >
             Build CBI Ladder
             {selectedIds.length > 0 && (
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                {selectedIds.length}
-              </span>
+              <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">{selectedIds.length}</span>
             )}
             <ArrowRight size={14} />
           </Link>
@@ -287,7 +401,8 @@ export default function StakeholderMap() {
           />
         </ReactFlow>
 
-        <aside className="pointer-events-none absolute left-4 top-4 max-w-xs space-y-3 rounded-xl border border-adisseo-line bg-white/90 p-4 text-xs shadow-sm backdrop-blur">
+        {/* Legend (left) */}
+        <aside className="pointer-events-auto absolute left-4 top-4 max-w-xs space-y-3 rounded-xl border border-adisseo-line bg-white/95 p-4 text-xs shadow-sm backdrop-blur">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
               Click bubble to select
@@ -298,17 +413,19 @@ export default function StakeholderMap() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
               Bubble size
             </p>
-            <p className="text-adisseo-ink">Current influence</p>
+            <p className="text-adisseo-ink">Current influence (small / medium / large)</p>
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
               Dotted ring
             </p>
-            <p className="text-adisseo-ink">Outer = growing &middot; inner = shrinking</p>
+            <p className="text-adisseo-ink">
+              Outer = future +&nbsp;&nbsp;·&nbsp;&nbsp;Inner = future –
+            </p>
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
-              Color
+              Persona colour
             </p>
             <ul className="space-y-1">
               {Object.entries(personaColors).map(([persona, color]) => (
@@ -324,12 +441,147 @@ export default function StakeholderMap() {
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
-              Arrows
+              Edge kind (toggle)
             </p>
-            <p className="text-adisseo-ink">Who-influences-whom (power flow)</p>
+            <ul className="space-y-1">
+              {ALL_EDGE_KINDS.map((k) => (
+                <li key={k}>
+                  <button
+                    onClick={() =>
+                      setEdgeKindFilter((prev) => ({ ...prev, [k]: !prev[k] }))
+                    }
+                    className={`flex w-full items-center gap-2 rounded px-1 py-0.5 text-left transition ${
+                      edgeKindFilter[k] ? "" : "opacity-30"
+                    }`}
+                  >
+                    <span
+                      className="inline-block h-1 w-6 rounded-full"
+                      style={{ backgroundColor: edgeKindColor[k] }}
+                    />
+                    <span className="text-adisseo-ink">{edgeKindLabel[k]}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         </aside>
+
+        {/* Selection panel (right) */}
+        {selectedStakeholders.length > 0 && (
+          <aside className="pointer-events-auto absolute right-4 top-4 max-h-[80vh] w-72 space-y-2 overflow-y-auto rounded-xl border border-adisseo-line bg-white/95 p-4 text-xs shadow-sm backdrop-blur">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+                Selected ({selectedStakeholders.length})
+              </p>
+              <button
+                onClick={clearStakeholders}
+                className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted hover:text-adisseo-crimson"
+              >
+                Clear all
+              </button>
+            </div>
+            <ul className="space-y-2">
+              {selectedStakeholders.map((s) => (
+                <li
+                  key={s.id}
+                  className="rounded-lg border border-adisseo-line bg-white p-2"
+                >
+                  <div className="flex items-start gap-2">
+                    <span
+                      className="mt-1 inline-block h-3 w-3 shrink-0 rounded-full"
+                      style={{ backgroundColor: personaColors[s.persona] }}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-adisseo-ink-strong">
+                        {s.label}
+                      </p>
+                      <p className="mt-0.5 text-[10px] text-adisseo-muted">
+                        {s.persona} · {s.influence} · {trendLabel[s.trend]}
+                      </p>
+                      {(s.regions?.length || s.species?.length) && (
+                        <p className="mt-0.5 truncate text-[10px] text-adisseo-muted">
+                          {s.regions?.join(",")}
+                          {s.regions && s.species && s.regions.length && s.species.length ? " · " : ""}
+                          {s.species?.join("/")}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => toggleStakeholder(s.id)}
+                      className="text-adisseo-muted hover:text-adisseo-crimson"
+                      title="Deselect"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Link
+                href="/cbi-ladder"
+                className="rounded-md bg-adisseo-crimson px-2 py-1 text-center text-[10px] font-bold uppercase tracking-widest text-white hover:opacity-90"
+              >
+                CBI Ladder
+              </Link>
+              <Link
+                href="/wwwk"
+                className="rounded-md bg-adisseo-orange px-2 py-1 text-center text-[10px] font-bold uppercase tracking-widest text-white hover:opacity-90"
+              >
+                WWWK board
+              </Link>
+              <Link
+                href="/personas-matrix"
+                className="rounded-md border border-adisseo-line px-2 py-1 text-center text-[10px] font-bold uppercase tracking-widest text-adisseo-ink-strong hover:border-adisseo-crimson hover:text-adisseo-crimson"
+              >
+                Personas matrix
+              </Link>
+              <Link
+                href="/plan-on-page"
+                className="rounded-md border border-adisseo-line px-2 py-1 text-center text-[10px] font-bold uppercase tracking-widest text-adisseo-ink-strong hover:border-adisseo-crimson hover:text-adisseo-crimson"
+              >
+                Plan on a Page
+              </Link>
+            </div>
+          </aside>
+        )}
       </div>
     </div>
+  );
+}
+
+function FilterSelect({
+  icon,
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <label className="flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2 py-1 text-xs">
+      <span className="flex items-center gap-1 text-adisseo-muted">
+        {icon}
+        <span className="text-[10px] font-semibold uppercase tracking-widest">
+          {label}
+        </span>
+      </span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="bg-transparent text-xs text-adisseo-ink-strong focus:outline-none"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

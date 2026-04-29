@@ -16,6 +16,7 @@ import {
 import { useAdiPlanStore } from "@/lib/store";
 import { aquaMagazines, type AquaLanguage } from "@/lib/aqua-leaflet";
 import { Logo, SpeciesIcon } from "@/components/Logo";
+import { SendToHQButton } from "@/components/SendToHQButton";
 
 type LeafletResponse = {
   leaflet: {
@@ -326,6 +327,20 @@ export default function AquaStudioPage() {
             >
               <Download size={14} /> Download PDF
             </button>
+          )}
+
+          {response && (
+            <SendToHQButton
+              kind="aqua-leaflet"
+              title={`Aqua leaflet \u00b7 ${response.leaflet.headline}`}
+              summary={`${response.leaflet.language.toUpperCase()} \u00b7 ${aquaMagazines.find((m) => m.id === magazineId)?.name ?? magazineId}`}
+              href="/studio/aqua"
+              payload={{
+                language: response.leaflet.language,
+                magazine: magazineId,
+                topic: studioTopic,
+              }}
+            />
           )}
 
           {error && (

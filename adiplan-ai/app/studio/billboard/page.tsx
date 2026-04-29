@@ -20,6 +20,7 @@ import {
   type BillboardPack,
 } from "@/lib/billboards";
 import { Logo } from "@/components/Logo";
+import { SendToHQButton } from "@/components/SendToHQButton";
 import { toast } from "sonner";
 
 type GenerateResp = {
@@ -334,6 +335,21 @@ export default function BillboardStudioPage() {
                 )}
                 {downloading ? "Rendering\u2026" : `Download PDF · ${fmtSpec.label}`}
               </button>
+            )}
+
+            {pack && (
+              <SendToHQButton
+                kind="billboard"
+                title={`Billboard \u00b7 ${pack.headline}`}
+                summary={`${fmtSpec.label} \u00b7 ${pack.region ?? "APAC"} \u00b7 ${pack.persona ?? "billboard"}`}
+                href="/studio/billboard"
+                payload={{
+                  format,
+                  region: pack.region,
+                  persona: pack.persona,
+                  cbi: pack.cbi,
+                }}
+              />
             )}
           </div>
 

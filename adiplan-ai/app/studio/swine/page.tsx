@@ -18,6 +18,7 @@ import {
 import { useAdiPlanStore } from "@/lib/store";
 import { swineAccounts } from "@/lib/swine-accounts";
 import { Logo, SpeciesIcon } from "@/components/Logo";
+import { SendToHQButton } from "@/components/SendToHQButton";
 
 type Scene = {
   index: number;
@@ -382,6 +383,20 @@ export default function SwineStudioPage() {
             <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-800">
               {error}
             </p>
+          )}
+
+          {response && (
+            <SendToHQButton
+              kind="swine-short"
+              title={`Swine short \u00b7 ${response.short.hook ?? studioTopic}`}
+              summary={`${(response.short.language ?? studioLanguage).toUpperCase()} \u00b7 ${studioAccount || "no account"}`}
+              href="/studio/swine"
+              payload={{
+                language: response.short.language ?? studioLanguage,
+                account: studioAccount,
+                topic: studioTopic,
+              }}
+            />
           )}
         </aside>
 

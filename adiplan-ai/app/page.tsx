@@ -15,6 +15,9 @@ import {
   Mic,
   Activity,
   PlayCircle,
+  ShieldCheck,
+  HelpCircle,
+  ClipboardList,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -168,28 +171,54 @@ const modules: Module[] = [
     cta: "Open the tracker",
     ready: true,
   },
+  {
+    href: "/wwwk",
+    icon: HelpCircle,
+    stage: "02 · Assessing",
+    title: "We Wish We Knew (WWWK) board",
+    blurb:
+      "The questions that, if answered, would change a decision \u2014 not just inform one. Per-stakeholder, per-CBI, with hypothesis, method, priority, and an answer-capture textarea. CSV export feeds the regional research backlog.",
+    cta: "Open the board",
+    ready: true,
+  },
+  {
+    href: "/plan-on-page",
+    icon: ClipboardList,
+    stage: "Executing",
+    title: "Plan on a Page generator",
+    blurb:
+      "Single-sheet A4 strategy summary that pulls everything in your session \u2014 stakeholders moved, frame composed, deliverables shipped, KPI targets \u2014 into one printable PDF for regional sales / KAMs.",
+    cta: "Generate the plan",
+    ready: true,
+  },
+  {
+    href: "/approval-queue",
+    icon: ShieldCheck,
+    stage: "HQ desk \u00b7 Brand-guardrail",
+    title: "Approval queue",
+    blurb:
+      "Vish's #1 blocker on Apr 28: HQ brand-guardrail compliance gates every poultry carousel. Every deliverable can be sent to HQ, reviewed by Ricardo with a comment, and audited \u2014 with the decision logged to the war room.",
+    cta: "Open the queue",
+    ready: true,
+  },
 ];
 
 const upcoming = [
   {
     species: null,
-    text: "Live scraper API — wired (set SCRAPER_API_URL to swap from seeded articles)",
+    text: "Live scraper API \u2014 wired (set SCRAPER_API_URL to swap from seeded articles)",
   },
   {
     species: null,
-    text: "Brand-guardrail approval workflow — send-to-Ricardo + watermarked log",
+    text: "Mistral OCR 3 \u2014 internal Adisseo PDF ingest into Copilot",
   },
   {
     species: null,
-    text: "Mistral OCR 3 — internal Adisseo PDF ingest into Copilot",
+    text: "LangGraph orchestration \u2014 overnight competitor digest agent",
   },
   {
     species: null,
-    text: "LangGraph orchestration — overnight competitor digest agent",
-  },
-  {
-    species: null,
-    text: "Auto-distribute to LinkedIn / WeChat / WhatsApp — HQ-approval gated",
+    text: "Auto-distribute to LinkedIn / WeChat / WhatsApp \u2014 HQ-approval gated",
   },
 ] as const;
 

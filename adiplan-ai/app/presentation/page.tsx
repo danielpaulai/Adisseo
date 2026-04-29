@@ -25,6 +25,8 @@ import {
   Radio,
   Mic,
   Activity,
+  HelpCircle,
+  ClipboardList,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -198,8 +200,38 @@ const MODULES = [
     layer: "Activation · Engagement",
     title: "Malaysia-ASF engagement tracker",
     blurb:
-      "The metric Ricardo named on the call. 9 historical deliverables, 4-stage funnel (views → qualified → conversations → conversions), each row graded against the 43% Malaysia benchmark.",
-    moves: ["Per-species + per-kind aggregates", "Above / At / Below grading", "Q4 2025 – Q1 2026 dataset"],
+      "The metric Ricardo named on the call. 9 historical deliverables, 4-stage funnel (views \u2192 qualified \u2192 conversations \u2192 conversions), each row graded against the 43% Malaysia benchmark.",
+    moves: ["Per-species + per-kind aggregates", "Above / At / Below grading", "Q4 2025 \u2013 Q1 2026 dataset"],
+  },
+  {
+    href: "/wwwk",
+    icon: HelpCircle,
+    num: "14",
+    layer: "Assessing \u00b7 WWWK",
+    title: "We Wish We Knew board",
+    blurb:
+      "Per stakeholder + CBI, 5\u20137 sharp research questions tied to specific decisions. Each question carries a hypothesis, recommended method, priority, and an answer-capture textarea. CSV export feeds the regional research backlog.",
+    moves: ["Tied to a decision", "Disprovable hypotheses", "1:1 / focus / on-farm methods"],
+  },
+  {
+    href: "/plan-on-page",
+    icon: ClipboardList,
+    num: "15",
+    layer: "Executing",
+    title: "Plan on a Page generator",
+    blurb:
+      "Single-sheet A4 PDF that pulls everything in this session \u2014 selected stakeholders, composed frame, deliverables shipped, KPI targets \u2014 onto one page for regional sales / KAMs.",
+    moves: ["A4 portrait, 4-quadrant", "Live preview iframe", "Zero LLM calls \u2014 deterministic"],
+  },
+  {
+    href: "/approval-queue",
+    icon: ShieldCheck,
+    num: "16",
+    layer: "HQ desk \u00b7 Brand-guardrail",
+    title: "Approval queue",
+    blurb:
+      "Every species deliverable can be sent to Ricardo for brand review. Pending / approved / rejected with a comment, audited, and logged back into the war room. Closes Vish's #1 blocker.",
+    moves: ["Send-to-HQ button on every studio", "Quick-comment templates", "Decisions \u2192 activity log"],
   },
 ];
 
@@ -225,9 +257,9 @@ const ROADMAP = [
     icon: Sparkles,
   },
   {
-    title: "Brand-guardrail approval workflow",
-    body: "The audit panels we already render under each studio become an actual review/approve flow: Vish hits 'send to Ricardo' → Ricardo gets a one-click approve/reject screen → approved deliverables are watermarked and logged.",
-    icon: ShieldCheck,
+    title: "Auto-distribute to LinkedIn / WeChat / WhatsApp",
+    body: "Once HQ approves a deliverable in the queue, push it directly to the right channel \u2014 LinkedIn carousel API, WeChat OA push, WhatsApp distributor list. Right now the manager still copies the file out manually.",
+    icon: Radio,
   },
 ];
 
@@ -250,7 +282,7 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
   },
   { label: "Mistral OCR 3 ingestion of internal Adisseo PDFs", status: "deferred" },
   { label: "LangGraph long-running orchestration", status: "deferred" },
-  { label: "Brand-guardrail approval workflow", status: "deferred" },
+  { label: "Auto-distribute approved deliverables to LinkedIn / WeChat / WhatsApp", status: "deferred" },
   { label: "Auto-distribute to LinkedIn / WeChat / WhatsApp", status: "deferred" },
 ];
 
@@ -483,7 +515,7 @@ export default function PresentationPage() {
         id="shipped"
         num="04"
         title="What AdiPlan AI ships today"
-        subtitle="13 live modules — every one runnable in the browser, no setup required"
+        subtitle="16 live modules \u2014 every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {MODULES.map((m) => (

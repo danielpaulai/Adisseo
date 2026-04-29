@@ -33,6 +33,48 @@ export type ActivityEntry = {
   tone?: "crimson" | "cyan" | "orange" | "ink";
 };
 
+/* ============================================================================
+ * Brand-guardrail approval workflow.
+ *
+ * Vish's #1 blocker on the Apr 28 call: HQ brand-guardrail compliance gates
+ * every poultry carousel and emailer. Every deliverable can be sent to the
+ * approval queue, reviewed by HQ (Ricardo), approved or rejected with a
+ * comment, and audited.
+ * ========================================================================== */
+
+export type ApprovalKind =
+  | "aqua-leaflet"
+  | "poultry-pack"
+  | "ruminants-brochure"
+  | "swine-short"
+  | "billboard"
+  | "voice-memo"
+  | "strategic-frame";
+
+export type ApprovalStatus = "pending" | "approved" | "rejected";
+
+export type ApprovalRequest = {
+  id: string;
+  kind: ApprovalKind;
+  title: string;
+  /** Short description for the queue. */
+  summary: string;
+  /** Who originated the request. */
+  sender: string;
+  /** Where to deep-link back to in the studio. */
+  href?: string;
+  /** Free-form payload snapshot for the queue (language, audience, etc.). */
+  payload?: Record<string, string | number | boolean | undefined>;
+  status: ApprovalStatus;
+  sentAt: string;
+  /** When HQ responded. */
+  reviewedAt?: string;
+  /** Reviewer comment (free text). */
+  reviewerComment?: string;
+  /** Reviewer name. */
+  reviewer?: string;
+};
+
 export type LadderRung = {
   id: string;
   outcome: string;
@@ -111,6 +153,19 @@ interface AdiPlanStore {
   activity: ActivityEntry[];
   pushActivity: (entry: Omit<ActivityEntry, "id" | "at"> & { id?: string; at?: string }) => void;
   clearActivity: () => void;
+
+  /** Brand-guardrail approval queue. */
+  approvals: ApprovalRequest[];
+  requestApproval: (
+    req: Omit<ApprovalRequest, "id" | "sentAt" | "status">
+  ) => string;
+  decideApproval: (
+    id: string,
+    decision: "approved" | "rejected",
+    reviewerComment: string,
+    reviewer?: string
+  ) => void;
+  clearApprovals: () => void;
 }
 
 export const useAdiPlanStore = create<AdiPlanStore>()(
@@ -178,6 +233,35 @@ export const useAdiPlanStore = create<AdiPlanStore>()(
           return { activity: [next, ...s.activity].slice(0, 30) };
         }),
       clearActivity: () => set({ activity: [] }),
+
+      approvals: [],
+      requestApproval: (req) => {
+        const id = `apr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+        const sentAt = new Date().toISOString();
+        const next: ApprovalRequest = {
+          id,
+          sentAt,
+          status: "pending",
+          ...req,
+        };
+        set((s) => ({ approvals: [next, ...s.approvals].slice(0, 60) }));
+        return id;
+      },
+      decideApproval: (id, decision, reviewerComment, reviewer) =>
+        set((s) => ({
+          approvals: s.approvals.map((a) =>
+            a.id === id
+              ? {
+                  ...a,
+                  status: decision,
+                  reviewerComment,
+                  reviewer: reviewer ?? a.reviewer ?? "Ricardo Communod",
+                  reviewedAt: new Date().toISOString(),
+                }
+              : a
+          ),
+        })),
+      clearApprovals: () => set({ approvals: [] }),
     }),
     { name: "adiplan-ai-state-v1" }
   )

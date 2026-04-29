@@ -217,6 +217,18 @@ export default function DashboardPage() {
             >
               Engagement
             </Link>
+            <Link
+              href="/approval-queue"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              HQ queue
+            </Link>
+            <Link
+              href="/plan-on-page"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Plan on a Page
+            </Link>
           </nav>
         </div>
       </header>
