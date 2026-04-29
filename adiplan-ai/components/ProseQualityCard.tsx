@@ -24,6 +24,13 @@ import {
 } from "@/lib/slop-detector";
 import { scoreBrandVoice } from "@/lib/brand-voice";
 import { scoreCitations } from "@/lib/citation-checker";
+import {
+  scoreAgainstVoiceProfile,
+  DEFAULT_VOICE_PROFILES,
+  MANAGER_OPTIONS,
+} from "@/lib/voice-profile";
+import { useAdiPlanStore } from "@/lib/store";
+import { Fingerprint } from "lucide-react";
 
 interface Props {
   /** All the prose to score (concat all the text fields the studio produced). */
@@ -64,6 +71,20 @@ export function ProseQualityCard({
   const slop: SlopReport = useMemo(() => scoreSlop(text), [text]);
   const brand = useMemo(() => scoreBrandVoice(text, brandVoice), [text, brandVoice]);
   const cites = useMemo(() => scoreCitations(text), [text]);
+
+  // Voice-match (Phase 3) — only scored if there's an active manager.
+  const activeManagerId = useAdiPlanStore((s) => s.activeManagerId);
+  const voiceProfiles = useAdiPlanStore((s) => s.voiceProfiles);
+  const voiceMatch = useMemo(() => {
+    if (!activeManagerId) return null;
+    const profile = voiceProfiles[activeManagerId] ?? DEFAULT_VOICE_PROFILES[activeManagerId];
+    if (!profile) return null;
+    if (text.split(/\s+/).filter(Boolean).length < 12) return null;
+    return scoreAgainstVoiceProfile(text, profile);
+  }, [text, activeManagerId, voiceProfiles]);
+  const voiceProfileMeta = activeManagerId
+    ? MANAGER_OPTIONS.find((m) => m.id === activeManagerId)
+    : null;
 
   // Composite when grammar isn't ready yet — weights renormalised to slop+brand+cites.
   // 40% slop / 25% brand / 20% cites + 15% grammar (set to 100 until server returns).
@@ -212,6 +233,32 @@ export function ProseQualityCard({
           }
         />
       </div>
+
+      {/* Voice-match strip */}
+      {voiceMatch && voiceProfileMeta && (
+        <div className="mt-2 rounded-md border border-violet-200 bg-violet-50 px-2 py-1.5 text-[10px] text-violet-900">
+          <div className="flex items-center gap-1">
+            <Fingerprint size={10} className="text-violet-700" />
+            <span className="font-semibold uppercase tracking-widest text-violet-700">
+              Voice match · {voiceProfileMeta.name}
+            </span>
+            <span
+              className={`ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${
+                voiceMatch.score >= 80
+                  ? "bg-emerald-100 text-emerald-700"
+                  : voiceMatch.score >= 60
+                    ? "bg-sky-100 text-sky-700"
+                    : "bg-rose-100 text-rose-700"
+              }`}
+            >
+              {voiceMatch.score}/100
+            </span>
+          </div>
+          {voiceMatch.notes.length > 0 && (
+            <p className="mt-0.5 text-violet-900/90">{voiceMatch.notes[0]}</p>
+          )}
+        </div>
+      )}
 
       {/* Citation strip */}
       {cites.cited > 0 && (

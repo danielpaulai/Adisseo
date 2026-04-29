@@ -5,6 +5,7 @@ import {
   type VaultSpecies,
 } from "@/lib/vault";
 import { formatCitation } from "@/lib/citation-checker";
+import { startTrace } from "@/lib/llm-trace";
 
 export const runtime = "nodejs";
 
@@ -98,6 +99,15 @@ export async function POST(req: NextRequest) {
   const species = body.species ?? "all";
   const region = body.region ?? "all";
 
+  const trace = startTrace({
+    kind: "research-deep",
+    title: question,
+    model: "deterministic",
+    determined: true,
+    payload: JSON.stringify({ question, species, region }),
+    inputTokens: Math.ceil(question.length / 4),
+  });
+
   const subqueryDefs = body.subqueries
     ? body.subqueries.map((q, i) => ({
         id: `custom-${i + 1}`,
@@ -165,6 +175,13 @@ export async function POST(req: NextRequest) {
       words: briefing.split(/\s+/).filter(Boolean).length,
     },
   };
+
+  trace.finish({
+    summary: `${subqueries.length} sub-queries · ${citations.length} vault hits · confidence ${Math.round(confidence * 100)}`,
+    trustScore: Math.round(confidence * 100),
+    outputTokens: Math.ceil(briefing.length / 4),
+    status: citations.length === 0 ? "warn" : "success",
+  });
 
   return NextResponse.json(response);
 }

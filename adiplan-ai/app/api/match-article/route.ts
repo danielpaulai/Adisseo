@@ -5,6 +5,7 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { fetchArticleById } from "@/lib/scraper-api";
 import { adiplanCBIs, adiplanPersonas, adiplanFormats } from "@/lib/adiplan";
+import { startTrace } from "@/lib/llm-trace";
 
 const matchSchema = z.object({
   cbiId: z.string(),
@@ -84,6 +85,18 @@ export async function POST(req: NextRequest) {
   }
 
   const model = pickModel();
+  const trace = startTrace({
+    kind: "match-article",
+    title: article.title.slice(0, 70),
+    model: model
+      ? process.env.OPENAI_API_KEY
+        ? "gpt-4o-mini"
+        : "claude-3-5-haiku"
+      : "deterministic",
+    determined: !model,
+    payload: `${article.competitor} · ${article.tags.join(", ")}`,
+    inputTokens: Math.ceil((article.summary?.length ?? 0) / 4),
+  });
 
   let result: z.infer<typeof matchSchema>;
   let usedModel = "deterministic-stub";
@@ -131,6 +144,13 @@ Be terse. Rationales should be 1-2 sentences each.`,
   const formats = result.recommendedFormatIds
     .map((id) => adiplanFormats.find((f) => f.id === id))
     .filter(Boolean);
+
+  trace.finish({
+    summary: `→ ${cbi?.label ?? result.cbiId} / ${persona?.label ?? result.personaId} · ${formats.length} formats`,
+    outputTokens: 280,
+    costUsd: usedModel.includes("gpt") ? 0.006 : usedModel.includes("claude") ? 0.005 : 0,
+    status: "success",
+  });
 
   return NextResponse.json({
     article,

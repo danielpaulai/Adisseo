@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { StrategicFrame } from "@/lib/strategic-frame";
+import type { VoiceProfile } from "@/lib/voice-profile";
 
 /* ============================================================================
  * War-room activity log — every meaningful action surfaces on /dashboard so the
@@ -166,6 +167,14 @@ interface AdiPlanStore {
     reviewer?: string
   ) => void;
   clearApprovals: () => void;
+
+  /** Per-manager voice profiles (Phase 3). */
+  voiceProfiles: Record<string, VoiceProfile>;
+  setVoiceProfile: (managerId: string, profile: VoiceProfile) => void;
+  removeVoiceProfile: (managerId: string) => void;
+  /** Currently active manager id, used by ProseQualityCard for voice scoring. */
+  activeManagerId: string | null;
+  setActiveManager: (id: string | null) => void;
 }
 
 export const useAdiPlanStore = create<AdiPlanStore>()(
@@ -262,6 +271,20 @@ export const useAdiPlanStore = create<AdiPlanStore>()(
           ),
         })),
       clearApprovals: () => set({ approvals: [] }),
+
+      voiceProfiles: {},
+      setVoiceProfile: (managerId, profile) =>
+        set((s) => ({
+          voiceProfiles: { ...s.voiceProfiles, [managerId]: profile },
+        })),
+      removeVoiceProfile: (managerId) =>
+        set((s) => {
+          const next = { ...s.voiceProfiles };
+          delete next[managerId];
+          return { voiceProfiles: next };
+        }),
+      activeManagerId: null,
+      setActiveManager: (id) => set({ activeManagerId: id }),
     }),
     { name: "adiplan-ai-state-v1" }
   )

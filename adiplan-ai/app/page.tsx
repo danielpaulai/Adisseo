@@ -21,6 +21,9 @@ import {
   Library,
   Telescope,
   Coffee,
+  Fingerprint,
+  Image as ImageIcon,
+  Eye,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -246,24 +249,54 @@ const modules: Module[] = [
     cta: "Preview the digest",
     ready: true,
   },
+  {
+    href: "/voice-fingerprint",
+    icon: Fingerprint,
+    stage: "Phase 3 · Voice fingerprint",
+    title: "Per-manager voice profile",
+    blurb:
+      "DSPy-style fingerprint of how each species manager actually writes — sentence length, hedging rate, citation density, em-dash habits, signature 3-grams. The trust layer adds a 'voice match' sub-score so a draft sounds like the human shipping it. Vish, Aileen, Antoine, Claire, Ricardo all seeded.",
+    cta: "Tune a profile",
+    ready: true,
+  },
+  {
+    href: "/og-cards",
+    icon: ImageIcon,
+    stage: "Phase 3 · Distribution",
+    title: "OG-card generator (Vercel Satori)",
+    blurb:
+      "Every shipped deliverable produces a 1200×630 LinkedIn card or 1200×1200 square — from URL params, no Photoshop. The trust score and citation count travel with the card so the quality signal is visible to the recipient before they click.",
+    cta: "Preview the cards",
+    ready: true,
+  },
+  {
+    href: "/observability",
+    icon: Eye,
+    stage: "Phase 3 · Trust",
+    title: "LLM observability (Langfuse-style)",
+    blurb:
+      "Every model call — score-prose, research-deep, match-article, render-* — pushes a span to an in-memory ring. Latency, cost, model id, deterministic-vs-LLM flag, trust score. For Adisseo's IT/legal team. Swap for Langfuse / Helicone when shipping.",
+    cta: "Open the trace ring",
+    ready: true,
+  },
 ];
 
 const upcoming = [
   {
     species: null,
-    text: "Phase 2 · GPT-Researcher / GPT-Newspaper agents — every deliverable cites 5+ sources",
-  },
-  {
-    species: null,
-    text: "Phase 3 · DSPy brand-voice fingerprinting per species manager",
-  },
-  {
-    species: null,
-    text: "Phase 4 · Multi-tenant (DSM / Cargill / Kemin) with per-tenant brand-voice configs",
+    text: "Phase 4 · Multi-tenant (DSM / Cargill / Kemin) with per-tenant brand-voice configs and per-tenant Vaults",
   },
   {
     species: null,
     text: "Auto-distribute to LinkedIn / WeChat / WhatsApp — HQ-approval + trust-gate enforced",
+  },
+  {
+    species: null,
+    text: "Replace in-memory trace ring with Langfuse / Helicone for production observability",
+  },
+  {
+    species: null,
+    text: "Voice profiles trained on actual manager writing samples (currently seeded with believable defaults)",
   },
 ] as const;
 

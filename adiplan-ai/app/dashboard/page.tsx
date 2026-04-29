@@ -253,6 +253,24 @@ export default function DashboardPage() {
             >
               Digest
             </Link>
+            <Link
+              href="/voice-fingerprint"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Voice
+            </Link>
+            <Link
+              href="/og-cards"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              OG cards
+            </Link>
+            <Link
+              href="/observability"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Observability
+            </Link>
           </nav>
         </div>
       </header>

@@ -8,6 +8,7 @@ import {
 } from "@/lib/brand-voice";
 import { checkGrammar, type LtLanguage, type LtReport } from "@/lib/languagetool";
 import { scoreCitations, type CitationReport } from "@/lib/citation-checker";
+import { startTrace } from "@/lib/llm-trace";
 
 export const runtime = "nodejs";
 
@@ -48,6 +49,15 @@ export async function POST(req: NextRequest) {
   const voiceId = body.brandVoice ?? "adisseo";
   const language = body.language ?? "en";
   const voice = getBrandVoice(voiceId);
+
+  const trace = startTrace({
+    kind: "score-prose",
+    title: text.slice(0, 70),
+    model: body.skipGrammar ? "deterministic" : "deterministic+languagetool",
+    determined: true,
+    payload: text.slice(0, 400),
+    inputTokens: Math.ceil(text.length / 4),
+  });
 
   const slop = scoreSlop(text);
   const brand = scoreBrandVoice(text, voiceId);
@@ -98,6 +108,12 @@ export async function POST(req: NextRequest) {
     brandFloor: voice.slopFloor,
     warningFloor: voice.warningFloor,
   };
+
+  trace.finish({
+    summary,
+    trustScore: composite,
+    status: brand.hasClaimBreach ? "error" : passesGate ? "success" : "warn",
+  });
 
   return NextResponse.json(response);
 }

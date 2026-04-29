@@ -30,6 +30,9 @@ import {
   Telescope,
   Coffee,
   Library,
+  Fingerprint,
+  Image as ImageIcon,
+  Eye,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -296,6 +299,51 @@ const MODULES = [
       "Hand-off to News Bridge / Research Deep / Studio",
     ],
   },
+  {
+    href: "/voice-fingerprint",
+    icon: Fingerprint,
+    num: "21",
+    layer: "Phase 3 · Voice fingerprint",
+    title: "Per-manager voice profile",
+    blurb:
+      "DSPy-style fingerprint of how each species manager actually writes. Eight measurable axes — sentence length, variance, vocabulary richness, hedging rate, citation density, em-dash habits, first-person rate, punctuation rhythm — plus signature 3-grams and avoided-word lists. The trust layer adds a 'voice match' sub-score so a draft sounds like the human shipping it.",
+    moves: [
+      "5 species-manager profiles seeded (Vish, Aileen, Antoine, Claire, Ricardo)",
+      "Paste 2–3 writing samples → derive a profile in one click",
+      "Voice-match sub-score lights up in ProseQualityCard",
+      "All scoring runs deterministically client-side — no LLM",
+    ],
+  },
+  {
+    href: "/og-cards",
+    icon: ImageIcon,
+    num: "22",
+    layer: "Phase 3 · Distribution",
+    title: "OG-card generator (Vercel Satori)",
+    blurb:
+      "Every shipped deliverable produces a 1200×630 LinkedIn card or 1200×1200 square — from URL params, no Photoshop. Trust score and citation count travel with the card so the quality signal is visible to the recipient before they click. Edge runtime, sub-second render.",
+    moves: [
+      "Title / deck / species / manager / trust / citations all URL-driven",
+      "LinkedIn 1200×630 + square 1200×1200 variants",
+      "Adisseo crimson + species tint baked into the design system",
+      "Edge runtime — cacheable on the CDN",
+    ],
+  },
+  {
+    href: "/observability",
+    icon: Eye,
+    num: "23",
+    layer: "Phase 3 · Trust",
+    title: "LLM observability (Langfuse-style)",
+    blurb:
+      "Every model call — score-prose, research-deep, match-article, render-* — pushes a span to an in-memory trace ring. Latency, cost, model id, deterministic-vs-LLM flag, trust score, payload preview. Built so Adisseo's IT and legal team can see exactly which model is being called with what data. Swap for Langfuse / Helicone in production.",
+    moves: [
+      "200-span ring buffer keyed off globalThis (survives hot-reload)",
+      "Auto-classifies deterministic vs. LLM calls",
+      "p95 / mean latency, cost, error count rollup",
+      "Per-span drill-down with payload preview",
+    ],
+  },
 ];
 
 const ROADMAP = [
@@ -310,9 +358,9 @@ const ROADMAP = [
     icon: Telescope,
   },
   {
-    title: "Phase 3 · UI / UX upgrade + brand-voice fingerprinting (Weeks 8–13)",
-    body: "DSPy + Langfuse to fingerprint each species manager's voice from their own writing samples. Magic UI / shadcn upgrade across studios. Vercel Satori OG-card generator for every shipped asset.",
-    icon: Sparkles,
+    title: "Phase 3 · UI / UX upgrade + brand-voice fingerprinting (LIVE)",
+    body: "Per-manager voice profiles with 8 measurable axes shipped at /voice-fingerprint, voice-match sub-score is live in the trust layer, Vercel Satori OG-card generator at /og-cards turns trust telemetry into a 1200×630 social asset, and a Langfuse-style observability ring at /observability captures every LLM and deterministic call. Production work-list: real DSPy training on actual writing samples, Magic UI polish across studios.",
+    icon: Fingerprint,
   },
   {
     title: "Phase 4 · Multi-tenant + distribution rails (Weeks 14–24)",
@@ -377,7 +425,11 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
   },
   {
     label: "Phase 3 · DSPy brand-voice fingerprinting per species manager",
-    status: "deferred",
+    status: "wired",
+  },
+  {
+    label: "Phase 3 · Vercel Satori OG-card generator + LLM observability ring",
+    status: "wired",
   },
   {
     label: "Phase 4 · Multi-tenant + auto-distribution to LinkedIn / WeChat / WhatsApp",
@@ -614,7 +666,7 @@ export default function PresentationPage() {
         id="shipped"
         num="04"
         title="What AdiPlan AI ships today"
-        subtitle="20 live modules — every one runnable in the browser, no setup required"
+        subtitle="23 live modules — every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {MODULES.map((m) => (
