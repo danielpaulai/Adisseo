@@ -15,6 +15,8 @@ const brochureSchema = z.object({
   coverEyebrow: z.string(),
   issueBadge: z.string(),
   bubbleLine: z.string(),
+  bubbleKind: z.enum(["speech", "shout", "thought"]).optional(),
+  coverSfx: z.string().optional(),
   heroClaim: z.string(),
   heroEvidence: z.string(),
   emphasisStamp: z.string(),
@@ -28,6 +30,8 @@ const brochureSchema = z.object({
         stat: z
           .object({ value: z.string(), unit: z.string() })
           .optional(),
+        sfx: z.string().optional(),
+        blackPanel: z.boolean().optional(),
       })
     )
     .min(3)
@@ -104,10 +108,19 @@ Hard rules:
 - Manga style applies to LAYOUT only; tone stays serious.
 - coverTitle: ultra-short, punchy headline (4-8 chars in JP, 2-4 words in EN). Will be set in massive bold white-on-black type.
 - bubbleLine: 1 short line, sounds like a speech bubble from a farm-vet character.
+- bubbleKind: pick one of "speech" | "shout" | "thought".
+   * "speech" = neutral / observational
+   * "shout"  = explosive / urgent / market-shock framing (rendered as jagged starburst bubble)
+   * "thought" = inner question / hypothesis framing (rendered as cloud bubble)
+- coverSfx: 2-6 char manga onomatopoeia overlay rendered large + rotated, bleeding across the hero panel.
+   * JP examples: ドンッ!! / バンッ!! / ガッ! / ハッ! / ドカン!
+   * EN examples: BAM!! / POW! / WHAM!! / KA-POW!
 - emphasisStamp: 2-4 chars only (e.g. "重要" / "IMPACT" / "新事実" / "勝ち筋"). Used in a rotated stamp.
 - heroClaim: ONE sentence. The most defensible, specific claim.
 - heroEvidence: 2 sentences supporting the claim with realistic numbers (Hokkaido / APAC trial framing).
 - panels: exactly 4 items in this order — Challenge / Mechanism / Result / Next step. Panel 3 ("Result") MUST include a stat with realistic numeric value + unit.
+   * Set blackPanel: true on EXACTLY ONE panel (typically the Challenge panel) — this renders as a dramatic black-fill "kuro-koma" with reverse-white text.
+   * Set sfx on AT LEAST the Result panel (the stat panel) using a 2-5 char manga SFX (e.g. バンッ!, グッ!, POW!).
 - ctaHeading: short call to action.
 - ctaBody: 1-2 sentences detailing the next step.
 - guardrailNotes: 4-6 brand-compliance bullets in ${langName[language]}.`,

@@ -100,6 +100,20 @@ export interface RuminantsBrochureData {
   /** Tease line at the bottom of cover. */
   coverTease: string;
 
+  /**
+   * Optional manga onomatopoeia ("SFX") on the cover, rendered as a large
+   * rotated stylized word that bleeds across the hero panel border
+   * (e.g. "ドン!!", "ガッ!", "BAM!"). Pure manga signature.
+   */
+  coverSfx?: string;
+  /**
+   * Speech bubble shape on the cover hero. Defaults to "speech".
+   *  - "speech":  rounded-rect with triangular tail
+   *  - "shout":   jagged starburst polygon (for explosive emphasis)
+   *  - "thought": cloud / multi-bubble (for inner monologue / question)
+   */
+  bubbleKind?: "speech" | "shout" | "thought";
+
   /** 4 narrative panels for page 2. */
   panels: {
     label: string;
@@ -107,6 +121,13 @@ export interface RuminantsBrochureData {
     body: string;
     /** Optional: turns this panel into a stat panel with a big number. */
     stat?: { value: string; unit: string };
+    /** Optional manga SFX overlay (e.g. "ドン!!"). Rotated, bleeds. */
+    sfx?: string;
+    /**
+     * If true, render this panel as a "kuro-koma" — full black fill with
+     * white reverse text. Standard manga technique for dramatic moments.
+     */
+    blackPanel?: boolean;
   }[];
 
   /** CTA text used on the inverted-crimson panel. */
@@ -160,17 +181,20 @@ export function deterministicBrochure(
       "camp-heat-stress": {
         coverTitle: "夏に、勝つ。",
         bubbleLine: "「暑熱期でも、乳量は落とさない。」",
+        bubbleKind: "shout",
+        coverSfx: "ドンッ!!",
         heroClaim:
           "メチオニン精密設計で、暑熱期の乳量低下を実測ベースで抑制する。",
         heroEvidence:
           "北海道3農場、夏季ピーク3週間の試験で、対照群比 +0.7 kg/日の乳量維持と乳脂率の安定化を確認。冷却投資の前に飼料側で取れる伸びしろが、データとして残る。",
         emphasisStamp: "重要",
-        coverTease: "→ 次のページ：北海道試験の実数値とプロトコル",
+        coverTease: "→ 次のページ:北海道試験の実数値とプロトコル",
         panels: [
           {
             label: labels.panel1,
             heading: "ヒートストレス × DMI低下 = 月次P/Lの直撃",
             body: "気温上昇による採食量の落ち込みは、暑熱期の3週間で乳脂率と乳量を同時に削る。冷却設備の追加投資は数千万円規模。飼料側で先回りできる余地は、これまで定量化されてこなかった。",
+            blackPanel: true,
           },
           {
             label: labels.panel2,
@@ -182,6 +206,7 @@ export function deterministicBrochure(
             heading: "+0.7 kg/日 の乳量維持。乳脂率は安定。",
             body: "北海道3農場、頭数1,200頭の同時試験。対照群と比較して、暑熱期の3週間における乳量低下は半分以下。乳脂率の標準偏差も縮小し、バルクタンクの品質が読みやすくなった。",
             stat: { value: "+0.7", unit: "kg / 日 / 頭 (暑熱期 平均維持)" },
+            sfx: "バンッ!",
           },
           {
             label: labels.panel4,
@@ -196,6 +221,8 @@ export function deterministicBrochure(
       "camp-fat-yield": {
         coverTitle: "乳脂率は、設計できる。",
         bubbleLine: "「乳脂率の谷は、戦略で埋められる。」",
+        bubbleKind: "thought",
+        coverSfx: "ハッ!",
         heroClaim:
           "泌乳前期、メチオニン精密設計で乳脂率の谷を浅くする。",
         heroEvidence:
@@ -218,6 +245,7 @@ export function deterministicBrochure(
             heading: "乳脂率の最低値が +0.25 pt 改善。",
             body: "5農場の比較で、乳脂率の最低値が +0.25 pt 改善。基準価格帯到達までの日数も短縮。給与プログラムの大きな変更なしで再現性を確認。",
             stat: { value: "+0.25", unit: "pt 乳脂率 最低値の改善" },
+            sfx: "グッ!",
           },
           {
             label: labels.panel4,
@@ -232,6 +260,8 @@ export function deterministicBrochure(
       "camp-methane": {
         coverTitle: "メタンも、生産も。",
         bubbleLine: "「クレジット化のその前に、勝てる飼料設計。」",
+        bubbleKind: "shout",
+        coverSfx: "バンッ!!",
         heroClaim:
           "メタン削減と泌乳量の維持を、トレードオフではなく両立として設計する。",
         heroEvidence:
@@ -243,6 +273,7 @@ export function deterministicBrochure(
             label: labels.panel1,
             heading: "「削減すれば乳量が落ちる」という前提を疑う。",
             body: "従来のメタン抑制策は、しばしば乾物摂取量と乳量の低下を伴った。J-クレジット制度の本格運用を前にした今、両立できる設計が市場価値を生む。",
+            blackPanel: true,
           },
           {
             label: labels.panel2,
@@ -254,6 +285,7 @@ export function deterministicBrochure(
             heading: "−12% メタン排出、乳量維持。",
             body: "APAC内パイロット試験で、乾物摂取量当たりのメタン排出を −12% 削減。同時に乳量・乳脂率は対照群比で有意差なしを確認。",
             stat: { value: "−12%", unit: "メタン (DMI 当たり、対照群比)" },
+            sfx: "ドンッ!!",
           },
           {
             label: labels.panel4,
@@ -283,6 +315,8 @@ export function deterministicBrochure(
         "Adisseo APAC ルミナンツチームの試験結果から、現場で再現可能な設計を抽出。",
       emphasisStamp: preset.emphasisStamp ?? "重要",
       coverTease: preset.coverTease ?? "→ 次のページ：詳細プロトコル",
+      coverSfx: preset.coverSfx,
+      bubbleKind: preset.bubbleKind,
       panels:
         preset.panels ??
         [
@@ -341,11 +375,14 @@ export function deterministicBrochure(
       "Across three Hokkaido farms over a 3-week peak summer window, herds on the Adisseo protocol held +0.7 kg/cow/day vs. controls — without changes to cooling capex.",
     emphasisStamp: "IMPACT",
     coverTease: "→ Next page: trial data + 30-day on-farm protocol",
+    coverSfx: "BAM!!",
+    bubbleKind: "shout",
     panels: [
       {
         label: labels.panel1,
         heading: "Heat × DMI = direct hit on monthly P&L.",
         body: "Summer DMI compression cuts both fat % and yield in the same 3-week window. Adding cooling capex is a multi-million-yen call. The feed-side headroom has been under-quantified until now.",
+        blackPanel: true,
       },
       {
         label: labels.panel2,
@@ -357,6 +394,7 @@ export function deterministicBrochure(
         heading: "+0.7 kg/day held. Fat % stable.",
         body: "Three farms, 1,200 head, peak summer window. Yield drop on the protocol arm was less than half the control. Bulk-tank fat % standard deviation tightened — quality reads more cleanly.",
         stat: { value: "+0.7", unit: "kg/cow/day held during heat window" },
+        sfx: "POW!",
       },
       {
         label: labels.panel4,
