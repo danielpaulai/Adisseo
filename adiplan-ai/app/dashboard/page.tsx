@@ -229,6 +229,12 @@ export default function DashboardPage() {
             >
               Plan on a Page
             </Link>
+            <Link
+              href="/trust-layer"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Trust layer
+            </Link>
           </nav>
         </div>
       </header>

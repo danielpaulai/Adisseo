@@ -17,6 +17,8 @@ import { useAdiPlanStore } from "@/lib/store";
 import { aquaMagazines, type AquaLanguage } from "@/lib/aqua-leaflet";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
+import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { collectAquaProse } from "@/lib/studio-prose";
 
 type LeafletResponse = {
   leaflet: {
@@ -65,6 +67,8 @@ export default function AquaStudioPage() {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [gatePasses, setGatePasses] = useState(true);
+  const [gateScore, setGateScore] = useState(100);
   const lastBlobRef = useRef<string | null>(null);
 
   const consumeStudioPrefill = useAdiPlanStore((s) => s.consumeStudioPrefill);
@@ -148,7 +152,7 @@ export default function AquaStudioPage() {
       useAdiPlanStore.getState().pushActivity({
         kind: "aqua",
         title: `Aqua leaflet: ${data.leaflet?.headline?.slice(0, 64) ?? "untitled"}`,
-        detail: `${language.toUpperCase()} \u00b7 ${magazineId}`,
+        detail: `${language.toUpperCase()} · ${magazineId}`,
         href: "/studio/aqua",
         tone: "cyan",
       });
@@ -330,16 +334,34 @@ export default function AquaStudioPage() {
           )}
 
           {response && (
+            <ProseQualityCard
+              text={collectAquaProse(response.leaflet)}
+              brandVoice="adisseo"
+              language={(["en", "vi", "id", "th", "zh"].includes(response.leaflet.language)
+                ? response.leaflet.language
+                : "en") as "en" | "vi" | "id" | "th" | "zh"}
+              onGateChange={(passes, score) => {
+                setGatePasses(passes);
+                setGateScore(score);
+              }}
+              compact
+            />
+          )}
+
+          {response && (
             <SendToHQButton
               kind="aqua-leaflet"
-              title={`Aqua leaflet \u00b7 ${response.leaflet.headline}`}
-              summary={`${response.leaflet.language.toUpperCase()} \u00b7 ${aquaMagazines.find((m) => m.id === magazineId)?.name ?? magazineId}`}
+              title={`Aqua leaflet · ${response.leaflet.title}`}
+              summary={`${response.leaflet.language.toUpperCase()} · ${aquaMagazines.find((m) => m.id === magazineId)?.name ?? magazineId} · trust ${gateScore}/100`}
               href="/studio/aqua"
               payload={{
                 language: response.leaflet.language,
                 magazine: magazineId,
                 topic: studioTopic,
+                trustScore: gateScore,
               }}
+              gateBlocked={!gatePasses}
+              gateReason={gateScore < 60 ? `Trust score ${gateScore}/100 below 60.` : undefined}
             />
           )}
 

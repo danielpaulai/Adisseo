@@ -22,6 +22,8 @@ import {
 } from "@/lib/ruminants-brochure";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
+import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { collectRuminantsProse } from "@/lib/studio-prose";
 
 type BrochureResponse = {
   brochure: RuminantsBrochureData;
@@ -29,6 +31,12 @@ type BrochureResponse = {
   campaign: (typeof ruminantsCampaigns)[number];
   meta: { usedModel: string };
 };
+
+function gateReason(score: number): string {
+  if (score < 40) return `Trust score ${score}/100 — saturated, rewrite required.`;
+  if (score < 60) return `Trust score ${score}/100 — below brand floor of 60.`;
+  return `Score below floor.`;
+}
 
 export default function RuminantsStudioPage() {
   const studioTopic = useAdiPlanStore((s) => s.studioTopic);
@@ -44,6 +52,8 @@ export default function RuminantsStudioPage() {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [gatePasses, setGatePasses] = useState(true);
+  const [gateScore, setGateScore] = useState(100);
   const lastBlobRef = useRef<string | null>(null);
 
   const consumeStudioPrefill = useAdiPlanStore((s) => s.consumeStudioPrefill);
@@ -115,7 +125,7 @@ export default function RuminantsStudioPage() {
       useAdiPlanStore.getState().pushActivity({
         kind: "ruminants",
         title: `Ruminants brochure: ${data.brochure?.coverHook?.slice(0, 64) ?? campaignId}`,
-        detail: `${language.toUpperCase()} \u00b7 ${campaignId} \u00b7 ${audienceId}`,
+        detail: `${language.toUpperCase()} · ${campaignId} · ${audienceId}`,
         href: "/studio/ruminants",
         tone: "ink",
       });
@@ -339,15 +349,31 @@ export default function RuminantsStudioPage() {
           )}
 
           {response && (
+            <ProseQualityCard
+              text={collectRuminantsProse(response.brochure)}
+              brandVoice="adisseo"
+              language={(response.brochure.language === "ja" ? "ja" : "en") as "ja" | "en"}
+              onGateChange={(passes, score) => {
+                setGatePasses(passes);
+                setGateScore(score);
+              }}
+              compact
+            />
+          )}
+
+          {response && (
             <SendToHQButton
               kind="ruminants-brochure"
-              title={`Ruminants manga \u00b7 ${response.brochure.topic ?? "Hokkaido"}`}
-              summary={`${(response.brochure.language ?? "ja").toUpperCase()} \u00b7 manga 2-page brochure`}
+              title={`Ruminants manga · ${response.brochure.topic ?? "Hokkaido"}`}
+              summary={`${(response.brochure.language ?? "ja").toUpperCase()} · manga 2-page brochure · trust ${gateScore}/100`}
               href="/studio/ruminants"
               payload={{
                 language: response.brochure.language,
                 topic: response.brochure.topic,
+                trustScore: gateScore,
               }}
+              gateBlocked={!gatePasses}
+              gateReason={gateReason(gateScore)}
             />
           )}
 

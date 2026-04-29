@@ -19,6 +19,8 @@ import { useAdiPlanStore } from "@/lib/store";
 import { swineAccounts } from "@/lib/swine-accounts";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
+import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { collectSwineProse } from "@/lib/studio-prose";
 
 type Scene = {
   index: number;
@@ -66,6 +68,8 @@ export default function SwineStudioPage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<ShortResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [gatePasses, setGatePasses] = useState(true);
+  const [gateScore, setGateScore] = useState(100);
   const [bridgeContext, setBridgeContext] = useState<{
     articleTitle: string;
     competitor: string;
@@ -224,7 +228,7 @@ export default function SwineStudioPage() {
       useAdiPlanStore.getState().pushActivity({
         kind: "swine",
         title: `Swine short: ${studioTopic.slice(0, 64) || "untitled"}`,
-        detail: `${studioLanguage.toUpperCase()}${studioAccount ? ` \u00b7 ${studioAccount}` : ""}`,
+        detail: `${studioLanguage.toUpperCase()}${studioAccount ? ` · ${studioAccount}` : ""}`,
         href: "/studio/swine",
         tone: "crimson",
       });
@@ -386,17 +390,35 @@ export default function SwineStudioPage() {
           )}
 
           {response && (
-            <SendToHQButton
-              kind="swine-short"
-              title={`Swine short \u00b7 ${response.short.hook ?? studioTopic}`}
-              summary={`${(response.short.language ?? studioLanguage).toUpperCase()} \u00b7 ${studioAccount || "no account"}`}
-              href="/studio/swine"
-              payload={{
-                language: response.short.language ?? studioLanguage,
-                account: studioAccount,
-                topic: studioTopic,
-              }}
-            />
+            <>
+              <ProseQualityCard
+                text={collectSwineProse(response.short)}
+                brandVoice="adisseo"
+                language={(["en", "zh", "vi", "th", "id"].includes(studioLanguage)
+                  ? studioLanguage
+                  : "en") as "en" | "zh" | "vi" | "th" | "id"}
+                onGateChange={(passes, score) => {
+                  setGatePasses(passes);
+                  setGateScore(score);
+                }}
+                compact
+              />
+
+              <SendToHQButton
+                kind="swine-short"
+                title={`Swine short · ${response.short.hook ?? studioTopic}`}
+                summary={`${studioLanguage.toUpperCase()} · ${studioAccount || "no account"} · trust ${gateScore}/100`}
+                href="/studio/swine"
+                payload={{
+                  language: studioLanguage,
+                  account: studioAccount,
+                  topic: studioTopic,
+                  trustScore: gateScore,
+                }}
+                gateBlocked={!gatePasses}
+                gateReason={gateScore < 60 ? `Trust score ${gateScore}/100 below 60.` : undefined}
+              />
+            </>
           )}
         </aside>
 

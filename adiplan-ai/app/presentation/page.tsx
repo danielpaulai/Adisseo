@@ -77,7 +77,7 @@ const MODULES = [
     layer: "Assessing",
     title: "CBI / CSF Ladder",
     blurb:
-      "Auto-generates “Help me to\u2026” outcomes per selected stakeholder, ladders up to underlying value (WITI). Editable rungs.",
+      "Auto-generates “Help me to…” outcomes per selected stakeholder, ladders up to underlying value (WITI). Editable rungs.",
     moves: ["8 AdiPlan CBIs encoded", "5 personas", "Per-stakeholder ladder"],
   },
   {
@@ -200,17 +200,17 @@ const MODULES = [
     layer: "Activation · Engagement",
     title: "Malaysia-ASF engagement tracker",
     blurb:
-      "The metric Ricardo named on the call. 9 historical deliverables, 4-stage funnel (views \u2192 qualified \u2192 conversations \u2192 conversions), each row graded against the 43% Malaysia benchmark.",
-    moves: ["Per-species + per-kind aggregates", "Above / At / Below grading", "Q4 2025 \u2013 Q1 2026 dataset"],
+      "The metric Ricardo named on the call. 9 historical deliverables, 4-stage funnel (views → qualified → conversations → conversions), each row graded against the 43% Malaysia benchmark.",
+    moves: ["Per-species + per-kind aggregates", "Above / At / Below grading", "Q4 2025 – Q1 2026 dataset"],
   },
   {
     href: "/wwwk",
     icon: HelpCircle,
     num: "14",
-    layer: "Assessing \u00b7 WWWK",
+    layer: "Assessing · WWWK",
     title: "We Wish We Knew board",
     blurb:
-      "Per stakeholder + CBI, 5\u20137 sharp research questions tied to specific decisions. Each question carries a hypothesis, recommended method, priority, and an answer-capture textarea. CSV export feeds the regional research backlog.",
+      "Per stakeholder + CBI, 5–7 sharp research questions tied to specific decisions. Each question carries a hypothesis, recommended method, priority, and an answer-capture textarea. CSV export feeds the regional research backlog.",
     moves: ["Tied to a decision", "Disprovable hypotheses", "1:1 / focus / on-farm methods"],
   },
   {
@@ -220,25 +220,60 @@ const MODULES = [
     layer: "Executing",
     title: "Plan on a Page generator",
     blurb:
-      "Single-sheet A4 PDF that pulls everything in this session \u2014 selected stakeholders, composed frame, deliverables shipped, KPI targets \u2014 onto one page for regional sales / KAMs.",
-    moves: ["A4 portrait, 4-quadrant", "Live preview iframe", "Zero LLM calls \u2014 deterministic"],
+      "Single-sheet A4 PDF that pulls everything in this session — selected stakeholders, composed frame, deliverables shipped, KPI targets — onto one page for regional sales / KAMs.",
+    moves: ["A4 portrait, 4-quadrant", "Live preview iframe", "Zero LLM calls — deterministic"],
   },
   {
     href: "/approval-queue",
     icon: ShieldCheck,
     num: "16",
-    layer: "HQ desk \u00b7 Brand-guardrail",
+    layer: "HQ desk · Brand-guardrail",
     title: "Approval queue",
     blurb:
       "Every species deliverable can be sent to Ricardo for brand review. Pending / approved / rejected with a comment, audited, and logged back into the war room. Closes Vish's #1 blocker.",
-    moves: ["Send-to-HQ button on every studio", "Quick-comment templates", "Decisions \u2192 activity log"],
+    moves: ["Send-to-HQ button on every studio", "Quick-comment templates", "Decisions → activity log"],
+  },
+  {
+    href: "/trust-layer",
+    icon: ShieldCheck,
+    num: "17",
+    layer: "Phase 1 · Trust layer",
+    title: "Prose-quality scorer + brand-voice gate",
+    blurb:
+      "Three checks compose into one composite gate before anything reaches HQ: slop-detector (16 LLM-tic rule families, ported from slop-guard), brand-voice (Adisseo / DSM / Cargill / Kemin banned-terms + claim guardrails), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked from Send-to-HQ. Below 80 — cannot be graded above benchmark in the engagement tracker. The platform now has measurable taste.",
+    moves: [
+      "16 slop rules, 0–100 score, instant client-side",
+      "Per-tenant brand-voice configs (4 customers seeded)",
+      "Hard fail on regulatory claim language",
+      "Engagement tracker quality-gates the benchmark",
+    ],
   },
 ];
 
 const ROADMAP = [
   {
+    title: "Phase 1 · Trust layer (LIVE)",
+    body: "Slop-detector + brand-voice + LanguageTool grammar compose into a composite gate. Every studio output runs the gate before Send-to-HQ. Engagement tracker only grades 'above benchmark' if trust ≥ 80. The full pipeline runs at /trust-layer.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Phase 2 · Research depth + Vault (Weeks 4–7)",
+    body: "GPT-Researcher / GPT-Newspaper agents that cite 5+ sources for every deliverable, plus a per-customer 'Vault' of approved trial protocols and anchor data so studios stop hallucinating numbers.",
+    icon: Cpu,
+  },
+  {
+    title: "Phase 3 · UI / UX upgrade + brand-voice fingerprinting (Weeks 8–13)",
+    body: "DSPy + Langfuse to fingerprint each species manager's voice from their own writing samples. Magic UI / shadcn upgrade across studios. Vercel Satori OG-card generator for every shipped asset.",
+    icon: Sparkles,
+  },
+  {
+    title: "Phase 4 · Multi-tenant + distribution rails (Weeks 14–24)",
+    body: "Tenant-aware (DSM / Cargill / Kemin) with per-tenant brand-voice configs. Auto-distribute approved deliverables to LinkedIn / WeChat / WhatsApp once the trust gate + HQ approval both clear.",
+    icon: Radio,
+  },
+  {
     title: "Live measurement plumbing",
-    body: "The engagement tracker is shipped with seed data. Next: hook real PDF-viewer scroll-depth, Swine-short watch-time, and LinkedIn-carousel scroll-depth APIs into the funnel \u2014 no more seed numbers.",
+    body: "The engagement tracker is shipped with seed data. Next: hook real PDF-viewer scroll-depth, Swine-short watch-time, and LinkedIn-carousel scroll-depth APIs into the funnel — no more seed numbers.",
     icon: Database,
   },
   {
@@ -258,12 +293,16 @@ const ROADMAP = [
   },
   {
     title: "Auto-distribute to LinkedIn / WeChat / WhatsApp",
-    body: "Once HQ approves a deliverable in the queue, push it directly to the right channel \u2014 LinkedIn carousel API, WeChat OA push, WhatsApp distributor list. Right now the manager still copies the file out manually.",
+    body: "Once HQ approves a deliverable in the queue, push it directly to the right channel — LinkedIn carousel API, WeChat OA push, WhatsApp distributor list. Right now the manager still copies the file out manually.",
     icon: Radio,
   },
 ];
 
 const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[] = [
+  {
+    label: "Phase 1 · Trust layer (slop-guard + vale-style + LanguageTool)",
+    status: "wired",
+  },
   {
     label: "Live competitor scraper feed (env-driven, awaiting SCRAPER_API_URL)",
     status: "wired",
@@ -280,10 +319,18 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
     label: "Live engagement measurement (real watch-time / scroll-depth APIs)",
     status: "in-progress",
   },
-  { label: "Mistral OCR 3 ingestion of internal Adisseo PDFs", status: "deferred" },
-  { label: "LangGraph long-running orchestration", status: "deferred" },
-  { label: "Auto-distribute approved deliverables to LinkedIn / WeChat / WhatsApp", status: "deferred" },
-  { label: "Auto-distribute to LinkedIn / WeChat / WhatsApp", status: "deferred" },
+  {
+    label: "Phase 2 · GPT-Researcher / GPT-Newspaper research-to-script agents",
+    status: "deferred",
+  },
+  {
+    label: "Phase 3 · DSPy brand-voice fingerprinting per species manager",
+    status: "deferred",
+  },
+  {
+    label: "Phase 4 · Multi-tenant + auto-distribution to LinkedIn / WeChat / WhatsApp",
+    status: "deferred",
+  },
 ];
 
 export default function PresentationPage() {
@@ -515,7 +562,7 @@ export default function PresentationPage() {
         id="shipped"
         num="04"
         title="What AdiPlan AI ships today"
-        subtitle="16 live modules \u2014 every one runnable in the browser, no setup required"
+        subtitle="17 live modules — every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {MODULES.map((m) => (

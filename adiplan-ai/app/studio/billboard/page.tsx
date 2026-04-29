@@ -21,6 +21,8 @@ import {
 } from "@/lib/billboards";
 import { Logo } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
+import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { collectBillboardProse } from "@/lib/studio-prose";
 import { toast } from "sonner";
 
 type GenerateResp = {
@@ -39,6 +41,8 @@ export default function BillboardStudioPage() {
   const [generating, setGenerating] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [gatePasses, setGatePasses] = useState(true);
+  const [gateScore, setGateScore] = useState(100);
   const [previewVersion, setPreviewVersion] = useState(0);
   const [renderedKey, setRenderedKey] = useState<string | null>(null);
 
@@ -286,7 +290,7 @@ export default function BillboardStudioPage() {
               ) : (
                 <Sparkles size={14} />
               )}
-              {generating ? "Composing billboard\u2026" : "Compose billboard"}
+              {generating ? "Composing billboard…" : "Compose billboard"}
             </button>
 
             {error && (
@@ -333,23 +337,38 @@ export default function BillboardStudioPage() {
                 ) : (
                   <FileDown size={14} />
                 )}
-                {downloading ? "Rendering\u2026" : `Download PDF · ${fmtSpec.label}`}
+                {downloading ? "Rendering…" : `Download PDF · ${fmtSpec.label}`}
               </button>
             )}
 
             {pack && (
-              <SendToHQButton
-                kind="billboard"
-                title={`Billboard \u00b7 ${pack.headline}`}
-                summary={`${fmtSpec.label} \u00b7 ${pack.region ?? "APAC"} \u00b7 ${pack.persona ?? "billboard"}`}
-                href="/studio/billboard"
-                payload={{
-                  format,
-                  region: pack.region,
-                  persona: pack.persona,
-                  cbi: pack.cbi,
-                }}
-              />
+              <>
+                <ProseQualityCard
+                  text={collectBillboardProse(pack)}
+                  brandVoice="adisseo"
+                  language="en"
+                  onGateChange={(passes, score) => {
+                    setGatePasses(passes);
+                    setGateScore(score);
+                  }}
+                  compact
+                />
+                <SendToHQButton
+                  kind="billboard"
+                  title={`Billboard · ${pack.headline}`}
+                  summary={`${fmtSpec.label} · ${pack.region ?? "APAC"} · ${pack.persona ?? "billboard"} · trust ${gateScore}/100`}
+                  href="/studio/billboard"
+                  payload={{
+                    format,
+                    region: pack.region,
+                    persona: pack.persona,
+                    cbi: pack.cbi,
+                    trustScore: gateScore,
+                  }}
+                  gateBlocked={!gatePasses}
+                  gateReason={gateScore < 60 ? `Trust score ${gateScore}/100 below 60.` : undefined}
+                />
+              </>
             )}
           </div>
 

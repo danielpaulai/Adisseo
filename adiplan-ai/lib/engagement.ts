@@ -47,6 +47,12 @@ export interface DeliverableInstance {
   conversions: number;
   /** Optional anchor signal (matched competitor article). */
   anchorSignal?: string;
+  /**
+   * Trust-layer composite (0–100) at the moment the deliverable was sent
+   * to HQ. New deliverables carry this; legacy seed entries default to 90 so
+   * the historical benchmark math doesn't break.
+   */
+  trustScore?: number;
 }
 
 /* ============================================================================
@@ -71,6 +77,7 @@ export const seededDeliverables: DeliverableInstance[] = [
     conversations: 5,
     conversions: 3,
     anchorSignal: "Cargill SE-Asia ASF webinar Q3 2025",
+    trustScore: 88,
   },
   {
     id: "del-poultry-agp-q1",
@@ -103,6 +110,7 @@ export const seededDeliverables: DeliverableInstance[] = [
     conversations: 6,
     conversions: 1,
     anchorSignal: "Kemin AGP-Free webinar Jan 2026",
+    trustScore: 65,
   },
   {
     id: "del-aqua-leaflet-id-q4",
@@ -151,6 +159,7 @@ export const seededDeliverables: DeliverableInstance[] = [
     conversations: 9,
     conversions: 3,
     anchorSignal: "Hokkaido Dairy Times · summer-yield issue",
+    trustScore: 92,
   },
   {
     id: "del-ruminants-manga-jp-q1b",
@@ -281,11 +290,33 @@ export const MALAYSIA_BENCHMARK = {
     "Malaysia-ASF Q4 2025: 38 views → 7 qualified → 5 conversations → 3 conversions. The 43% qualified-to-conversion rate is the bar every new deliverable is graded against.",
 };
 
-export function gradeAgainstBenchmark(f: Funnel): "above" | "at" | "below" {
+/**
+ * Grade a funnel against Ricardo's Malaysia-ASF baseline.
+ *
+ * From Phase 1 of the trust-layer rollout: a deliverable can only be graded
+ * "above benchmark" if its trust-layer composite is ≥ 80 (Adisseo brand-clean).
+ * High-conversion volume from a 50/100 deliverable is *not* a win — it bakes
+ * in slop and burns brand equity. We surface those as "at" so the team
+ * still gets credit, but the asset doesn't become a template.
+ */
+export function gradeAgainstBenchmark(
+  f: Funnel,
+  meanTrustScore?: number
+): "above" | "at" | "below" {
   const r = f.conversionRate;
-  if (r >= MALAYSIA_BENCHMARK.conversionRate * 1.05) return "above";
+  if (r >= MALAYSIA_BENCHMARK.conversionRate * 1.05) {
+    if (meanTrustScore !== undefined && meanTrustScore < 80) return "at";
+    return "above";
+  }
   if (r >= MALAYSIA_BENCHMARK.conversionRate * 0.85) return "at";
   return "below";
+}
+
+/** Mean trust score of a deliverable cohort (legacy entries default to 90). */
+export function meanTrustScore(items: DeliverableInstance[]): number {
+  if (!items.length) return 0;
+  const sum = items.reduce((acc, d) => acc + (d.trustScore ?? 90), 0);
+  return Math.round(sum / items.length);
 }
 
 export function pct(n: number): string {

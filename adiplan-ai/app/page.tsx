@@ -177,7 +177,7 @@ const modules: Module[] = [
     stage: "02 · Assessing",
     title: "We Wish We Knew (WWWK) board",
     blurb:
-      "The questions that, if answered, would change a decision \u2014 not just inform one. Per-stakeholder, per-CBI, with hypothesis, method, priority, and an answer-capture textarea. CSV export feeds the regional research backlog.",
+      "The questions that, if answered, would change a decision — not just inform one. Per-stakeholder, per-CBI, with hypothesis, method, priority, and an answer-capture textarea. CSV export feeds the regional research backlog.",
     cta: "Open the board",
     ready: true,
   },
@@ -187,38 +187,49 @@ const modules: Module[] = [
     stage: "Executing",
     title: "Plan on a Page generator",
     blurb:
-      "Single-sheet A4 strategy summary that pulls everything in your session \u2014 stakeholders moved, frame composed, deliverables shipped, KPI targets \u2014 into one printable PDF for regional sales / KAMs.",
+      "Single-sheet A4 strategy summary that pulls everything in your session — stakeholders moved, frame composed, deliverables shipped, KPI targets — into one printable PDF for regional sales / KAMs.",
     cta: "Generate the plan",
     ready: true,
   },
   {
     href: "/approval-queue",
     icon: ShieldCheck,
-    stage: "HQ desk \u00b7 Brand-guardrail",
+    stage: "HQ desk · Brand-guardrail",
     title: "Approval queue",
     blurb:
-      "Vish's #1 blocker on Apr 28: HQ brand-guardrail compliance gates every poultry carousel. Every deliverable can be sent to HQ, reviewed by Ricardo with a comment, and audited \u2014 with the decision logged to the war room.",
+      "Vish's #1 blocker on Apr 28: HQ brand-guardrail compliance gates every poultry carousel. Every deliverable can be sent to HQ, reviewed by Ricardo with a comment, and audited — with the decision logged to the war room.",
     cta: "Open the queue",
     ready: true,
+  },
+  {
+    href: "/trust-layer",
+    icon: ShieldCheck,
+    stage: "Phase 1 · Trust layer",
+    title: "Prose-quality scorer + brand-voice gate",
+    blurb:
+      "Every studio deliverable runs through three checks before it can hit the HQ queue: slop-detector (16 LLM-tic rule families), brand-voice (per-customer banned-terms + claim guardrails), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked. Below 80 — won't be graded above benchmark in the engagement tracker.",
+    cta: "Score live prose",
+    ready: true,
+    highlight: true,
   },
 ];
 
 const upcoming = [
   {
     species: null,
-    text: "Live scraper API \u2014 wired (set SCRAPER_API_URL to swap from seeded articles)",
+    text: "Phase 2 · GPT-Researcher / GPT-Newspaper agents — every deliverable cites 5+ sources",
   },
   {
     species: null,
-    text: "Mistral OCR 3 \u2014 internal Adisseo PDF ingest into Copilot",
+    text: "Phase 3 · DSPy brand-voice fingerprinting per species manager",
   },
   {
     species: null,
-    text: "LangGraph orchestration \u2014 overnight competitor digest agent",
+    text: "Phase 4 · Multi-tenant (DSM / Cargill / Kemin) with per-tenant brand-voice configs",
   },
   {
     species: null,
-    text: "Auto-distribute to LinkedIn / WeChat / WhatsApp \u2014 HQ-approval gated",
+    text: "Auto-distribute to LinkedIn / WeChat / WhatsApp — HQ-approval + trust-gate enforced",
   },
 ] as const;
 

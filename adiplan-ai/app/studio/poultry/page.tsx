@@ -22,6 +22,8 @@ import {
 } from "@/lib/poultry-pack";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { SendToHQButton } from "@/components/SendToHQButton";
+import { ProseQualityCard } from "@/components/ProseQualityCard";
+import { collectPoultryProse } from "@/lib/studio-prose";
 import { useAdiPlanStore } from "@/lib/store";
 
 type PackResponse = {
@@ -48,6 +50,8 @@ export default function PoultryStudioPage() {
   const [renderingCarousel, setRenderingCarousel] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copyOk, setCopyOk] = useState(false);
+  const [gatePasses, setGatePasses] = useState(true);
+  const [gateScore, setGateScore] = useState(100);
   const lastBlobRef = useRef<string | null>(null);
 
   const consumeStudioPrefill = useAdiPlanStore((s) => s.consumeStudioPrefill);
@@ -139,7 +143,7 @@ export default function PoultryStudioPage() {
       useAdiPlanStore.getState().pushActivity({
         kind: "poultry",
         title: `Poultry pack: ${data.pack?.email?.subject?.slice(0, 64) ?? campaignId}`,
-        detail: `Email + carousel \u00b7 ${audienceId}`,
+        detail: `Email + carousel · ${audienceId}`,
         href: "/studio/poultry",
         tone: "cyan",
       });
@@ -369,15 +373,29 @@ export default function PoultryStudioPage() {
                 </ul>
               </div>
 
+              <ProseQualityCard
+                text={collectPoultryProse(response.pack)}
+                brandVoice="adisseo"
+                language="en"
+                onGateChange={(passes, score) => {
+                  setGatePasses(passes);
+                  setGateScore(score);
+                }}
+                compact
+              />
+
               <SendToHQButton
                 kind="poultry-pack"
-                title={`Poultry pack \u00b7 ${response.pack.email.subject}`}
-                summary={`Audience ${response.pack.audienceId} \u00b7 campaign ${response.pack.campaignId} \u00b7 email + 5-slide carousel`}
+                title={`Poultry pack · ${response.pack.email.subject}`}
+                summary={`Audience ${response.pack.audienceId} · campaign ${response.pack.campaignId} · email + 5-slide carousel · trust ${gateScore}/100`}
                 href="/studio/poultry"
                 payload={{
                   campaign: response.pack.campaignId,
                   audience: response.pack.audienceId,
+                  trustScore: gateScore,
                 }}
+                gateBlocked={!gatePasses}
+                gateReason={gateScore < 60 ? `Trust score ${gateScore}/100 below 60.` : undefined}
               />
 
 

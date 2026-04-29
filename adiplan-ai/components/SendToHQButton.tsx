@@ -25,6 +25,9 @@ interface Props {
   sender?: string;
   /** Disable the button (e.g. before first generation). */
   disabled?: boolean;
+  /** When the trust-layer gate blocks the send, show this banner instead of the button. */
+  gateBlocked?: boolean;
+  gateReason?: string;
 }
 
 const SENDER_BY_KIND: Record<ApprovalKind, string> = {
@@ -45,6 +48,8 @@ export function SendToHQButton({
   href,
   sender,
   disabled = false,
+  gateBlocked = false,
+  gateReason,
 }: Props) {
   const requestApproval = useAdiPlanStore((s) => s.requestApproval);
   const approvals = useAdiPlanStore((s) => s.approvals);
@@ -120,6 +125,16 @@ export function SendToHQButton({
         >
           Open queue <ArrowRight size={11} />
         </Link>
+      </div>
+    );
+  }
+
+  if (gateBlocked) {
+    return (
+      <div className="flex flex-wrap items-center gap-2 rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs">
+        <ShieldCheck size={14} className="text-rose-600" />
+        <span className="font-semibold text-rose-700">Blocked by trust-layer gate</span>
+        <span className="text-rose-700/80">{gateReason ?? "Fix prose-quality issues first"}</span>
       </div>
     );
   }

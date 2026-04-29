@@ -19,6 +19,7 @@ import {
   Bookmark,
   Mic,
   Layers,
+  ShieldCheck,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import {
@@ -26,6 +27,7 @@ import {
   groupBySpecies,
   groupByKind,
   gradeAgainstBenchmark,
+  meanTrustScore,
   MALAYSIA_BENCHMARK,
   pct,
   seededDeliverables,
@@ -93,6 +95,7 @@ export default function EngagementTrackerPage() {
   }, [filterSpecies, filterKind, sortKey]);
 
   const overall = aggregateFunnel(filtered);
+  const overallTrust = meanTrustScore(filtered);
   const bySpecies = groupBySpecies(seededDeliverables);
   const byKind = groupByKind(seededDeliverables);
 
@@ -206,6 +209,25 @@ export default function EngagementTrackerPage() {
             </div>
           </div>
           <FunnelStrip funnel={overall} />
+          <div className="mt-3 flex items-center gap-3 rounded-xl border border-adisseo-line bg-white px-4 py-3 text-xs">
+            <ShieldCheck size={14} className="text-adisseo-crimson" />
+            <span className="font-semibold text-adisseo-ink-strong">Trust-layer floor:</span>
+            <span className="text-adisseo-muted">
+              Cohort mean trust score is{" "}
+              <strong
+                className={
+                  overallTrust >= 80
+                    ? "text-emerald-600"
+                    : overallTrust >= 60
+                      ? "text-amber-600"
+                      : "text-rose-600"
+                }
+              >
+                {overallTrust}/100
+              </strong>
+              . Phase 1 rule: a deliverable can only be graded "above benchmark" if its trust score is ≥ 80. High engagement on slop-heavy copy stays at "at" — we don't promote it to a template.
+            </span>
+          </div>
         </section>
 
         {/* BY SPECIES + BY KIND */}
@@ -215,26 +237,38 @@ export default function EngagementTrackerPage() {
               <Users size={12} /> By species
             </div>
             <ul className="space-y-2">
-              {bySpecies.map((s) => (
-                <li key={s.species} className="flex items-center gap-3">
-                  <span className="w-24 text-xs font-bold text-adisseo-ink-strong">
-                    {SPECIES_LABEL[s.species]}
-                  </span>
-                  <span className="text-[10px] text-adisseo-muted">
-                    {s.count} · {s.funnel.conversions} conv
-                  </span>
-                  <div className="ml-auto flex items-center gap-2">
-                    <RatioBar value={s.funnel.conversionRate} />
-                    <span
-                      className={`w-12 text-right text-xs font-bold ${gradeColor(
-                        gradeAgainstBenchmark(s.funnel)
-                      )}`}
-                    >
-                      {pct(s.funnel.conversionRate)}
+              {bySpecies.map((s) => {
+                const items = seededDeliverables.filter((d) => d.species === s.species);
+                const trust = meanTrustScore(items);
+                return (
+                  <li key={s.species} className="flex items-center gap-3">
+                    <span className="w-24 text-xs font-bold text-adisseo-ink-strong">
+                      {SPECIES_LABEL[s.species]}
                     </span>
-                  </div>
-                </li>
-              ))}
+                    <span className="text-[10px] text-adisseo-muted">
+                      {s.count} · {s.funnel.conversions} conv
+                    </span>
+                    <span
+                      className={`text-[10px] font-semibold ${
+                        trust >= 80 ? "text-emerald-600" : trust >= 60 ? "text-amber-600" : "text-rose-600"
+                      }`}
+                      title="Mean trust-layer score for the cohort"
+                    >
+                      • trust {trust}
+                    </span>
+                    <div className="ml-auto flex items-center gap-2">
+                      <RatioBar value={s.funnel.conversionRate} />
+                      <span
+                        className={`w-12 text-right text-xs font-bold ${gradeColor(
+                          gradeAgainstBenchmark(s.funnel, trust)
+                        )}`}
+                      >
+                        {pct(s.funnel.conversionRate)}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -245,6 +279,8 @@ export default function EngagementTrackerPage() {
             <ul className="space-y-2">
               {byKind.map((k) => {
                 const Icon = KIND_ICON[k.kind];
+                const items = seededDeliverables.filter((d) => d.kind === k.kind);
+                const trust = meanTrustScore(items);
                 return (
                   <li key={k.kind} className="flex items-center gap-3">
                     <span className="flex w-32 items-center gap-1.5 text-xs font-bold text-adisseo-ink-strong">
@@ -254,11 +290,19 @@ export default function EngagementTrackerPage() {
                     <span className="text-[10px] text-adisseo-muted">
                       {k.count} · {k.funnel.conversions} conv
                     </span>
+                    <span
+                      className={`text-[10px] font-semibold ${
+                        trust >= 80 ? "text-emerald-600" : trust >= 60 ? "text-amber-600" : "text-rose-600"
+                      }`}
+                      title="Mean trust-layer score for the cohort"
+                    >
+                      • trust {trust}
+                    </span>
                     <div className="ml-auto flex items-center gap-2">
                       <RatioBar value={k.funnel.conversionRate} />
                       <span
                         className={`w-12 text-right text-xs font-bold ${gradeColor(
-                          gradeAgainstBenchmark(k.funnel)
+                          gradeAgainstBenchmark(k.funnel, trust)
                         )}`}
                       >
                         {pct(k.funnel.conversionRate)}
@@ -313,6 +357,7 @@ export default function EngagementTrackerPage() {
                   <Th align="right">Conv rate</Th>
                   <Th align="right">Conversations</Th>
                   <Th align="right">Conversions</Th>
+                  <Th align="center">Trust</Th>
                   <Th align="center">vs MY benchmark</Th>
                 </tr>
               </thead>
@@ -320,7 +365,8 @@ export default function EngagementTrackerPage() {
                 {filtered.map((d) => {
                   const Icon = KIND_ICON[d.kind];
                   const f = aggregateFunnel([d]);
-                  const grade = gradeAgainstBenchmark(f);
+                  const trust = d.trustScore ?? 90;
+                  const grade = gradeAgainstBenchmark(f, trust);
                   return (
                     <tr
                       key={d.id}
@@ -368,7 +414,10 @@ export default function EngagementTrackerPage() {
                         {d.conversions}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <GradeBadge grade={grade} />
+                        <TrustBadge trust={trust} />
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <GradeBadge grade={grade} trust={trust} />
                       </td>
                     </tr>
                   );
@@ -512,7 +561,14 @@ function RatioBar({ value }: { value: number }) {
   );
 }
 
-function GradeBadge({ grade }: { grade: "above" | "at" | "below" }) {
+function GradeBadge({
+  grade,
+  trust,
+}: {
+  grade: "above" | "at" | "below";
+  trust?: number;
+}) {
+  const blockedByTrust = trust !== undefined && trust < 80 && grade === "at";
   if (grade === "above")
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
@@ -521,13 +577,41 @@ function GradeBadge({ grade }: { grade: "above" | "at" | "below" }) {
     );
   if (grade === "at")
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-adisseo-bg px-2 py-0.5 text-[10px] font-semibold text-adisseo-ink-strong">
-        <Clock size={10} /> At
+      <span
+        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+          blockedByTrust
+            ? "bg-amber-50 text-amber-800"
+            : "bg-adisseo-bg text-adisseo-ink-strong"
+        }`}
+        title={
+          blockedByTrust
+            ? "Above benchmark numerically, but trust-layer score < 80 — don't make this asset a template."
+            : undefined
+        }
+      >
+        <Clock size={10} /> {blockedByTrust ? "At (trust-gated)" : "At"}
       </span>
     );
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-adisseo-orange">
       <TrendingDown size={10} /> Below
+    </span>
+  );
+}
+
+function TrustBadge({ trust }: { trust: number }) {
+  const tone =
+    trust >= 80
+      ? "bg-emerald-50 text-emerald-700"
+      : trust >= 60
+        ? "bg-amber-50 text-amber-800"
+        : "bg-rose-50 text-rose-700";
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${tone}`}
+      title="Trust-layer composite (slop · brand voice · grammar)"
+    >
+      <ShieldCheck size={10} /> {trust}
     </span>
   );
 }
