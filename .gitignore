@@ -1,0 +1,49 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files (keep .env.example, ignore everything else)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Node / Next.js
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+**/dist/
+
+# Coverage / caches
+**/.cache/
+**/coverage/
+**/.turbo/
+**/.eslintcache
+**/tsconfig.tsbuildinfo
+
+# Local artefacts
+*.tsbuildinfo
+next-env.d.ts.bak
+
+# Vercel
+.vercel/
+
+# OS / scratch
+*.bak
+*.tmp

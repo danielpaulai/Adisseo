@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stakeholder Influence Map · Adisseo APAC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --adisseo-red: #C8102E;
+    --adisseo-red-dark: #8B0A1F;
+    --adisseo-red-soft: #F4DCE0;
+    --adisseo-charcoal: #1A1A1A;
+    --adisseo-grey: #4A4A4A;
+    --adisseo-light: #F5F5F5;
+    --adisseo-mist: #FAFAFA;
+    --adisseo-line: #E5E5E5;
+    --adisseo-gold: #C9A961;
+    --growing: #2E7D32;
+    --shrinking: #E65100;
+    --stable: #5C6BC0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #2C2C2C;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--adisseo-charcoal);
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .slide {
+    width: 1280px;
+    height: 720px;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slide-header { height: 8px; background: var(--adisseo-red); flex-shrink: 0; }
+
+  .slide-body {
+    flex: 1;
+    padding: 28px 40px 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .title-block .eyebrow {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--adisseo-red);
+    margin-bottom: 4px;
+  }
+
+  .title-block h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--adisseo-charcoal);
+    letter-spacing: -0.01em;
+  }
+
+  .title-block .subtitle {
+    font-size: 12px;
+    color: var(--adisseo-grey);
+    margin-top: 4px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .filter-group {
+    display: flex;
+    background: var(--adisseo-mist);
+    border: 1px solid var(--adisseo-line);
+  }
+
+  .filter-btn {
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--adisseo-grey);
+    cursor: pointer;
+    border-right: 1px solid var(--adisseo-line);
+    transition: all 0.15s;
+  }
+
+  .filter-btn:last-child { border-right: none; }
+  .filter-btn:hover { background: white; color: var(--adisseo-charcoal); }
+  .filter-btn.active { background: var(--adisseo-red); color: white; }
+
+  .action-btn {
+    padding: 8px 14px;
+    background: white;
+    border: 1px solid var(--adisseo-line);
+    color: var(--adisseo-charcoal);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .action-btn:hover { background: var(--adisseo-charcoal); color: white; border-color: var(--adisseo-charcoal); }
+  .action-btn.primary { background: var(--adisseo-red); color: white; border-color: var(--adisseo-red); }
+  .action-btn.primary:hover { background: var(--adisseo-red-dark); border-color: var(--adisseo-red-dark); }
+
+  /* ─── Main canvas + side panel ─── */
+  .work-area {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+    min-height: 0;
+  }
+
+  .canvas-wrap {
+    position: relative;
+    background: var(--adisseo-mist);
+    border: 1px solid var(--adisseo-line);
+    overflow: hidden;
+    background-image:
+      linear-gradient(var(--adisseo-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--adisseo-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+  }
+
+  .canvas-wrap svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .canvas-wrap svg .arrow-line { stroke: var(--adisseo-grey); stroke-width: 1.5; opacity: 0.5; transition: opacity 0.2s; }
+  .canvas-wrap svg .arrow-line.highlight { stroke: var(--adisseo-red); opacity: 1; stroke-width: 2.5; }
+
+  .node {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 600;
+    line-height: 1.15;
+    padding: 6px;
+    background: white;
+    border: 2px solid var(--adisseo-red);
+    color: var(--adisseo-charcoal);
+    z-index: 3;
+    cursor: grab;
+    user-select: none;
+    transition: box-shadow 0.15s, transform 0.15s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  .node:hover { box-shadow: 0 4px 14px rgba(200,16,46,0.25); transform: scale(1.04); z-index: 5; }
+  .node.dragging { cursor: grabbing; z-index: 10; box-shadow: 0 8px 24px rgba(0,0,0,0.25); transform: scale(1.06); transition: none; }
+  .node.selected { box-shadow: 0 0 0 3px white, 0 0 0 5px var(--adisseo-red), 0 4px 14px rgba(200,16,46,0.4); z-index: 5; }
+  .node.dim { opacity: 0.25; pointer-events: none; }
+
+  .node.large { width: 110px; height: 110px; font-size: 12px; background: var(--adisseo-red); color: white; border-color: var(--adisseo-red-dark); }
+  .node.medium { width: 82px; height: 82px; font-size: 10px; background: var(--adisseo-red-soft); border-color: var(--adisseo-red); }
+  .node.small { width: 60px; height: 60px; font-size: 9px; background: white; }
+
+  .ring {
+    position: absolute;
+    border: 2px dashed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 0.15s;
+  }
+
+  .ring.growing { border-color: var(--growing); }
+  .ring.shrinking { border-color: var(--shrinking); }
+
+  /* ─── Side panel ─── */
+  .side-panel {
+    background: white;
+    border: 1px solid var(--adisseo-line);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    background: var(--adisseo-charcoal);
+    color: white;
+    padding: 14px 16px;
+  }
+
+  .panel-header .label {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 4px;
+  }
+
+  .panel-header .name {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .panel-body {
+    padding: 14px 16px;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .stat {
+    background: var(--adisseo-mist);
+    padding: 8px 10px;
+    border-left: 3px solid var(--adisseo-red);
+  }
+
+  .stat .stat-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--adisseo-grey);
+    margin-bottom: 3px;
+    font-weight: 600;
+  }
+
+  .stat .stat-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--adisseo-charcoal);
+  }
+
+  .stat .stat-value.growing { color: var(--growing); }
+  .stat .stat-value.shrinking { color: var(--shrinking); }
+  .stat .stat-value.stable { color: var(--stable); }
+
+  .panel-section h4 {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--adisseo-red);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .panel-section p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--adisseo-charcoal);
+  }
+
+  .csf-list { display: flex; flex-direction: column; gap: 4px; }
+
+  .csf-list li {
+    list-style: none;
+    font-size: 11px;
+    color: var(--adisseo-charcoal);
+    padding: 5px 8px 5px 18px;
+    background: var(--adisseo-mist);
+    position: relative;
+    line-height: 1.35;
+  }
+
+  .csf-list li::before {
+    content: '→';
+    position: absolute;
+    left: 6px;
+    color: var(--adisseo-red);
+    font-weight: 700;
+  }
+
+  .deliverables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .deliverable {
+    background: var(--adisseo-charcoal);
+    color: white;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    color: var(--adisseo-grey);
+  }
+
+  .empty-state .icon {
+    font-size: 32px;
+    color: var(--adisseo-line);
+    margin-bottom: 12px;
+  }
+
+  .empty-state p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* ─── Legend bar ─── */
+  .legend-bar {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid var(--adisseo-line);
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--adisseo-grey);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid;
+  }
+
+  .legend-dot.large { background: var(--adisseo-red); border-color: var(--adisseo-red-dark); width: 18px; height: 18px; }
+  .legend-dot.medium { background: var(--adisseo-red-soft); border-color: var(--adisseo-red); }
+  .legend-dot.small { background: white; border-color: var(--adisseo-red); width: 11px; height: 11px; }
+
+  .legend-ring {
+    width: 18px;
+    height: 18px;
+    border: 2px dashed;
+    border-radius: 50%;
+  }
+
+  .legend-ring.growing { border-color: var(--growing); }
+  .legend-ring.shrinking { border-color: var(--shrinking); }
+
+  /* ─── Footer ─── */
+  .slide-footer {
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: var(--adisseo-grey);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-top: 1px solid var(--adisseo-line);
+    padding-top: 8px;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--adisseo-red);
+    letter-spacing: 0.15em;
+  }
+
+  .brand-mark::before {
+    content: '';
+    width: 5px;
+    height: 13px;
+    background: var(--adisseo-red);
+  }
+
+  .hint {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 16px;
+    font-size: 11px;
+    z-index: 1000;
+    line-height: 1.4;
+  }
+
+  .hint kbd {
+    background: rgba(255,255,255,0.15);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide">
+  <div class="slide-header"></div>
+  <div class="slide-body">
+
+    <div class="top-bar">
+      <div class="title-block">
+        <div class="eyebrow">AdiPlan AI · Live Demo</div>
+        <h1>Stakeholder Influence Map</h1>
+        <div class="subtitle">Drag any node. Influence arrows redraw. Click a stakeholder to see CSFs and recommended deliverables.</div>
+      </div>
+      <div class="controls">
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="large">Large</button>
+          <button class="filter-btn" data-filter="growing">Growing</button>
+          <button class="filter-btn" data-filter="shrinking">Shrinking</button>
+        </div>
+        <button class="action-btn" id="reset-btn">Reset</button>
+        <button class="action-btn primary" id="auto-btn">Auto-layout</button>
+      </div>
+    </div>
+
+    <div class="work-area">
+      <div class="canvas-wrap" id="canvas">
+        <svg id="arrows">
+          <defs>
+            <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--adisseo-grey)" />
+            </marker>
+            <marker id="arrowhead-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--adisseo-red)" />
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <aside class="side-panel" id="panel">
+        <div class="panel-header" id="panel-header" style="display: none;">
+          <div class="label">Stakeholder</div>
+          <div class="name" id="panel-name"></div>
+        </div>
+        <div class="panel-body" id="panel-body">
+          <div class="empty-state">
+            <div>
+              <div class="icon">◎</div>
+              <p>Click any stakeholder to surface their<br/>CSF ladder and recommended<br/>deliverable from the Content Studio.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="legend-bar">
+      <div class="legend-item"><div class="legend-dot large"></div><span>Large influence</span></div>
+      <div class="legend-item"><div class="legend-dot medium"></div><span>Medium</span></div>
+      <div class="legend-item"><div class="legend-dot small"></div><span>Small</span></div>
+      <div class="legend-item"><div class="legend-ring growing"></div><span>Growing trend</span></div>
+      <div class="legend-item"><div class="legend-ring shrinking"></div><span>Shrinking trend</span></div>
+      <div class="legend-item"><span style="font-weight:600; color:var(--adisseo-charcoal);">→</span><span>Direction of influence</span></div>
+      <div class="legend-item" style="margin-left: auto; color: var(--adisseo-charcoal); font-weight: 600;">15 stakeholders · seeded from Adisseo workshop example</div>
+    </div>
+
+    <div class="slide-footer">
+      <div class="brand-mark">ADISSEO · APAC MARKETING</div>
+      <div>AdiPlan AI · Stakeholder Module · Demo Build</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="hint">
+  <strong>Demo controls:</strong>
+  <kbd>drag</kbd> nodes ·
+  <kbd>click</kbd> for details ·
+  <kbd>filter</kbd> by influence/trend ·
+  <kbd>auto-layout</kbd> for force-directed
+</div>
+
+<script>
+const stakeholders = [
+  {
+    id: 'nut-mgr', name: 'Nutrition Managers', size: 'large', trend: 'growing',
+    persona: 'Efficiency Optimizer',
+    csfs: [
+      'Help me hit feed-conversion targets predictably',
+      'Help me defend margin against ingredient volatility',
+      'Help me reduce supplier complexity'
+    ],
+    deliverables: ['AGP-Free emailer', 'Technical bulletin', 'Account-adapted deck'],
+    x: 470, y: 110
+  },
+  {
+    id: 'integrator', name: 'Integrator Tech Mgr', size: 'large', trend: 'stable',
+    persona: 'System Simplifier',
+    csfs: [
+      'Help me standardize across multiple feed mills',
+      'Help me roll out consistent results region-wide',
+      'Help me defend against KOL skepticism'
+    ],
+    deliverables: ['KOL podcast', 'Multi-site case study', 'Webinar series'],
+    x: 740, y: 130
+  },
+  {
+    id: 'corp-nut', name: 'Corp Nutrition Directors', size: 'medium', trend: 'shrinking',
+    persona: 'Strategic Allocator',
+    csfs: [
+      'Help me align nutrition strategy to corporate ESG',
+      'Help me justify category spend to the C-suite'
+    ],
+    deliverables: ['Executive one-pager', 'Sustainability brief'],
+    x: 130, y: 220
+  },
+  {
+    id: 'procurement', name: 'Procurement Leads', size: 'medium', trend: 'stable',
+    persona: 'Cost Sentinel',
+    csfs: [
+      'Help me secure supply at predictable cost',
+      'Help me reduce qualified-vendor risk'
+    ],
+    deliverables: ['Price-trend dashboard', 'Supply-security FAQ'],
+    x: 410, y: 280
+  },
+  {
+    id: 'regulatory', name: 'Regulatory Affairs', size: 'medium', trend: 'growing',
+    persona: 'Compliance Guardian',
+    csfs: [
+      'Help me anticipate APAC regulatory shifts',
+      'Help me document compliance to auditors'
+    ],
+    deliverables: ['Regulatory alert email', 'Compliance handbook'],
+    x: 700, y: 280
+  },
+  {
+    id: 'vets', name: 'Vets · Clinic & Field', size: 'medium', trend: 'shrinking',
+    persona: 'Outcome Defender',
+    csfs: [
+      'Help me reduce clinical incidents on-farm',
+      'Help me support farmer decision-making'
+    ],
+    deliverables: ['ASF/PRRS video kit', 'Visual diagnosis aid'],
+    x: 230, y: 400
+  },
+  {
+    id: 'premixer', name: 'Premixer Formulator', size: 'medium', trend: 'growing',
+    persona: 'Specification Master',
+    csfs: [
+      'Help me match diet specs to producer goals',
+      'Help me defend formulation choices to clients'
+    ],
+    deliverables: ['Formulator emailer', 'Spec-comparison sheet'],
+    x: 530, y: 420
+  },
+  {
+    id: 'vet-kol', name: 'Vet KOLs / Consultants', size: 'medium', trend: 'shrinking',
+    persona: 'Authority Voice',
+    csfs: [
+      'Help me publish credible content',
+      'Help me stay ahead of peer consultants'
+    ],
+    deliverables: ['Podcast guest invite', 'Co-authored white paper'],
+    x: 880, y: 420
+  },
+  {
+    id: 'csr', name: 'CSR Officer', size: 'small', trend: 'growing',
+    persona: 'ESG Advocate',
+    csfs: ['Help me prove sustainability progress'],
+    deliverables: ['Carbon-footprint infographic'],
+    x: 60, y: 110
+  },
+  {
+    id: 'farm', name: 'Farm Managers', size: 'small', trend: 'stable',
+    persona: 'Daily Operator',
+    csfs: ['Help me get results without complexity'],
+    deliverables: ['Manga-style brochure', 'WhatsApp video'],
+    x: 360, y: 510
+  },
+  {
+    id: 'feedmill', name: 'Feed Mill', size: 'small', trend: 'stable',
+    persona: 'Process Steward',
+    csfs: ['Help me run consistent batches'],
+    deliverables: ['Application guide PDF'],
+    x: 700, y: 530
+  },
+  {
+    id: 'university', name: 'University / Research', size: 'small', trend: 'shrinking',
+    persona: 'Academic Validator',
+    csfs: ['Help me access trial data for citation'],
+    deliverables: ['Open trial-data portal'],
+    x: 920, y: 110
+  },
+  {
+    id: 'distributor', name: 'Distributor BD', size: 'small', trend: 'shrinking',
+    persona: 'Channel Operator',
+    csfs: ['Help me defend my margin and exclusivity'],
+    deliverables: ['Co-branded leaflet', 'Live webinar'],
+    x: 100, y: 510
+  },
+  {
+    id: 'finance', name: 'Financial Controllers', size: 'small', trend: 'stable',
+    persona: 'Margin Auditor',
+    csfs: ['Help me see ROI on category spend'],
+    deliverables: ['ROI calculator'],
+    x: 800, y: 60
+  },
+  {
+    id: 'ngo', name: 'NGO / Trade Policy', size: 'small', trend: 'stable',
+    persona: 'Industry Lobbyist',
+    csfs: ['Help me shape policy with industry data'],
+    deliverables: ['Policy briefing pack'],
+    x: 540, y: 60
+  }
+];
+
+const links = [
+  { from: 'vet-kol', to: 'nut-mgr' },
+  { from: 'vet-kol', to: 'integrator' },
+  { from: 'regulatory', to: 'corp-nut' },
+  { from: 'regulatory', to: 'integrator' },
+  { from: 'premixer', to: 'integrator' },
+  { from: 'integrator', to: 'feedmill' },
+  { from: 'nut-mgr', to: 'farm' },
+  { from: 'vets', to: 'farm' },
+  { from: 'university', to: 'vet-kol' },
+  { from: 'corp-nut', to: 'procurement' },
+  { from: 'csr', to: 'corp-nut' },
+  { from: 'distributor', to: 'farm' },
+  { from: 'ngo', to: 'regulatory' },
+  { from: 'finance', to: 'corp-nut' },
+  { from: 'premixer', to: 'feedmill' }
+];
+
+const sizeMap = { large: 110, medium: 82, small: 60 };
+const ringScale = { growing: 1.36, shrinking: 0.7 };
+
+const canvas = document.getElementById('canvas');
+const svg = document.getElementById('arrows');
+const panelHeader = document.getElementById('panel-header');
+const panelName = document.getElementById('panel-name');
+const panelBody = document.getElementById('panel-body');
+
+let selectedId = null;
+let activeFilter = 'all';
+
+function renderNodes() {
+  // Clear existing nodes (preserve svg)
+  Array.from(canvas.querySelectorAll('.node, .ring')).forEach(el => el.remove());
+
+  stakeholders.forEach(s => {
+    const size = sizeMap[s.size];
+
+    // Future-influence ring
+    if (s.trend !== 'stable') {
+      const ring = document.createElement('div');
+      ring.className = `ring ${s.trend}`;
+      ring.dataset.id = s.id;
+      const ringSize = size * ringScale[s.trend];
+      ring.style.width = `${ringSize}px`;
+      ring.style.height = `${ringSize}px`;
+      ring.style.left = `${s.x + size/2 - ringSize/2}px`;
+      ring.style.top = `${s.y + size/2 - ringSize/2}px`;
+      canvas.appendChild(ring);
+    }
+
+    // Node
+    const node = document.createElement('div');
+    node.className = `node ${s.size}`;
+    node.dataset.id = s.id;
+    node.style.left = `${s.x}px`;
+    node.style.top = `${s.y}px`;
+    node.textContent = s.name;
+    node.addEventListener('mousedown', e => startDrag(e, s));
+    node.addEventListener('click', e => { if (!node.classList.contains('was-dragged')) selectNode(s.id); node.classList.remove('was-dragged'); });
+    canvas.appendChild(node);
+  });
+
+  applyFilter();
+  renderArrows();
+}
+
+function renderArrows() {
+  const existing = Array.from(svg.querySelectorAll('.arrow-line'));
+  existing.forEach(e => e.remove());
+
+  links.forEach(link => {
+    const from = stakeholders.find(s => s.id === link.from);
+    const to = stakeholders.find(s => s.id === link.to);
+    if (!from || !to) return;
+
+    const fromSize = sizeMap[from.size];
+    const toSize = sizeMap[to.size];
+
+    const fx = from.x + fromSize / 2;
+    const fy = from.y + fromSize / 2;
+    const tx = to.x + toSize / 2;
+    const ty = to.y + toSize / 2;
+
+    // Trim line to circle edges
+    const dx = tx - fx, dy = ty - fy;
+    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+    const ux = dx / dist, uy = dy / dist;
+    const x1 = fx + ux * (fromSize / 2);
+    const y1 = fy + uy * (fromSize / 2);
+    const x2 = tx - ux * (toSize / 2 + 4);
+    const y2 = ty - uy * (toSize / 2 + 4);
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('class', 'arrow-line');
+    line.dataset.from = link.from;
+    line.dataset.to = link.to;
+    line.setAttribute('marker-end', 'url(#arrowhead)');
+
+    if (selectedId && (link.from === selectedId || link.to === selectedId)) {
+      line.classList.add('highlight');
+      line.setAttribute('marker-end', 'url(#arrowhead-red)');
+    }
+
+    svg.appendChild(line);
+  });
+}
+
+function startDrag(e, s) {
+  e.preventDefault();
+  const node = e.currentTarget;
+  const ring = canvas.querySelector(`.ring[data-id="${s.id}"]`);
+  const startX = e.clientX;
+  const startY = e.clientY;
+  const origX = s.x;
+  const origY = s.y;
+  const size = sizeMap[s.size];
+  const ringSize = s.trend !== 'stable' ? size * ringScale[s.trend] : 0;
+
+  node.classList.add('dragging');
+  let moved = false;
+
+  function onMove(ev) {
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+
+    s.x = Math.max(0, Math.min(canvas.clientWidth - size, origX + dx));
+    s.y = Math.max(0, Math.min(canvas.clientHeight - size, origY + dy));
+
+    node.style.left = `${s.x}px`;
+    node.style.top = `${s.y}px`;
+    if (ring) {
+      ring.style.left = `${s.x + size/2 - ringSize/2}px`;
+      ring.style.top = `${s.y + size/2 - ringSize/2}px`;
+    }
+    renderArrows();
+  }
+
+  function onUp() {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    node.classList.remove('dragging');
+    if (moved) node.classList.add('was-dragged');
+  }
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+function selectNode(id) {
+  selectedId = id === selectedId ? null : id;
+  Array.from(canvas.querySelectorAll('.node')).forEach(n => {
+    n.classList.toggle('selected', n.dataset.id === selectedId);
+  });
+  renderArrows();
+  updatePanel();
+}
+
+function updatePanel() {
+  if (!selectedId) {
+    panelHeader.style.display = 'none';
+    panelBody.innerHTML = `
+      <div class="empty-state">
+        <div>
+          <div class="icon">◎</div>
+          <p>Click any stakeholder to surface their<br/>CSF ladder and recommended<br/>deliverable from the Content Studio.</p>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const s = stakeholders.find(x => x.id === selectedId);
+  panelHeader.style.display = 'block';
+  panelName.textContent = s.name;
+
+  const trendLabel = { growing: 'Growing ↑', shrinking: 'Shrinking ↓', stable: 'Not changing' }[s.trend];
+  const trendClass = s.trend === 'stable' ? 'stable' : s.trend;
+
+  panelBody.innerHTML = `
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-label">Influence</div>
+        <div class="stat-value">${s.size[0].toUpperCase() + s.size.slice(1)}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Trend</div>
+        <div class="stat-value ${trendClass}">${trendLabel}</div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h4>Persona</h4>
+      <p>${s.persona}</p>
+    </div>
+
+    <div class="panel-section">
+      <h4>CSF Ladder · "Help me to…"</h4>
+      <ul class="csf-list">
+        ${s.csfs.map(c => `<li>${c}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="panel-section">
+      <h4>Recommended Deliverables</h4>
+      <div class="deliverables">
+        ${s.deliverables.map(d => `<span class="deliverable">${d}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ─── Filtering ───
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyFilter();
+  });
+});
+
+function applyFilter() {
+  Array.from(canvas.querySelectorAll('.node')).forEach(n => {
+    const s = stakeholders.find(x => x.id === n.dataset.id);
+    let match = false;
+    if (activeFilter === 'all') match = true;
+    else if (activeFilter === 'large') match = s.size === 'large';
+    else if (activeFilter === 'growing') match = s.trend === 'growing';
+    else if (activeFilter === 'shrinking') match = s.trend === 'shrinking';
+    n.classList.toggle('dim', !match);
+  });
+  Array.from(canvas.querySelectorAll('.ring')).forEach(r => {
+    const s = stakeholders.find(x => x.id === r.dataset.id);
+    let match = false;
+    if (activeFilter === 'all') match = true;
+    else if (activeFilter === 'large') match = s.size === 'large';
+    else if (activeFilter === 'growing') match = s.trend === 'growing';
+    else if (activeFilter === 'shrinking') match = s.trend === 'shrinking';
+    r.style.opacity = match ? '0.55' : '0.1';
+  });
+}
+
+// ─── Reset / Auto-layout ───
+const initialPositions = stakeholders.map(s => ({ id: s.id, x: s.x, y: s.y }));
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  initialPositions.forEach(p => {
+    const s = stakeholders.find(x => x.id === p.id);
+    s.x = p.x;
+    s.y = p.y;
+  });
+  renderNodes();
+});
+
+document.getElementById('auto-btn').addEventListener('click', () => {
+  // Simple force-directed pass: large nodes pulled toward center, small pushed out, links act as springs
+  const cx = canvas.clientWidth / 2;
+  const cy = canvas.clientHeight / 2;
+  const linkLen = 180;
+
+  for (let iter = 0; iter < 220; iter++) {
+    // Repulsion
+    for (let i = 0; i < stakeholders.length; i++) {
+      for (let j = i + 1; j < stakeholders.length; j++) {
+        const a = stakeholders[i], b = stakeholders[j];
+        const ax = a.x + sizeMap[a.size]/2;
+        const ay = a.y + sizeMap[a.size]/2;
+        const bx = b.x + sizeMap[b.size]/2;
+        const by = b.y + sizeMap[b.size]/2;
+        const dx = bx - ax, dy = by - ay;
+        let d2 = dx*dx + dy*dy;
+        if (d2 < 1) d2 = 1;
+        const f = 6000 / d2;
+        const d = Math.sqrt(d2);
+        const fx = (dx / d) * f;
+        const fy = (dy / d) * f;
+        a.x -= fx; a.y -= fy;
+        b.x += fx; b.y += fy;
+      }
+    }
+    // Spring on links
+    links.forEach(l => {
+      const a = stakeholders.find(s => s.id === l.from);
+      const b = stakeholders.find(s => s.id === l.to);
+      if (!a || !b) return;
+      const ax = a.x + sizeMap[a.size]/2;
+      const ay = a.y + sizeMap[a.size]/2;
+      const bx = b.x + sizeMap[b.size]/2;
+      const by = b.y + sizeMap[b.size]/2;
+      const dx = bx - ax, dy = by - ay;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      const f = (d - linkLen) * 0.04;
+      const fx = (dx / d) * f;
+      const fy = (dy / d) * f;
+      a.x += fx; a.y += fy;
+      b.x -= fx; b.y -= fy;
+    });
+    // Center gravity (large nodes pulled hardest)
+    stakeholders.forEach(s => {
+      const cxn = s.x + sizeMap[s.size]/2;
+      const cyn = s.y + sizeMap[s.size]/2;
+      const pull = s.size === 'large' ? 0.022 : s.size === 'medium' ? 0.012 : 0.006;
+      s.x += (cx - cxn) * pull;
+      s.y += (cy - cyn) * pull;
+    });
+    // Bounds
+    stakeholders.forEach(s => {
+      const sz = sizeMap[s.size];
+      s.x = Math.max(8, Math.min(canvas.clientWidth - sz - 8, s.x));
+      s.y = Math.max(8, Math.min(canvas.clientHeight - sz - 8, s.y));
+    });
+  }
+
+  renderNodes();
+});
+
+// ─── Init ───
+renderNodes();
+window.addEventListener('resize', renderArrows);
+</script>
+
+</body>
+</html>

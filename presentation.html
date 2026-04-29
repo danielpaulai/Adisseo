@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AdiPlan AI — Adisseo APAC Marketing Co-Pilot</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --adisseo-red: #C8102E;
+    --adisseo-red-dark: #8B0A1F;
+    --adisseo-red-soft: #F4DCE0;
+    --adisseo-charcoal: #1A1A1A;
+    --adisseo-grey: #4A4A4A;
+    --adisseo-light: #F5F5F5;
+    --adisseo-mist: #FAFAFA;
+    --adisseo-line: #E5E5E5;
+    --adisseo-gold: #C9A961;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #2C2C2C;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--adisseo-charcoal);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .deck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    gap: 32px;
+  }
+
+  .slide {
+    width: 1280px;
+    height: 720px;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slide-header {
+    height: 8px;
+    background: var(--adisseo-red);
+    flex-shrink: 0;
+  }
+
+  .slide-body {
+    flex: 1;
+    padding: 56px 72px 40px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 24px;
+    left: 72px;
+    right: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--adisseo-grey);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-top: 1px solid var(--adisseo-line);
+    padding-top: 12px;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--adisseo-red);
+    letter-spacing: 0.15em;
+  }
+
+  .brand-mark::before {
+    content: '';
+    width: 6px;
+    height: 16px;
+    background: var(--adisseo-red);
+    display: inline-block;
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--adisseo-red);
+    margin-bottom: 16px;
+  }
+
+  h1.slide-title {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--adisseo-charcoal);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  h2.slide-subtitle {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--adisseo-grey);
+    margin-bottom: 36px;
+    line-height: 1.5;
+    max-width: 900px;
+  }
+
+  /* ─── Title slide ─── */
+  .slide.title {
+    background: linear-gradient(135deg, var(--adisseo-charcoal) 0%, #2A2A2A 100%);
+    color: white;
+  }
+
+  .slide.title .slide-body {
+    justify-content: center;
+    padding: 0 96px;
+  }
+
+  .slide.title .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 64px;
+  }
+
+  .slide.title .logo-mark .bar {
+    width: 8px;
+    height: 36px;
+    background: var(--adisseo-red);
+  }
+
+  .slide.title .logo-mark .name {
+    color: white;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+  }
+
+  .slide.title h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 76px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+
+  .slide.title .accent {
+    color: var(--adisseo-red);
+  }
+
+  .slide.title .tagline {
+    font-size: 22px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 300;
+    max-width: 760px;
+    line-height: 1.5;
+    margin-bottom: 56px;
+  }
+
+  .slide.title .meta {
+    display: flex;
+    gap: 64px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 28px;
+  }
+
+  .slide.title .meta-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+
+  .slide.title .meta-item .value {
+    font-size: 16px;
+    color: white;
+    font-weight: 500;
+  }
+
+  /* ─── Section divider ─── */
+  .slide.section {
+    background: var(--adisseo-red);
+    color: white;
+  }
+
+  .slide.section .slide-body {
+    justify-content: center;
+    padding: 0 96px;
+  }
+
+  .slide.section .section-num {
+    font-family: 'Source Serif 4', serif;
+    font-size: 200px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.18);
+    line-height: 0.85;
+    margin-bottom: 12px;
+  }
+
+  .slide.section h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .slide.section .desc {
+    font-size: 20px;
+    color: rgba(255,255,255,0.85);
+    max-width: 720px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* ─── Quote slide ─── */
+  .quote-block {
+    border-left: 4px solid var(--adisseo-red);
+    padding: 20px 32px;
+    margin: 24px 0;
+    background: var(--adisseo-mist);
+  }
+
+  .quote-block .quote-text {
+    font-family: 'Source Serif 4', serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--adisseo-charcoal);
+    font-style: italic;
+  }
+
+  .quote-block .quote-attr {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--adisseo-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
+
+  /* ─── Content layouts ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; flex: 1; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; flex: 1; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; flex: 1; }
+
+  .card {
+    background: var(--adisseo-mist);
+    padding: 24px;
+    border-top: 3px solid var(--adisseo-red);
+  }
+
+  .card .card-num {
+    font-size: 11px;
+    color: var(--adisseo-red);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    margin-bottom: 8px;
+  }
+
+  .card .card-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--adisseo-charcoal);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .card .card-body {
+    font-size: 13px;
+    color: var(--adisseo-grey);
+    line-height: 1.5;
+  }
+
+  /* ─── Layer stack ─── */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .layer {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 24px;
+    padding: 14px 20px;
+    background: var(--adisseo-mist);
+    border-left: 4px solid var(--adisseo-red);
+    align-items: center;
+  }
+
+  .layer .layer-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--adisseo-red);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .layer .layer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .layer .layer-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--adisseo-charcoal);
+  }
+
+  .layer .layer-desc {
+    font-size: 12px;
+    color: var(--adisseo-grey);
+    line-height: 1.4;
+  }
+
+  /* ─── Stakeholder map slide ─── */
+  .stakeholder-canvas {
+    flex: 1;
+    position: relative;
+    background: var(--adisseo-mist);
+    border: 1px solid var(--adisseo-line);
+    overflow: hidden;
+  }
+
+  .node {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 1.15;
+    padding: 4px;
+    background: white;
+    border: 2px solid var(--adisseo-red);
+    color: var(--adisseo-charcoal);
+    z-index: 2;
+  }
+
+  .node.large { width: 110px; height: 110px; font-size: 12px; background: var(--adisseo-red); color: white; border-color: var(--adisseo-red-dark); }
+  .node.medium { width: 78px; height: 78px; background: var(--adisseo-red-soft); border-color: var(--adisseo-red); }
+  .node.small { width: 56px; height: 56px; background: white; }
+
+  .node .ring {
+    position: absolute;
+    border: 2px dashed var(--adisseo-red);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  .node.growing .ring { width: 130%; height: 130%; }
+  .node.shrinking .ring { width: 75%; height: 75%; border-color: var(--adisseo-grey); }
+
+  .arrow {
+    position: absolute;
+    height: 1.5px;
+    background: var(--adisseo-grey);
+    transform-origin: 0 50%;
+    z-index: 1;
+    opacity: 0.45;
+  }
+
+  .arrow::after {
+    content: '';
+    position: absolute;
+    right: -2px; top: -3px;
+    width: 0; height: 0;
+    border-left: 6px solid var(--adisseo-grey);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+
+  .legend {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    background: white;
+    border: 1px solid var(--adisseo-line);
+    padding: 10px 14px;
+    font-size: 10px;
+    color: var(--adisseo-grey);
+    line-height: 1.6;
+    z-index: 3;
+  }
+
+  .legend strong { color: var(--adisseo-charcoal); display: block; margin-bottom: 4px; font-size: 10px; }
+
+  /* ─── Species lanes ─── */
+  .lanes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; flex: 1; }
+
+  .lane {
+    background: white;
+    border: 1px solid var(--adisseo-line);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lane-head {
+    padding: 18px 18px 14px;
+    background: var(--adisseo-red);
+    color: white;
+  }
+
+  .lane-head .species {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 4px;
+  }
+
+  .lane-head .manager {
+    font-family: 'Source Serif 4', serif;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .lane-body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .lane-body .item {
+    font-size: 12px;
+    color: var(--adisseo-charcoal);
+    line-height: 1.4;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .lane-body .item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 6px;
+    height: 2px;
+    background: var(--adisseo-red);
+  }
+
+  .lane-foot {
+    padding: 12px 18px;
+    background: var(--adisseo-mist);
+    font-size: 10px;
+    color: var(--adisseo-grey);
+    font-style: italic;
+    line-height: 1.4;
+    border-top: 1px solid var(--adisseo-line);
+  }
+
+  /* ─── Timeline ─── */
+  .timeline {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 0;
+  }
+
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .timeline-row .label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--adisseo-charcoal);
+    text-align: right;
+  }
+
+  .timeline-row .track {
+    height: 28px;
+    background: var(--adisseo-mist);
+    position: relative;
+    border: 1px solid var(--adisseo-line);
+  }
+
+  .timeline-row .bar {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    background: var(--adisseo-red);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .timeline-row .bar.soft { background: var(--adisseo-red-soft); color: var(--adisseo-red-dark); }
+  .timeline-row .bar.dark { background: var(--adisseo-charcoal); }
+
+  .timeline-axis {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+    margin-bottom: 6px;
+  }
+
+  .timeline-axis .scale {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    font-size: 10px;
+    color: var(--adisseo-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── Flow diagram ─── */
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    flex: 1;
+    align-items: stretch;
+  }
+
+  .flow-step {
+    background: var(--adisseo-mist);
+    border-top: 3px solid var(--adisseo-red);
+    padding: 18px 14px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .flow-step .step-num {
+    font-family: 'Source Serif 4', serif;
+    font-size: 36px;
+    color: var(--adisseo-red);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .flow-step .step-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--adisseo-charcoal);
+  }
+
+  .flow-step .step-desc {
+    font-size: 11px;
+    color: var(--adisseo-grey);
+    line-height: 1.45;
+  }
+
+  .flow-step::after {
+    content: '→';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--adisseo-red);
+    font-weight: 700;
+    z-index: 5;
+    background: white;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flow-step:last-child::after { display: none; }
+
+  /* ─── Governance seam ─── */
+  .seam {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .seam-side {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .seam-side.internal {
+    background: linear-gradient(135deg, #FDECEE 0%, #FCE4E7 100%);
+    border-left: 4px solid var(--adisseo-red);
+  }
+
+  .seam-side.external {
+    background: linear-gradient(135deg, #ECF7EE 0%, #E0F0E4 100%);
+    border-right: 4px solid #2D7A3F;
+  }
+
+  .seam-divider {
+    background: var(--adisseo-charcoal);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    position: relative;
+  }
+
+  .seam-divider::before {
+    content: 'GOVERNANCE SEAM';
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    font-weight: 700;
+  }
+
+  .seam-side h3 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .seam-side.internal h3 { color: var(--adisseo-red-dark); }
+  .seam-side.external h3 { color: #2D7A3F; }
+
+  .seam-side ul {
+    list-style: none;
+    margin-bottom: 18px;
+  }
+
+  .seam-side li {
+    font-size: 13px;
+    color: var(--adisseo-charcoal);
+    padding: 6px 0 6px 18px;
+    position: relative;
+  }
+
+  .seam-side li::before {
+    content: '■';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    font-size: 8px;
+  }
+
+  .seam-side.internal li::before { color: var(--adisseo-red); }
+  .seam-side.external li::before { color: #2D7A3F; }
+
+  .seam-side .target {
+    margin-top: auto;
+    padding: 12px;
+    background: white;
+    border: 1px dashed var(--adisseo-grey);
+    font-size: 11px;
+    color: var(--adisseo-grey);
+    line-height: 1.4;
+  }
+
+  .seam-side .target strong { display: block; color: var(--adisseo-charcoal); margin-bottom: 4px; }
+
+  /* ─── Stack tiers ─── */
+  .tier-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 16px;
+    align-items: stretch;
+    margin-bottom: 10px;
+  }
+
+  .tier-tag {
+    background: var(--adisseo-red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0 8px;
+    text-align: center;
+  }
+
+  .tier-tag.soft { background: var(--adisseo-red-soft); color: var(--adisseo-red-dark); }
+  .tier-tag.dark { background: var(--adisseo-charcoal); }
+  .tier-tag.gold { background: var(--adisseo-gold); color: white; }
+
+  .tier-pkgs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    background: var(--adisseo-mist);
+    padding: 12px 16px;
+    border: 1px solid var(--adisseo-line);
+  }
+
+  .pkg {
+    background: white;
+    border: 1px solid var(--adisseo-line);
+    padding: 6px 12px;
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--adisseo-charcoal);
+  }
+
+  /* ─── Closing CTA ─── */
+  .cta-box {
+    background: var(--adisseo-charcoal);
+    color: white;
+    padding: 24px 28px;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cta-box .cta-text {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .cta-box .cta-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+  }
+
+  .cta-box .cta-action {
+    background: var(--adisseo-red);
+    padding: 14px 24px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ─── Hint banner (screen only) ─── */
+  .hint {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    z-index: 1000;
+  }
+
+  @media print {
+    html, body { background: white; }
+    .deck { padding: 0; gap: 0; }
+    .slide { box-shadow: none; }
+    .hint { display: none; }
+    @page { size: 1280px 720px; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- ─────────── SLIDE 1: Title ─────────── -->
+  <section class="slide title">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="logo-mark">
+        <div class="bar"></div>
+        <div class="name">ADISSEO · APAC MARKETING</div>
+      </div>
+      <h1>AdiPlan <span class="accent">AI</span></h1>
+      <h1 style="font-size: 42px; font-weight: 400; color: rgba(255,255,255,0.85); margin-bottom: 24px;">
+        Bridging strategy and content<br/>across four species, six languages, one platform.
+      </h1>
+      <p class="tagline">
+        A marketing co-pilot built on the AdiPlan framework — turning scraped market intelligence
+        into campaign-ready deliverables, governed end-to-end.
+      </p>
+      <div class="meta">
+        <div class="meta-item">
+          <div class="label">Prepared for</div>
+          <div class="value">Ricardo Communod · APAC Marketing</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Pilot region</div>
+          <div class="value">Asia Pacific</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Demo date</div>
+          <div class="value">May 7, 2026 · Global Team</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 2: Situation ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Situation</div>
+      <h1 class="slide-title">The scraper works. The strategy exists.<br/>The bridge between them does not.</h1>
+      <h2 class="slide-subtitle">
+        APAC has shipped a competitor news platform — 83 competitors, 125+ websites, scored daily.
+        Adisseo has the AdiPlan strategic framework. But intelligence is not yet feeding strategy,
+        and strategy is not yet producing content at the rhythm the market demands.
+      </h2>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-num">01 · TODAY</div>
+          <div class="card-title">Intelligence layer is live</div>
+          <div class="card-body">
+            83 competitors monitored, news scraped continuously, four species verticals tagged,
+            global team ready to adopt.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-num">02 · TODAY</div>
+          <div class="card-title">Strategy is defined annually</div>
+          <div class="card-body">
+            Customer Success Factors, Critical Business Issues, and personas are mapped — but
+            adapting them to live market signals is manual.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-num">03 · GAP</div>
+          <div class="card-title">Content production lags by months</div>
+          <div class="card-body">
+            Each species manager creates per-country, per-language, per-persona deliverables alone.
+            Volume is the bottleneck. Quality varies. Timing slips.
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 02</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 3: Quote (the missing link) ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">The missing link</div>
+      <h1 class="slide-title">From Ricardo, on April 28:</h1>
+
+      <div class="quote-block" style="margin: 36px 0; padding: 32px 40px;">
+        <div class="quote-text" style="font-size: 30px;">
+          &ldquo;We have all the news. We have our strategy.<br/>
+          The missing link is putting them together with RAG to take<br/>
+          the decision for us and tell us what to do.&rdquo;
+        </div>
+        <div class="quote-attr">Ricardo Communod · APAC Marketing Lead</div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 24px; gap: 24px;">
+        <div class="card">
+          <div class="card-num">PILOT APPROVED</div>
+          <div class="card-title">External LLMs cleared for public &amp; published content</div>
+          <div class="card-body">
+            APAC team confirmed: scraped news + already-published articles can flow through external LLMs.
+            Internal proprietary data stays inside Microsoft Copilot.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-num">TIMELINE</div>
+          <div class="card-title">&ldquo;Two weeks to public.&rdquo;</div>
+          <div class="card-body">
+            Stakeholder Influence Map demo for May 7 global presentation. Per-species content flows
+            shippable across the same window.
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 03</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 4: Section divider ─────────── -->
+  <section class="slide section">
+    <div class="slide-header" style="background: white;"></div>
+    <div class="slide-body">
+      <div class="section-num">01</div>
+      <h1>The Architecture</h1>
+      <p class="desc">
+        Five layers. One governance seam. Built on AdiPlan, not over it.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 5: Five layers ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Architecture</div>
+      <h1 class="slide-title">Five layers, stacked top-down.</h1>
+      <h2 class="slide-subtitle">
+        Each layer consumes the one below and serves the one above. The seam between Layer 1 and
+        Layer 2 is where AI governance is enforced.
+      </h2>
+
+      <div class="layer-stack">
+        <div class="layer">
+          <div class="layer-tag">Layer 5</div>
+          <div class="layer-content">
+            <div class="layer-name">Activation</div>
+            <div class="layer-desc">Account-adaptation engine · Sales weekly dashboard · Engagement tracker (Malaysia-ASF model) · Publishing rails (LinkedIn, WeChat, TikTok, magazines)</div>
+          </div>
+        </div>
+        <div class="layer">
+          <div class="layer-tag">Layer 4</div>
+          <div class="layer-content">
+            <div class="layer-name">Content Studio</div>
+            <div class="layer-desc">Per persona × country × language. Aqua leaflets · Poultry emailers · Ruminants Manga · Swine shorts. Brand-guardrail pack enforces HQ-approved style.</div>
+          </div>
+        </div>
+        <div class="layer">
+          <div class="layer-tag">Layer 3</div>
+          <div class="layer-content">
+            <div class="layer-name">Strategic Frame · The AdiPlan Engine</div>
+            <div class="layer-desc">Stakeholder Map · CBI &amp; CSF Ladder · Personas · Total Value Solution · Billboard Campaign</div>
+          </div>
+        </div>
+        <div class="layer">
+          <div class="layer-tag">Layer 2</div>
+          <div class="layer-content">
+            <div class="layer-name">Synthesis · RAG</div>
+            <div class="layer-desc">News ↔ Strategy matcher. Article → CBI → persona → CSF → deliverable format.</div>
+          </div>
+        </div>
+        <div class="layer">
+          <div class="layer-tag">Layer 1</div>
+          <div class="layer-content">
+            <div class="layer-name">Intel</div>
+            <div class="layer-desc">Existing scraper · Raw-material price feeds (pangasius, shrimp, fishmeal, methionine) · Approved internal corpus (Copilot-bound)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 05</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 6: Governance seam ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">AI Governance</div>
+      <h1 class="slide-title">The seam is not a feature. It is the architecture.</h1>
+      <h2 class="slide-subtitle">
+        Internal proprietary data never reaches an external model. Public and already-published content does.
+        This is the rule that unblocked the APAC pilot.
+      </h2>
+
+      <div class="seam">
+        <div class="seam-side internal">
+          <h3>Internal · Copilot only</h3>
+          <ul>
+            <li>Adisseo brochures and decks</li>
+            <li>Sales presentations</li>
+            <li>Trial &amp; performance data</li>
+            <li>Customer account records</li>
+            <li>Internal financial reporting</li>
+          </ul>
+          <div class="target">
+            <strong>Routing</strong>
+            Microsoft Copilot, tenant-bound. Never sent to external LLMs.
+          </div>
+        </div>
+
+        <div class="seam-divider"></div>
+
+        <div class="seam-side external">
+          <h3>Public · External LLMs allowed</h3>
+          <ul>
+            <li>Scraped competitor news</li>
+            <li>Public scientific papers</li>
+            <li>Adisseo public-website content</li>
+            <li>Industry magazines &amp; reports</li>
+            <li>Raw-material price feeds</li>
+          </ul>
+          <div class="target">
+            <strong>Routing</strong>
+            External LLMs (GPT, Claude) and the AdiPlan AI synthesis layer.
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 06</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 7: AdiPlan framework ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Strategic spine</div>
+      <h1 class="slide-title">AdiPlan stays the framework.<br/>AI just makes it run faster.</h1>
+      <h2 class="slide-subtitle">
+        The Impact Planning Group framework already in use. The platform automates the modules,
+        not replaces them.
+      </h2>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">01</div>
+          <div class="step-title">Stakeholder Map</div>
+          <div class="step-desc">Influence network. Bubbles by current size. Dotted rings for future trend.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">02</div>
+          <div class="step-title">CBI &amp; CSF Ladder</div>
+          <div class="step-desc">"Help me to…" outcomes per stakeholder, laddered to underlying values.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">03</div>
+          <div class="step-title">Enterprise Personas</div>
+          <div class="step-desc">Diagonal CSF matrix. Named by top priority, not by species or region.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">04</div>
+          <div class="step-title">Total Value Solution</div>
+          <div class="step-desc">Products + add-ons + services + advisory, bound to top CSFs.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">05</div>
+          <div class="step-title">Billboard Campaign</div>
+          <div class="step-desc">Headline + Differentiation + Reason to Believe. Unique. Important. Believable.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 18px 24px; background: var(--adisseo-charcoal); color: white; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7;">Executing layer</div>
+        <div style="font-family: 'Source Serif 4', serif; font-size: 18px;">Plan on a Page · Leading / Progress / Lagging KPIs</div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 07</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 8: Section divider ─────────── -->
+  <section class="slide section">
+    <div class="slide-header" style="background: white;"></div>
+    <div class="slide-body">
+      <div class="section-num">02</div>
+      <h1>The Hero Demo</h1>
+      <p class="desc">
+        Stakeholder Influence Map. Live, draggable, multilingual.
+        The first thing Ricardo shows the global team on May 7.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 9: Stakeholder map ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Stakeholder Influence Map</div>
+      <h1 class="slide-title">Who has power. Where it is heading.<br/>Who influences whom.</h1>
+      <h2 class="slide-subtitle" style="margin-bottom: 18px;">
+        Not an org chart — a power map. Filter by species and country, edit live in workshop.
+        Auto-feeds the CBI Ladder and Persona generator downstream.
+      </h2>
+
+      <div class="stakeholder-canvas">
+        <!-- Large -->
+        <div class="node large growing" style="left: 280px; top: 80px;">
+          Nutrition<br/>Managers
+          <div class="ring"></div>
+        </div>
+        <div class="node large" style="left: 720px; top: 90px;">
+          Integrator<br/>Tech Mgr
+        </div>
+
+        <!-- Medium -->
+        <div class="node medium shrinking" style="left: 100px; top: 230px;">
+          Corp Nut.<br/>Directors
+          <div class="ring"></div>
+        </div>
+        <div class="node medium" style="left: 470px; top: 250px;">
+          Procurement<br/>Leads
+        </div>
+        <div class="node medium growing" style="left: 880px; top: 260px;">
+          Regulatory<br/>Affairs
+          <div class="ring"></div>
+        </div>
+        <div class="node medium shrinking" style="left: 200px; top: 380px;">
+          Vets<br/>Clinic
+          <div class="ring"></div>
+        </div>
+        <div class="node medium growing" style="left: 590px; top: 410px;">
+          Premixer<br/>Formulator
+          <div class="ring"></div>
+        </div>
+        <div class="node medium shrinking" style="left: 1010px; top: 420px;">
+          Vet KOLs
+          <div class="ring"></div>
+        </div>
+
+        <!-- Small -->
+        <div class="node small growing" style="left: 50px; top: 90px;">
+          CSR
+          <div class="ring"></div>
+        </div>
+        <div class="node small" style="left: 370px; top: 470px;">
+          Farm
+        </div>
+        <div class="node small" style="left: 770px; top: 480px;">
+          Feed Mill
+        </div>
+        <div class="node small shrinking" style="left: 1070px; top: 90px;">
+          University
+          <div class="ring"></div>
+        </div>
+        <div class="node small shrinking" style="left: 90px; top: 440px;">
+          Distributor
+          <div class="ring"></div>
+        </div>
+        <div class="node small" style="left: 920px; top: 90px;">
+          Finance
+        </div>
+        <div class="node small" style="left: 460px; top: 90px;">
+          NGO
+        </div>
+
+        <!-- arrows (approximate) -->
+        <div class="arrow" style="left: 1010px; top: 460px; width: 320px; transform: rotate(206deg);"></div>
+        <div class="arrow" style="left: 940px; top: 290px; width: 200px; transform: rotate(176deg);"></div>
+        <div class="arrow" style="left: 670px; top: 410px; width: 160px; transform: rotate(312deg);"></div>
+        <div class="arrow" style="left: 270px; top: 370px; width: 120px; transform: rotate(286deg);"></div>
+        <div class="arrow" style="left: 720px; top: 140px; width: 200px; transform: rotate(125deg);"></div>
+
+        <div class="legend">
+          <strong>Legend</strong>
+          ● Large = current high influence<br/>
+          ◐ Medium · ○ Small<br/>
+          ⊙ Dotted ring = future trend<br/>
+          → Arrow = direction of influence
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 09</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 10: Section divider ─────────── -->
+  <section class="slide section">
+    <div class="slide-header" style="background: white;"></div>
+    <div class="slide-body">
+      <div class="section-num">03</div>
+      <h1>Four species.<br/>One platform.</h1>
+      <p class="desc">
+        Each species manager runs a different marketing playbook. The platform supports all four
+        — without flattening them into a generic content engine.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 11: Species lanes ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Personalization</div>
+      <h1 class="slide-title">Four marketing personalities, served simultaneously.</h1>
+      <h2 class="slide-subtitle" style="margin-bottom: 24px;">
+        Direct from the training transcripts: each species manager wants different formats,
+        different channels, different languages, different tones.
+      </h2>
+
+      <div class="lanes">
+        <div class="lane">
+          <div class="lane-head">
+            <div class="species">Aqua</div>
+            <div class="manager">Aileen</div>
+          </div>
+          <div class="lane-body">
+            <div class="item">1–2 page leaflets · ID · VN · TH</div>
+            <div class="item">Drawing-style explainer videos<br/>(parasite cycles, lateral-flow)</div>
+            <div class="item">Monthly Aqua-EPAC newsletter</div>
+            <div class="item">Raw-material price dashboard</div>
+            <div class="item">Local-magazine articles</div>
+          </div>
+          <div class="lane-foot">
+            "LinkedIn is useless for Aqua. Customers read trade magazines and printed handouts."
+          </div>
+        </div>
+
+        <div class="lane">
+          <div class="lane-head">
+            <div class="species">Poultry</div>
+            <div class="manager">Vish</div>
+          </div>
+          <div class="lane-body">
+            <div class="item">Targeted emailers (AGP-Free template)</div>
+            <div class="item">LinkedIn carousels · HQ-locked</div>
+            <div class="item">Sales engagement dashboard</div>
+            <div class="item">KOL podcast pilot</div>
+            <div class="item">Product-update PPTs to sales</div>
+          </div>
+          <div class="lane-foot">
+            "I do not want to reach customers directly. I want to enable sales to reach them."
+          </div>
+        </div>
+
+        <div class="lane">
+          <div class="lane-head">
+            <div class="species">Ruminants</div>
+            <div class="manager">Antoine</div>
+          </div>
+          <div class="lane-body">
+            <div class="item">Bilingual newsletter · JP + EN</div>
+            <div class="item">Manga-style brochures · Japan</div>
+            <div class="item">90-sec pasture videos · NZ + AU</div>
+            <div class="item">MyCommand-personality 2-pager</div>
+            <div class="item">Amino-acid education content</div>
+          </div>
+          <div class="lane-foot">
+            "I refuse to lose authorship. AI must augment, never replace what I own."
+          </div>
+        </div>
+
+        <div class="lane">
+          <div class="lane-head">
+            <div class="species">Swine</div>
+            <div class="manager">Claire</div>
+          </div>
+          <div class="lane-body">
+            <div class="item">&lt;60s shorts · TikTok · WeChat · IG</div>
+            <div class="item">WeChat live-broadcast / webinar</div>
+            <div class="item">ASF / PRRS / Tasvax video kit · 4 langs</div>
+            <div class="item">Account-adapted decks · top-10 / country</div>
+            <div class="item">MCQ knowledge base for sales</div>
+          </div>
+          <div class="lane-foot">
+            "Account-based adaptation eats my week. Distributors, products, languages — all different."
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 11</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 12: End-to-end flow ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">End-to-end</div>
+      <h1 class="slide-title">From scraped article to published deliverable in one flow.</h1>
+      <h2 class="slide-subtitle" style="margin-bottom: 24px;">
+        Engagement metrics close the loop. The Malaysia ASF case (7 serious viewers, 3 conversions)
+        becomes the measurement template.
+      </h2>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-title">Detect</div>
+          <div class="step-desc">Scraper surfaces a competitor article tagged by species &amp; country.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-title">Match</div>
+          <div class="step-desc">Synthesis layer maps article to a CBI, persona, and target market.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-title">Compose</div>
+          <div class="step-desc">Content studio drafts 3 formats — leaflet, emailer, video script — in the species manager's voice.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-title">Audit</div>
+          <div class="step-desc">Brand-guardrail audit log written. Manager reviews and approves before publishing.</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">5</div>
+          <div class="step-title">Publish</div>
+          <div class="step-desc">Channel routing: LinkedIn · WeChat · email · magazine · sales handout. Engagement tracked back to step 1.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 18px 24px; background: var(--adisseo-mist); border-left: 4px solid var(--adisseo-red); display: flex; align-items: center; gap: 24px;">
+        <div style="font-family: 'Source Serif 4', serif; font-size: 30px; font-weight: 700; color: var(--adisseo-red);">7 → 3</div>
+        <div>
+          <div style="font-size: 15px; font-weight: 600; color: var(--adisseo-charcoal); margin-bottom: 2px;">Malaysia ASF benchmark</div>
+          <div style="font-size: 12px; color: var(--adisseo-grey);">7 serious viewers (&gt;2.5 min watch time) · 3 customer conversions. Institutionalized as the engagement metric for all future campaigns.</div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 12</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 13: Section divider ─────────── -->
+  <section class="slide section">
+    <div class="slide-header" style="background: white;"></div>
+    <div class="slide-body">
+      <div class="section-num">04</div>
+      <h1>Delivery</h1>
+      <p class="desc">
+        Pilot scope, timeline, and the technology stack. Two weeks to a global-team demo.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 14: May 7 pilot scope ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Pilot scope · May 7</div>
+      <h1 class="slide-title">What we ship for the global presentation.</h1>
+      <h2 class="slide-subtitle">
+        Three deliverables, scoped to demonstrate the full pipeline. Everything else is V2.
+      </h2>
+
+      <div class="grid-3" style="gap: 20px;">
+        <div class="card" style="border-top-width: 6px;">
+          <div class="card-num">01 · HERO</div>
+          <div class="card-title" style="font-size: 19px;">Stakeholder Influence Map</div>
+          <div class="card-body" style="margin-top: 12px;">
+            Fully interactive. Pre-seeded with the 14 stakeholders from the Adisseo workshop example.
+            Drag, resize, redraw influence arrows live in Ricardo's meeting.
+          </div>
+          <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--adisseo-line); font-size: 11px; color: var(--adisseo-grey); letter-spacing: 0.06em;">
+            Stack: <strong style="color: var(--adisseo-charcoal); font-family: monospace;">xyflow + d3-force</strong>
+          </div>
+        </div>
+
+        <div class="card" style="border-top-width: 6px;">
+          <div class="card-num">02 · END-TO-END</div>
+          <div class="card-title" style="font-size: 19px;">News → Deliverable bridge</div>
+          <div class="card-body" style="margin-top: 12px;">
+            Pick a scraped article, hit one button. Get back the matched CBI, target persona,
+            and three deliverable formats ready to publish in the chosen language.
+          </div>
+          <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--adisseo-line); font-size: 11px; color: var(--adisseo-grey); letter-spacing: 0.06em;">
+            Stack: <strong style="color: var(--adisseo-charcoal); font-family: monospace;">llama_index + pgvector + vercel/ai</strong>
+          </div>
+        </div>
+
+        <div class="card" style="border-top-width: 6px;">
+          <div class="card-num">03 · ONE FLOW</div>
+          <div class="card-title" style="font-size: 19px;">First species-manager flow</div>
+          <div class="card-body" style="margin-top: 12px;">
+            One end-to-end deliverable for the species we align on Thursday Apr 30 — leaflet,
+            emailer, brochure, or short-form video — fully branded and HQ-compliant.
+          </div>
+          <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--adisseo-line); font-size: 11px; color: var(--adisseo-grey); letter-spacing: 0.06em;">
+            Stack: <strong style="color: var(--adisseo-charcoal); font-family: monospace;">react-pdf + remotion + ComfyUI</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px 22px; background: var(--adisseo-charcoal); color: white; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6);">Side ask · also for May 7</div>
+        <div style="font-size: 14px; font-weight: 500;">Add &ldquo;top-5 competitors by published-news count&rdquo; card to the existing scraper analytics page.</div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 14</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 15: Timeline ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Timeline</div>
+      <h1 class="slide-title">Eight working days to global-team demo.</h1>
+      <h2 class="slide-subtitle">
+        Critical path: pick the lead species manager on Thursday Apr 30, build the bridge by May 5,
+        dry-run with Ricardo May 6, present May 7.
+      </h2>
+
+      <div class="timeline-axis">
+        <div></div>
+        <div class="scale">
+          <div>Apr 29</div><div>Apr 30</div><div>May 1</div><div>May 2</div>
+          <div>May 3</div><div>May 4</div><div>May 5</div><div>May 6</div>
+          <div>May 7</div><div></div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-row">
+          <div class="label">MVP scope to Ricardo</div>
+          <div class="track"><div class="bar dark" style="left: 0%; width: 10%;">Send brief</div></div>
+        </div>
+        <div class="timeline-row">
+          <div class="label">Thursday call · alignment</div>
+          <div class="track"><div class="bar" style="left: 10%; width: 10%;">Align</div></div>
+        </div>
+        <div class="timeline-row">
+          <div class="label">Stakeholder Map MVP</div>
+          <div class="track"><div class="bar" style="left: 10%; width: 35%;">xyflow + seed + drag UX</div></div>
+        </div>
+        <div class="timeline-row">
+          <div class="label">Pick lead species flow</div>
+          <div class="track"><div class="bar dark" style="left: 20%; width: 8%;">Decide</div></div>
+        </div>
+        <div class="timeline-row">
+          <div class="label">News → Deliverable bridge</div>
+          <div class="track"><div class="bar" style="left: 28%; width: 35%;">RAG + matcher</div></div>
+        </div>
+        <div class="timeline-row">
+          <div class="label">First end-to-end deliverable</div>
+          <div class="track"><div class="bar" style="left: 55%; width: 25%;">Studio output</div></div>
+        </div>
+        <div class="timeline-row">
+          <div class="label">Scraper analytics tweak</div>
+          <div class="track"><div class="bar soft" style="left: 50%; width: 22%;">Top-5 card</div></div>
+        </div>
+        <div class="timeline-row">
+          <div class="label">Dry-run + global demo</div>
+          <div class="track"><div class="bar dark" style="left: 80%; width: 18%;">Dry-run · Demo</div></div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 15</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 16: Tech stack ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Technology</div>
+      <h1 class="slide-title">Open-source, audited, in priority order.</h1>
+      <h2 class="slide-subtitle">
+        Each tier maps to a delivery milestone. Tier 1 is everything required for May 7.
+      </h2>
+
+      <div style="margin-top: 16px;">
+        <div class="tier-row">
+          <div class="tier-tag">Tier 1 · May 7</div>
+          <div class="tier-pkgs">
+            <span class="pkg">xyflow / xyflow</span>
+            <span class="pkg">d3 / d3-force</span>
+            <span class="pkg">gka / pptxgenjs</span>
+            <span class="pkg">vercel / ai</span>
+          </div>
+        </div>
+        <div class="tier-row">
+          <div class="tier-tag soft">Tier 2 · First flow</div>
+          <div class="tier-pkgs">
+            <span class="pkg">microsoft / markitdown</span>
+            <span class="pkg">run-llama / llama_index</span>
+            <span class="pkg">pgvector / pgvector</span>
+            <span class="pkg">diegomura / react-pdf</span>
+          </div>
+        </div>
+        <div class="tier-row">
+          <div class="tier-tag dark">Tier 3 · Studio breadth</div>
+          <div class="tier-pkgs">
+            <span class="pkg">3b1b / manim</span>
+            <span class="pkg">remotion-dev / remotion</span>
+            <span class="pkg">comfyanonymous / ComfyUI</span>
+            <span class="pkg">coqui-ai / TTS</span>
+          </div>
+        </div>
+        <div class="tier-row">
+          <div class="tier-tag gold">Tier 4 · Scale &amp; audit</div>
+          <div class="tier-pkgs">
+            <span class="pkg">langfuse / langfuse</span>
+            <span class="pkg">mendableai / firecrawl</span>
+            <span class="pkg">tremorlabs / tremor</span>
+            <span class="pkg">Unstructured-IO / unstructured</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 14px 22px; background: var(--adisseo-mist); border-left: 4px solid var(--adisseo-red); font-size: 13px; color: var(--adisseo-grey); line-height: 1.5;">
+        Every external LLM call is logged through <strong style="color: var(--adisseo-charcoal); font-family: monospace;">langfuse</strong> with a brand-guardrail audit trail.
+        HQ approval gate runs against that log before any content is published — non-negotiable for governance compliance.
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 16</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 17: Closing / Next ─────────── -->
+  <section class="slide">
+    <div class="slide-header"></div>
+    <div class="slide-body">
+      <div class="eyebrow">Decisions for Thursday</div>
+      <h1 class="slide-title">Three decisions in the Apr 30 call.<br/>The rest follows.</h1>
+
+      <div class="grid-3" style="margin-top: 32px;">
+        <div class="card" style="border-top-width: 6px; padding: 28px 24px;">
+          <div class="card-num" style="margin-bottom: 16px;">DECISION 01</div>
+          <div class="card-title" style="font-size: 22px; margin-bottom: 12px;">Lead species manager.</div>
+          <div class="card-body" style="font-size: 14px;">
+            Whose end-to-end flow ships first for May 7? The other three follow on identical scaffolding.
+          </div>
+        </div>
+        <div class="card" style="border-top-width: 6px; padding: 28px 24px;">
+          <div class="card-num" style="margin-bottom: 16px;">DECISION 02</div>
+          <div class="card-title" style="font-size: 22px; margin-bottom: 12px;">Brand-guardrail packet.</div>
+          <div class="card-body" style="font-size: 14px;">
+            Confirm HQ-approved color, type, voice, and visual rules to encode into the system prompt and LoRA training.
+          </div>
+        </div>
+        <div class="card" style="border-top-width: 6px; padding: 28px 24px;">
+          <div class="card-num" style="margin-bottom: 16px;">DECISION 03</div>
+          <div class="card-title" style="font-size: 22px; margin-bottom: 12px;">Scraper expansion numbers.</div>
+          <div class="card-body" style="font-size: 14px;">
+            Final competitor / customer / website counts so the running-cost proposal can be issued.
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <div>
+          <div class="cta-text">Ready to build. Awaiting Thursday's go.</div>
+          <div class="cta-sub">Stakeholder Map MVP starts the moment alignment is confirmed.</div>
+        </div>
+        <div class="cta-action">Apr 30 · 09:30 SGT</div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="brand-mark">ADISSEO</div>
+        <div>AdiPlan AI · 17</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SLIDE 18: Closing ─────────── -->
+  <section class="slide title">
+    <div class="slide-header"></div>
+    <div class="slide-body" style="justify-content: center;">
+      <div class="logo-mark">
+        <div class="bar"></div>
+        <div class="name">ADISSEO · APAC MARKETING</div>
+      </div>
+      <h1 style="font-size: 88px;">Thank <span class="accent">you.</span></h1>
+      <p class="tagline" style="margin-top: 32px;">
+        Prepared for Ricardo Communod. Built for the Adisseo APAC team.<br/>
+        Continued in <span style="font-family: monospace; color: var(--adisseo-red);">/Adisseo/context.md</span> ·
+        diagrams in <span style="font-family: monospace; color: var(--adisseo-red);">plan-diagram.md</span>.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<div class="hint">
+  Press <strong>Cmd/Ctrl + P</strong> → "Save as PDF" to export the deck.
+</div>
+
+</body>
+</html>

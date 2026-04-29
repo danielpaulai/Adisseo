@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FBF9F9;
+  --foreground: #1F252A;
+  --adisseo-crimson: #A70A2D;
+  --adisseo-cyan: #00A3C4;
+  --adisseo-orange: #D97641;
+}
+
+html, body {
+  height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.react-flow__node-stakeholder {
+  font-family: inherit;
+}
+
+.react-flow__background {
+  background-color: var(--background);
+}
+
+::selection {
+  background: rgba(167, 10, 45, 0.18);
+  color: var(--adisseo-crimson);
+}
+
+@keyframes adiplan-beam-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes adiplan-pulse-soft {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(167, 10, 45, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(167, 10, 45, 0);
+  }
+}
+
+.adiplan-pulse {
+  animation: adiplan-pulse-soft 2.4s ease-out infinite;
+}
