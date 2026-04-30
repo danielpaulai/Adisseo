@@ -20,6 +20,7 @@ import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectAquaProse } from "@/lib/studio-prose";
+import { InlineSectionEditor } from "@/components/InlineSectionEditor";
 
 type LeafletResponse = {
   leaflet: {
@@ -66,6 +67,8 @@ export default function AquaStudioPage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<LeafletResponse | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  /** Prefer Puppeteer HTML→PDF for brand fidelity; falls back to @react-pdf. */
+  const [pdfEngine, setPdfEngine] = useState<"chrome" | "react-pdf" | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [gatePasses, setGatePasses] = useState(true);
@@ -108,8 +111,29 @@ export default function AquaStudioPage() {
   const renderPdf = useCallback(
     async (leaflet: LeafletResponse["leaflet"]) => {
       setPdfLoading(true);
+      setPdfEngine(null);
       try {
-        const res = await fetch("/api/render-aqua-leaflet", {
+        const personaLabel = match?.persona;
+        let res = await fetch("/api/render-leaflet-html", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            leaflet,
+            ...(personaLabel ? { personaLabel } : {}),
+          }),
+        });
+        const chromeCt = res.headers.get("content-type") ?? "";
+        if (res.ok && chromeCt.includes("application/pdf")) {
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          if (lastBlobRef.current) URL.revokeObjectURL(lastBlobRef.current);
+          lastBlobRef.current = url;
+          setPdfUrl(url);
+          setPdfEngine("chrome");
+          return;
+        }
+
+        res = await fetch("/api/render-aqua-leaflet", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ leaflet }),
@@ -120,13 +144,14 @@ export default function AquaStudioPage() {
         if (lastBlobRef.current) URL.revokeObjectURL(lastBlobRef.current);
         lastBlobRef.current = url;
         setPdfUrl(url);
+        setPdfEngine("react-pdf");
       } catch (e) {
         setError(e instanceof Error ? e.message : "PDF render failed");
       } finally {
         setPdfLoading(false);
       }
     },
-    []
+    [match?.persona]
   );
 
   const generate = useCallback(async () => {
@@ -152,7 +177,7 @@ export default function AquaStudioPage() {
       setResponse(data);
       useAdiPlanStore.getState().pushActivity({
         kind: "aqua",
-        title: `Aqua leaflet: ${data.leaflet?.headline?.slice(0, 64) ?? "untitled"}`,
+        title: `Aqua leaflet: ${data.leaflet.title.slice(0, 64)}`,
         detail: `${language.toUpperCase()} · ${magazineId}`,
         href: "/studio/aqua",
         tone: "cyan",
@@ -424,9 +449,27 @@ export default function AquaStudioPage() {
           {response && pdfUrl && !loading && (
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-adisseo-line bg-adisseo-tint px-4 py-2 text-xs text-adisseo-muted">
-                <span>
-                  {response.magazine.name} · {response.magazine.country} ·{" "}
-                  <span className="font-mono">{response.leaflet.language.toUpperCase()}</span>
+                <span className="flex flex-wrap items-center gap-2">
+                  <span>
+                    {response.magazine.name} · {response.magazine.country} ·{" "}
+                    <span className="font-mono">{response.leaflet.language.toUpperCase()}</span>
+                  </span>
+                  {pdfEngine && (
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                        pdfEngine === "chrome"
+                          ? "bg-emerald-100 text-emerald-900"
+                          : "bg-amber-100 text-amber-900"
+                      }`}
+                      title={
+                        pdfEngine === "chrome"
+                          ? "Rendered with Puppeteer (full CSS, TFIP template)"
+                          : "Rendered with @react-pdf (fallback)"
+                      }
+                    >
+                      {pdfEngine === "chrome" ? "Brand PDF · Chrome" : "PDF · react-pdf"}
+                    </span>
+                  )}
                 </span>
                 <button
                   onClick={() => renderPdf(response.leaflet)}
@@ -435,6 +478,41 @@ export default function AquaStudioPage() {
                 >
                   <RefreshCw size={11} /> Re-render
                 </button>
+              </div>
+              {/* Phase 5 — inline section editor */}
+              <div className="grid gap-2 border-b border-adisseo-line bg-adisseo-warmth/30 p-3 md:grid-cols-2">
+                <InlineSectionEditor
+                  sectionId={`aqua-title-${response.leaflet.language}`}
+                  sectionLabel="Leaflet · Title"
+                  value={response.leaflet.title}
+                  original={response.leaflet.title}
+                  language={response.leaflet.language as "en" | "vi" | "th" | "id"}
+                  onChange={(next) => {
+                    const merged = {
+                      ...response,
+                      leaflet: { ...response.leaflet, title: next },
+                    };
+                    setResponse(merged);
+                    renderPdf(merged.leaflet);
+                  }}
+                  compact
+                />
+                <InlineSectionEditor
+                  sectionId={`aqua-hero-${response.leaflet.language}`}
+                  sectionLabel="Leaflet · Hero claim"
+                  value={response.leaflet.heroClaim}
+                  original={response.leaflet.heroClaim}
+                  language={response.leaflet.language as "en" | "vi" | "th" | "id"}
+                  onChange={(next) => {
+                    const merged = {
+                      ...response,
+                      leaflet: { ...response.leaflet, heroClaim: next },
+                    };
+                    setResponse(merged);
+                    renderPdf(merged.leaflet);
+                  }}
+                  compact
+                />
               </div>
               <iframe
                 src={pdfUrl}

@@ -35,7 +35,6 @@ const SENDER_BY_KIND: Record<ApprovalKind, string> = {
   "poultry-pack": "Vish · Poultry",
   "ruminants-brochure": "Antoine · Ruminants",
   "swine-short": "Claire · Swine",
-  billboard: "AdiPlan AI",
   "voice-memo": "Field memo",
   "strategic-frame": "Strategy desk",
 };

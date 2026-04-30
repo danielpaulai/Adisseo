@@ -16,6 +16,7 @@ import {
   type PoultryCarouselSlide,
   deterministicPoultryPack,
 } from "@/lib/poultry-pack";
+import { herubel } from "@/lib/design-system-herubel";
 
 export const runtime = "nodejs";
 
@@ -34,158 +35,176 @@ function ensureFonts() {
   fontsRegistered = true;
 }
 
-const CRIMSON = "#A70A2D";
-const CYAN = "#00A3C4";
-const ORANGE = "#D97641";
-const INK = "#1F252A";
-const MUTED = "#6B7280";
-const BG = "#FBF9F9";
+// Hérubel design tokens (lib/design-system-herubel.ts).
+const P = herubel.palette;
+const T = herubel.type;
 
-// LinkedIn carousel optimal: 1080 x 1080 px @ 72 dpi -> 1080 pt
-// We'll render at 540 pt square (will scale fine).
+// LinkedIn carousel optimal: 1080 x 1080 px @ 72 dpi -> 1080 pt.
+// We render at 540 pt square (PDF scales fine).
 const SLIDE = 540;
+const PAD = 40;
 
 const styles = StyleSheet.create({
   page: {
     width: SLIDE,
     height: SLIDE,
     fontFamily: "Noto Sans",
-    color: INK,
-    backgroundColor: BG,
-    padding: 36,
+    color: P.ink,
+    backgroundColor: P.surface,
+    padding: PAD,
     position: "relative",
   },
-  topBar: {
+  // Hérubel signature accent — single thick rule on the left edge,
+  // not a top/bottom band. Reads as a tabloid column rule.
+  accentRule: {
     position: "absolute",
     top: 0,
-    left: 0,
-    right: 0,
-    height: 8,
-    backgroundColor: CRIMSON,
-  },
-  bottomBar: {
-    position: "absolute",
     bottom: 0,
     left: 0,
-    right: 0,
-    height: 8,
-    backgroundColor: CRIMSON,
+    width: 12,
+    backgroundColor: P.accent,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 14,
-    marginBottom: 18,
+    marginBottom: 20,
   },
-  logo: { width: 84, height: 36, objectFit: "contain" },
+  logo: { width: 78, height: 32, objectFit: "contain" },
   pageBadge: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: P.blockTint,
   },
   pageBadgeText: {
-    fontSize: 9,
-    color: MUTED,
-    letterSpacing: 1,
-    fontWeight: 700,
+    fontSize: T.eyebrow.size,
+    color: P.ink,
+    letterSpacing: T.eyebrow.letterSpacing,
+    fontWeight: T.eyebrow.weight,
   },
   pageBadgeDot: {
     width: 6,
     height: 6,
-    borderRadius: 3,
-    backgroundColor: ORANGE,
+    backgroundColor: P.accent,
   },
   eyebrow: {
-    fontSize: 10,
-    letterSpacing: 1.4,
-    color: CRIMSON,
-    fontWeight: 700,
+    fontSize: T.eyebrow.size,
+    letterSpacing: T.eyebrow.letterSpacing,
+    color: P.accent,
+    fontWeight: T.eyebrow.weight,
     textTransform: "uppercase",
-    marginBottom: 10,
+    marginBottom: 12,
   },
   headline: {
-    fontSize: 26,
-    fontWeight: 700,
-    color: INK,
-    lineHeight: 1.18,
+    fontSize: T.headline.size,
+    fontWeight: T.headline.weight,
+    color: P.ink,
+    lineHeight: T.headline.lineHeight,
+    letterSpacing: T.headline.letterSpacing,
     marginBottom: 16,
   },
-  body: { fontSize: 13, color: INK, lineHeight: 1.5 },
+  context: {
+    fontSize: T.body.size,
+    color: P.inkSoft,
+    lineHeight: T.body.lineHeight,
+    marginBottom: 14,
+  },
+  body: {
+    fontSize: T.body.size,
+    color: P.ink,
+    lineHeight: T.body.lineHeight,
+  },
   bigStat: {
     marginVertical: 18,
-    paddingVertical: 18,
+    paddingVertical: 22,
     paddingHorizontal: 22,
-    borderLeftWidth: 6,
-    borderLeftColor: CRIMSON,
-    backgroundColor: "white",
-    borderRadius: 4,
-    borderTopWidth: 1,
-    borderRightWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "#EEECEC",
+    backgroundColor: P.ink,
+    color: P.surface,
   },
   bigStatValue: {
-    fontSize: 56,
-    fontWeight: 700,
-    color: CRIMSON,
-    lineHeight: 1,
+    fontSize: T.display.size,
+    fontWeight: T.display.weight,
+    color: P.surface,
+    lineHeight: T.display.lineHeight,
+    letterSpacing: T.display.letterSpacing,
   },
   bigStatLabel: {
-    fontSize: 11,
-    color: MUTED,
+    fontSize: T.microCaption.size,
+    color: P.surface,
     textTransform: "uppercase",
-    letterSpacing: 1,
-    marginTop: 6,
+    letterSpacing: T.microCaption.letterSpacing,
+    marginTop: 8,
+    opacity: 0.78,
   },
   bullet: {
-    fontSize: 13,
-    color: INK,
-    lineHeight: 1.6,
-    marginBottom: 6,
+    fontSize: T.body.size,
+    color: P.ink,
+    lineHeight: T.body.lineHeight,
+    marginBottom: 8,
     flexDirection: "row",
-    gap: 8,
+    gap: 10,
   },
-  bulletDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: CYAN,
-    marginTop: 6,
+  bulletNum: {
+    width: 22,
+    height: 22,
+    backgroundColor: P.ink,
+    color: P.surface,
+    fontSize: T.bodyBold.size,
+    fontWeight: T.bodyBold.weight,
+    textAlign: "center",
+    lineHeight: 1.6,
   },
-  bulletText: { flex: 1, fontSize: 13, lineHeight: 1.5, color: INK },
+  bulletText: {
+    flex: 1,
+    fontSize: T.body.size,
+    lineHeight: T.body.lineHeight,
+    color: P.ink,
+  },
   ctaCover: {
-    fontSize: 36,
-    fontWeight: 700,
-    color: INK,
-    lineHeight: 1.18,
+    fontSize: T.display.size,
+    fontWeight: T.display.weight,
+    color: P.ink,
+    lineHeight: T.display.lineHeight,
+    letterSpacing: T.display.letterSpacing,
   },
   footer: {
     position: "absolute",
     bottom: 22,
-    left: 36,
-    right: 36,
+    left: PAD,
+    right: PAD,
     flexDirection: "row",
     justifyContent: "space-between",
-    fontSize: 9,
-    color: MUTED,
+    alignItems: "flex-end",
   },
-  footerLeft: { fontSize: 9, color: MUTED, letterSpacing: 0.4 },
+  signature: {
+    fontSize: T.signature.size,
+    color: P.inkSoft,
+    fontWeight: T.signature.weight,
+    letterSpacing: T.signature.letterSpacing,
+    textTransform: "uppercase",
+  },
   swipeHint: {
-    fontSize: 9,
-    color: CRIMSON,
-    fontWeight: 700,
-    letterSpacing: 1,
+    fontSize: T.signature.size,
+    color: P.accent,
+    fontWeight: T.signature.weight,
+    letterSpacing: T.signature.letterSpacing,
     textTransform: "uppercase",
   },
   ctaBox: {
-    backgroundColor: CRIMSON,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
-    borderRadius: 8,
+    backgroundColor: P.accent,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     marginTop: 14,
   },
-  ctaText: { fontSize: 14, fontWeight: 700, color: "white" },
+  ctaText: {
+    fontSize: T.bodyBold.size,
+    fontWeight: T.bodyBold.weight,
+    color: P.accentInk,
+    letterSpacing: 0.4,
+  },
 });
 
 function Slide({
@@ -202,7 +221,9 @@ function Slide({
   return React.createElement(
     Page,
     { size: { width: SLIDE, height: SLIDE }, style: styles.page },
-    React.createElement(View, { style: styles.topBar }),
+
+    // Hérubel: single thick rule on the left edge.
+    React.createElement(View, { style: styles.accentRule }),
 
     React.createElement(
       View,
@@ -215,7 +236,7 @@ function Slide({
         React.createElement(
           Text,
           { style: styles.pageBadgeText },
-          `${slide.index} / ${total}`
+          `${String(slide.index).padStart(2, "0")} / ${String(total).padStart(2, "0")}`
         )
       )
     ),
@@ -240,18 +261,26 @@ function Slide({
       : null,
 
     slide.body
-      ? React.createElement(Text, { style: styles.body }, slide.body)
+      ? React.createElement(
+          Text,
+          { style: slide.kind === "cover" ? styles.context : styles.body },
+          slide.body
+        )
       : null,
 
     slide.bullets
       ? React.createElement(
           View,
-          { style: { marginTop: 8 } },
+          { style: { marginTop: 12 } },
           ...slide.bullets.map((b, i) =>
             React.createElement(
               View,
               { key: i, style: styles.bullet },
-              React.createElement(View, { style: styles.bulletDot }),
+              React.createElement(
+                Text,
+                { style: styles.bulletNum },
+                String(i + 1).padStart(2, "0")
+              ),
               React.createElement(Text, { style: styles.bulletText }, b)
             )
           )
@@ -265,7 +294,7 @@ function Slide({
           React.createElement(
             Text,
             { style: styles.ctaText },
-            slide.attribution ?? "Adisseo APAC · Poultry"
+            slide.attribution ?? "APAC · Adisseo Poultry"
           )
         )
       : null,
@@ -273,17 +302,15 @@ function Slide({
     React.createElement(
       View,
       { style: styles.footer },
-      React.createElement(Text, { style: styles.footerLeft }, campaignName),
+      React.createElement(Text, { style: styles.signature }, campaignName),
       slide.kind !== "cta" && slide.index < total
-        ? React.createElement(Text, { style: styles.swipeHint }, "swipe  >")
+        ? React.createElement(Text, { style: styles.swipeHint }, "Swipe →")
         : React.createElement(
             Text,
-            { style: styles.footerLeft },
-            "adiplan.poultry@adisseo.com"
+            { style: styles.signature },
+            herubel.brand.signature
           )
-    ),
-
-    React.createElement(View, { style: styles.bottomBar })
+    )
   );
 }
 
@@ -336,7 +363,7 @@ export async function POST(req: NextRequest) {
   const element = React.createElement(CarouselDoc, {
     slides,
     logoSrc: logoBuffer as unknown as string,
-    campaignName: body.campaignName ?? "Adisseo Poultry APAC · AGP-Free Asia",
+    campaignName: body.campaignName ?? "APAC · Poultry · AGP-Free Asia",
   });
 
   const pdfBuffer = await renderToBuffer(

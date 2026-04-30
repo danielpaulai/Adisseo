@@ -1,5 +1,5 @@
 /**
- * Channel dispatcher — Phase 6 of AdiPlan.
+ * Channel dispatcher — Phase 6 of APAC.
  *
  * Wraps the per-channel adapter with the production-readiness shell:
  *   - Live-vs-mock fallback (driven by lib/channel-credentials.ts)

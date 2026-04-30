@@ -1,7 +1,7 @@
 /**
  * Master demo-seed — A.1 of the May 7 demo prep.
  *
- * Cold-opens are death for product demos. The first-ever demo of AdiPlan
+ * Cold-opens are death for product demos. The first-ever demo of APAC
  * starts with empty stakeholder selections, an empty match, an empty
  * frame, an empty distribution log, an empty engagement tracker, and so
  * on. By the time the room sees /dashboard or /engagement-tracker, the
@@ -333,14 +333,6 @@ const SEEDED_ACTIVITY: Array<Omit<ActivityEntry, "id">> = [
     at: hoursAgo(3),
   },
   {
-    kind: "billboard",
-    title: "Billboard · 3-claim A2 booth (Indonesia)",
-    detail: "AGP-free poultry · ID · A2 portrait",
-    href: "/studio/billboard",
-    tone: "orange",
-    at: minsAgo(45),
-  },
-  {
     kind: "voice-memo",
     title: "Antoine voice memo · Hokkaido follow-up",
     detail: "JA · 38s · transcribed → ruminants",
@@ -658,22 +650,6 @@ const SEEDED_LIVE_DELIVERABLES: DeliverableInstance[] = [
     conversions: 21,
     anchorSignal: "BASF Lutavit Vita-mix NZ launch (art-005)",
     trustScore: 84,
-  },
-  {
-    id: "live-id-billboard",
-    kind: "billboard",
-    title: "Indonesia AGP-free booth · A2 portrait",
-    language: "ID",
-    region: "Indonesia",
-    species: "poultry",
-    audience: "VIV Asia booth attendees",
-    owner: "Vish",
-    sentAt: minsAgo(45),
-    views: 612,
-    qualifiedViews: 188,
-    conversations: 34,
-    conversions: 18,
-    trustScore: 87,
   },
 ];
 

@@ -1,5 +1,5 @@
 /**
- * AdiPlan Slop Detector
+ * APAC Slop Detector
  * ---------------------
  *
  * TypeScript port of the slop-guard rule taxonomy (eric-tramel/slop-guard,

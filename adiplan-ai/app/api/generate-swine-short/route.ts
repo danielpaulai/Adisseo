@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
       const { object } = await generateObject({
         model,
         schema: shortSchema,
-        prompt: `You are AdiPlan AI's Content Studio for Claire (Adisseo Swine APAC).
+        prompt: `You are APAC AI's Content Studio for Claire (Adisseo Swine APAC).
 
 Generate a vertical-format <60s short for TikTok / WeChat Channels / Instagram Reels — NOT LinkedIn.
 

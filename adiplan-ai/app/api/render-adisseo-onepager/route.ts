@@ -5,7 +5,7 @@
  * desk of an Adisseo SVP who didn't attend the demo. Tells the whole
  * story in 60 seconds of skim:
  *
- *   - What is AdiPlan, in one sentence
+ *   - What is APAC, in one sentence
  *   - The 5-layer architecture, named + iconified
  *   - What's live today (26 modules)
  *   - What changes for Adisseo (before / after)
@@ -319,7 +319,7 @@ const ARCH: ArchLayer[] = [
   {
     num: "L4",
     name: "Content Studio",
-    body: "Per-species: Aqua, Poultry, Ruminants, Swine, Billboard, Voice.",
+    body: "Per-species: Aqua, Poultry, Ruminants, Swine, Voice.",
     iconPath: "M4 4h16v16H4z M4 10h16",
     color: INK,
   },
@@ -398,12 +398,12 @@ function OnePager({ data }: { data: OnePagerData }) {
       React.createElement(
         Text,
         { style: s.headline },
-        "Why AdiPlan exists, in one operator."
+        "Why APAC exists, in one operator."
       ),
       React.createElement(
         Text,
         { style: s.subhead },
-        "Adisseo APAC's marketing team ships ~30 deliverables a quarter across 4 species, 8 languages, and 4 countries — each one of them anchored on a fast-moving competitor signal that today gets discovered, framed, drafted, brand-reviewed, translated, and shipped by 11 different humans across 3 timezones. AdiPlan is the operator that does all of that as one continuous flow, with brand-guardrails and trust-grading baked in."
+        "Adisseo APAC's marketing team ships ~30 deliverables a quarter across 4 species, 8 languages, and 4 countries — each one of them anchored on a fast-moving competitor signal that today gets discovered, framed, drafted, brand-reviewed, translated, and shipped by 11 different humans across 3 timezones. APAC is the operator that does all of that as one continuous flow, with brand-guardrails and trust-grading baked in."
       ),
       /* Stat strip */
       React.createElement(
@@ -534,7 +534,7 @@ function OnePager({ data }: { data: OnePagerData }) {
           React.createElement(
             Text,
             { style: { ...s.baLabel, color: CRIMSON } },
-            "On AdiPlan \u00b7 1 operator, 1 day"
+            "On APAC \u00b7 1 operator, 1 day"
           ),
           React.createElement(
             Text,
@@ -585,7 +585,7 @@ function OnePager({ data }: { data: OnePagerData }) {
             "CBI \u00d7 CSF ladder + Personas \u00d7 CSF diagonal matrix",
             "News bridge \u2192 LLM match \u2192 strategic frame composer",
             "Per-species studios: Aqua leaflet, Poultry email + carousel",
-            "Ruminants manga (JA/EN), Swine vertical short, Billboard",
+            "Ruminants manga (JA/EN), Swine vertical short, voice memo",
             "Voice-memo studio with Whisper transcription",
           ].map((t) =>
             React.createElement(
@@ -634,7 +634,7 @@ function OnePager({ data }: { data: OnePagerData }) {
         React.createElement(
           Text,
           { style: s.footerLeft },
-          "AdiPlan AI \u00b7 Internal demo build \u00b7 26 modules live, every one runnable in the browser.\nThis brief is generated from the live module registry \u2014 numbers refresh on every print."
+          "APAC AI \u00b7 Internal demo build \u00b7 26 modules live, every one runnable in the browser.\nThis brief is generated from the live module registry \u2014 numbers refresh on every print."
         ),
         React.createElement(
           View,
@@ -674,7 +674,7 @@ export async function GET(_req: NextRequest) {
     headers: {
       "content-type": "application/pdf",
       "content-disposition":
-        'inline; filename="AdiPlan-decision-maker-onepager.pdf"',
+        'inline; filename="APAC-decision-maker-onepager.pdf"',
       "cache-control": "no-store",
     },
   });

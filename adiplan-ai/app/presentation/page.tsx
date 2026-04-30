@@ -16,7 +16,6 @@ import {
   Circle,
   AlertTriangle,
   Compass,
-  Bookmark,
   Globe2,
   Database,
   Cpu,
@@ -47,7 +46,7 @@ import { PipelineVisual } from "@/components/PipelineVisual";
  *   01. The need (situation, DC, "missing link" quote)
  *   02. The gap (what the current process leaves on the table)
  *   03. The 5-layer architecture
- *   04. What AdiPlan AI ships today (9 live modules)
+ *   04. What APAC AI ships today (9 live modules)
  *   05. The pipeline visual (reused from landing)
  *   06. By the numbers
  *   07. What's still missing (honest WIP list)
@@ -86,7 +85,7 @@ const MODULES = [
     title: "CBI / CSF Ladder",
     blurb:
       "Auto-generates “Help me to…” outcomes per selected stakeholder, ladders up to underlying value (WITI). Editable rungs.",
-    moves: ["8 AdiPlan CBIs encoded", "5 personas", "Per-stakeholder ladder"],
+    moves: ["8 APAC CBIs encoded", "5 personas", "Per-stakeholder ladder"],
   },
   {
     href: "/news-bridge",
@@ -95,7 +94,7 @@ const MODULES = [
     layer: "The Bridge",
     title: "News → Strategy",
     blurb:
-      "Pick a scraped competitor article, get back the CBI it surfaces, the persona to target, and three deliverable formats — grounded in the AdiPlan vocabulary. Live scraper API plumbing wired in.",
+      "Pick a scraped competitor article, get back the CBI it surfaces, the persona to target, and three deliverable formats — grounded in the APAC vocabulary. Live scraper API plumbing wired in.",
     moves: [
       "vercel/ai · GPT-4o-mini fallback",
       "Live mode env-driven",
@@ -120,8 +119,29 @@ const MODULES = [
     layer: "Upstream prioritisation",
     title: "Enterprise Personas × CSF matrix",
     blurb:
-      "5 personas × 6 customer success factors. The diagonal marks where persona priority and Adisseo strength meet. Click any cell to see the lead claim, flagship, recommended deliverable.",
-    moves: ["30 cells encoded", "Click → strategic frame", "Diagonal-win callouts"],
+      "5 personas × 6 customer success factors. The diagonal marks where persona priority and Adisseo strength meet. Click any cell to see the lead claim, flagship, recommended deliverable. Switchable to the Apr-30 poultry workshop overlay (6×6).",
+    moves: ["30 cells encoded", "Click → strategic frame", "Diagonal-win callouts", "Generic / poultry view toggle"],
+  },
+  {
+    href: "/campaign-fanout",
+    icon: Layers,
+    num: "05b",
+    layer: "TFIP demo",
+    title: "Campaign Fan-out · TFIP",
+    blurb:
+      "One campaign (Turning Feed Into Profit) → 6 stakeholder-tuned variants. Three buyers (Nutritionist · Vet · Purchaser) × two channels (email · 1-slide infographic). Anchored on 8 TFIP vault entries from the WeTransfer corpus.",
+    moves: ["Workshop ladders wired", "Studio prefill", "Citation-checker resolves €/MT claims"],
+    highlight: true,
+  },
+  {
+    href: "/poultry-workshop",
+    icon: BookOpen,
+    num: "05c",
+    layer: "TFIP reference",
+    title: "Poultry workshop · 8 posters",
+    blurb:
+      "Read-only HTML rendering of the Apr-30 workshop output — six persona cards, the 6×6 priority heat-grid, three CBI ladders, six value-prop circles, the WWWK research backlog, and the seven ranked insights.",
+    moves: ["Personas · matrix · ladders", "Value-prop circles", "WWWK + ranked insights"],
   },
   {
     href: "/studio/aqua",
@@ -172,23 +192,13 @@ const MODULES = [
     moves: ["EN · ZH · VI · TH · ID", "Per-account adaptation", "ElevenLabs TTS"],
   },
   {
-    href: "/studio/billboard",
-    icon: Bookmark,
-    num: "10",
-    layer: "05 · Creating",
-    title: "Billboard Campaign generator",
-    blurb:
-      "AdiPlan billboard test in one button — Headline + Adisseo Differentiation + Reason to Believe + Visual brief, scored on Unique / Important / Believable. A2 / A1 portrait or square LinkedIn key visual.",
-    moves: ["3 page formats", "Auto-fills from frame", "Self-test scorer"],
-  },
-  {
     href: "/studio/voice-memo",
     icon: Mic,
     num: "11",
     layer: "Studio · Voice Memo",
     title: "Voice memo → deliverable",
     blurb:
-      "30-second phone memo. Whisper transcribes. The transcript seeds whichever species studio you point it at. Antoine keeps authorship; AdiPlan AI keeps the production cycle.",
+      "30-second phone memo. Whisper transcribes. The transcript seeds whichever species studio you point it at. Antoine keeps authorship; APAC AI keeps the production cycle.",
     moves: ["MediaRecorder in-browser", "Whisper API + demo fallback", "Routes to all 5 studios"],
   },
   {
@@ -353,7 +363,7 @@ const MODULES = [
     layer: "Phase 4 · Multi-tenant",
     title: "Tenant directory (Adisseo / DSM / Cargill / Kemin)",
     blurb:
-      "AdiPlan runs four tenants out of the box. Adisseo is live; DSM-Firmenich, Cargill, and Kemin are blueprinted with their own brand voice, Vault scope, trust floor, approved channels, and reviewer label. Switching the tenant in the top-bar rescopes ProseQualityCard, Vault, Distribution, Approval queue, and Engagement.",
+      "APAC runs four tenants out of the box. Adisseo is live; DSM-Firmenich, Cargill, and Kemin are blueprinted with their own brand voice, Vault scope, trust floor, approved channels, and reviewer label. Switching the tenant in the top-bar rescopes ProseQualityCard, Vault, Distribution, Approval queue, and Engagement.",
     moves: [
       "TenantSwitcher chip in every top-bar — single source of truth",
       "Vault entries tagged by tenantId; cross-tenant entries stay invisible",
@@ -570,10 +580,10 @@ export default function PresentationPage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-adisseo-crimson opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-adisseo-crimson" />
             </span>
-            AdiPlan AI · APAC Pilot · Built for Adisseo
+            APAC AI · APAC Pilot · Built for Adisseo
           </div>
           <h1 className="font-serif text-5xl font-bold leading-[1.05] text-adisseo-ink-strong md:text-6xl">
-            How AdiPlan AI bridges <br className="hidden md:inline" />
+            How APAC AI bridges <br className="hidden md:inline" />
             <span className="text-adisseo-crimson">competitor news</span> to
             species-specific deliverables.
           </h1>
@@ -630,7 +640,7 @@ export default function PresentationPage() {
               competitors, 125+ websites, timeline filter, chat layer,
               analytics. On the Apr 28 call, Ricardo asked Danny to build the{" "}
               <strong>next layer</strong>: bridge the scraped news to
-              Adisseo&apos;s marketing strategy (the <em>AdiPlan</em>{" "}
+              Adisseo&apos;s marketing strategy (the <em>APAC</em>{" "}
               framework) and auto-produce campaign-ready deliverables per
               species, country, persona, and language. APAC is the pilot;
               global rollout follows.
@@ -696,7 +706,7 @@ export default function PresentationPage() {
               body="EN · JP · VI · ID · TH · ZH. Plus cultural register variations — koon for Thai, park for Indonesian, manga voice for Japanese."
             />
             <FactBox
-              icon={Bookmark}
+              icon={Target}
               label="Timeline Ricardo offered"
               body="&ldquo;With you and I, we can go public in two weeks.&rdquo; APAC pilot first, global rollout after."
             />
@@ -709,7 +719,7 @@ export default function PresentationPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <GapCard
             title="No bridge between news → strategy → deliverable"
-            body="The scraper produces 125+ websites of competitor news. The AdiPlan framework lives in PowerPoint. Sales gets the news; nothing connects them. Each species manager rebuilds the link manually for every campaign."
+            body="The scraper produces 125+ websites of competitor news. The APAC framework lives in PowerPoint. Sales gets the news; nothing connects them. Each species manager rebuilds the link manually for every campaign."
           />
           <GapCard
             title="No multilingual content infrastructure"
@@ -717,7 +727,7 @@ export default function PresentationPage() {
           />
           <GapCard
             title="No structured Total Value Solution framing"
-            body="The AdiPlan framework defines the answer: Pain × Promise × Proof × Proposition, anchored on a CBI + persona. But composing that frame happens in conversations, not a system. It doesn&apos;t scale across 5 species × 8 countries."
+            body="The APAC framework defines the answer: Pain × Promise × Proof × Proposition, anchored on a CBI + persona. But composing that frame happens in conversations, not a system. It doesn&apos;t scale across 5 species × 8 countries."
           />
           <GapCard
             title="No upstream prioritisation view"
@@ -739,7 +749,7 @@ export default function PresentationPage() {
         <div className="space-y-3">
           <ArchLayer num="5" name="Activation" body="Account-Adaptation Engine · Sales Weekly Dashboard · Engagement Tracker (Malaysia-ASF model) · Publishing rails" />
           <ArchLayer num="4" name="Content Studio (per persona × country × language)" body="Aqua leaflets · Poultry emailers · Ruminants manga · Swine <60s shorts · explainer videos · podcast scripts. Brand-guardrail pack enforces HQ-approved style." />
-          <ArchLayer num="3" name="Strategic Frame (the AdiPlan engine)" body="Stakeholder Map · CBI / CSF Ladder · Personas · TVS · Billboard" highlight />
+          <ArchLayer num="3" name="Strategic Frame (the APAC engine)" body="Stakeholder Map · CBI / CSF Ladder · Personas · Total Value Solution" highlight />
           <ArchLayer num="2" name="Synthesis / RAG" body="Match scraped news ↔ strategy ↔ persona ↔ CBI" />
           <ArchLayer
             num="1"
@@ -754,7 +764,7 @@ export default function PresentationPage() {
       <Section
         id="shipped"
         num="04"
-        title="What AdiPlan AI ships today"
+        title="What APAC AI ships today"
         subtitle="26 live modules — every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -791,7 +801,7 @@ export default function PresentationPage() {
           <Stat n="17" label="API routes" />
           <Stat n="6" label="Languages" sub="EN · JP · ZH · VI · ID · TH" />
           <Stat n="5" label="Deliverable formats" sub="leaflet · email · carousel · manga · short" />
-          <Stat n="8" label="AdiPlan CBIs" />
+          <Stat n="8" label="APAC CBIs" />
           <Stat n="5" label="Personas" />
           <Stat n="14" label="Stakeholders seeded" />
           <Stat n="30" label="Persona × CSF cells" />
@@ -936,7 +946,7 @@ export default function PresentationPage() {
 
       <footer className="mx-auto max-w-6xl px-6 pb-16 pt-8 text-xs text-adisseo-muted">
         <p>
-          AdiPlan AI · APAC Pilot · Built for Adisseo by Danny ·
+          APAC AI · APAC Pilot · Built for Adisseo by Danny ·
           Source: <code>context.md</code> + Apr 28 call notes
         </p>
       </footer>

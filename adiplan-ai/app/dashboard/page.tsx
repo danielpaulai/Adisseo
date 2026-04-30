@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Activity,
   ArrowRight,
-  Bookmark,
   Clapperboard,
   FileText,
   Mail,
@@ -82,14 +81,6 @@ const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
     at: new Date(Date.now() - 5 * 60_000).toISOString(),
   },
   {
-    kind: "billboard",
-    title: "Billboard composed: Move the cycle. Reclaim the uniformity ceiling.",
-    detail: "A2 portrait — trade booth · deterministic",
-    href: "/studio/billboard",
-    tone: "orange",
-    at: new Date(Date.now() - 4 * 60_000).toISOString(),
-  },
-  {
     kind: "match",
     title: "Matched: Hokkaido Dairy Times · summer-yield issue",
     detail:
@@ -124,7 +115,6 @@ const KIND_ICON: Record<ActivityKind, React.ComponentType<{ size?: number }>> = 
   poultry: Mail,
   ruminants: BookOpen,
   swine: Clapperboard,
-  billboard: Bookmark,
   "voice-memo": Mic,
 };
 
@@ -135,7 +125,6 @@ const KIND_LABEL: Record<ActivityKind, string> = {
   poultry: "Poultry pack",
   ruminants: "Ruminants brochure",
   swine: "Swine short",
-  billboard: "Billboard",
   "voice-memo": "Voice memo",
 };
 
@@ -173,7 +162,6 @@ export default function DashboardPage() {
       poultry: 0,
       ruminants: 0,
       swine: 0,
-      billboard: 0,
       "voice-memo": 0,
     }
   );
@@ -183,7 +171,6 @@ export default function DashboardPage() {
     counts.poultry +
     counts.ruminants +
     counts.swine +
-    counts.billboard +
     counts["voice-memo"];
 
   const matchToFrame = counts.match
@@ -312,7 +299,7 @@ export default function DashboardPage() {
             </h1>
             <p className="text-sm text-adisseo-muted">
               Every news match, composed strategic frame, and species deliverable
-              that moved through AdiPlan AI — most-recent first.
+              that moved through APAC AI — most-recent first.
             </p>
           </div>
         </div>
@@ -365,12 +352,6 @@ export default function DashboardPage() {
                 className="flex items-center gap-1 rounded-md bg-adisseo-crimson px-3 py-1.5 font-semibold text-white hover:opacity-90"
               >
                 Open frame <ArrowRight size={11} />
-              </Link>
-              <Link
-                href="/studio/billboard"
-                className="flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-3 py-1.5 font-semibold text-adisseo-ink-strong hover:border-adisseo-crimson hover:text-adisseo-crimson"
-              >
-                Compose billboard <ArrowRight size={11} />
               </Link>
               {composedFrame.activations.slice(0, 3).map((act) => (
                 <Link

@@ -541,9 +541,16 @@ export const seededVault: VaultEntry[] = [
  * of the seeded set.
  * ========================================================================== */
 import { adisseoRealVault } from "@/lib/vault-adisseo-real";
+import { poultryRealCorpus } from "@/lib/poultry-real-corpus";
+import { TFIP_VAULT_ENTRIES } from "@/lib/poultry-tfip-campaign";
 
 /** Combined corpus used by every search / lookup helper below. */
-export const fullVault: VaultEntry[] = [...adisseoRealVault, ...seededVault];
+export const fullVault: VaultEntry[] = [
+  ...adisseoRealVault,
+  ...poultryRealCorpus,
+  ...TFIP_VAULT_ENTRIES,
+  ...seededVault,
+];
 
 /* ============================================================================
  * Search + lookup

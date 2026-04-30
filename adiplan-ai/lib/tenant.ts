@@ -3,7 +3,7 @@
  *
  * Phase 4. The trust layer is already brand-voice scoped. The Vault
  * already tags entries by species + region. What's missing is a single
- * "tenant" that ties everything together so AdiPlan can run for
+ * "tenant" that ties everything together so APAC can run for
  * Adisseo today, DSM-Firmenich next quarter, Cargill the quarter
  * after, etc. — each with their own brand voice, vault scope,
  * approved channels, and trust floor.

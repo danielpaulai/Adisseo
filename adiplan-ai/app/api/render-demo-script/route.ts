@@ -222,7 +222,7 @@ const SHOTS: Shot[] = [
     cue: "01",
     time: "0:00–0:08",
     onScreen: "Landing page hero, AnimatedBeam pulsing",
-    vo: "AdiPlan turns one piece of competitor news into a fully approved Adisseo campaign — in under ninety seconds.",
+    vo: "APAC turns one piece of competitor news into a fully approved Adisseo campaign — in under ninety seconds.",
   },
   {
     cue: "02",
@@ -234,7 +234,7 @@ const SHOTS: Shot[] = [
     cue: "03",
     time: "0:18–0:30",
     onScreen: "/news-bridge → drag Mintec article → composes CBI + persona + 3 deliverables",
-    vo: "A real Mintec article on Asian feed-additive prices. AdiPlan picks the right CBI ladder, the right persona, and proposes three deliverables.",
+    vo: "A real Mintec article on Asian feed-additive prices. APAC picks the right CBI ladder, the right persona, and proposes three deliverables.",
   },
   {
     cue: "04",
@@ -264,7 +264,7 @@ const SHOTS: Shot[] = [
     cue: "08",
     time: "1:22–1:30",
     onScreen: "/tenants → cost model panel → annualised savings $1.06M",
-    vo: "Across four tenants, AdiPlan replaces roughly a million dollars of agency spend a year — and gives Adisseo back ninety-six marketing-ops hours every month.",
+    vo: "Across four tenants, APAC replaces roughly a million dollars of agency spend a year — and gives Adisseo back ninety-six marketing-ops hours every month.",
   },
 ];
 
@@ -321,7 +321,7 @@ function DemoScript() {
           View,
           { style: s.ribbonLeft },
           React.createElement(Text, { style: s.tag }, "DEMO · 90-SECOND SHOOTING SCRIPT"),
-          React.createElement(Text, { style: s.headline }, "AdiPlan AI · May 7 walkthrough"),
+          React.createElement(Text, { style: s.headline }, "APAC AI · May 7 walkthrough"),
           React.createElement(
             Text,
             { style: s.ribbonMeta },
@@ -342,7 +342,7 @@ function DemoScript() {
       React.createElement(
         Text,
         { style: s.subhead },
-        "Goal: prove AdiPlan can take competitor news → strategy → approved, citation-anchored deliverable → live channel ship → engagement, in real time, without staging."
+        "Goal: prove APAC can take competitor news → strategy → approved, citation-anchored deliverable → live channel ship → engagement, in real time, without staging."
       ),
       React.createElement(ShotTable),
       React.createElement(
@@ -382,7 +382,7 @@ function DemoScript() {
       React.createElement(
         Text,
         { style: s.footer },
-        "AdiPlan AI · adisseo.com Vault corpus · 26 live modules · cost-of-running model on /tenants · live demo at adiplan.local"
+        "APAC AI · adisseo.com Vault corpus · 26 live modules · cost-of-running model on /tenants · live demo at adiplan.local"
       )
     )
   );

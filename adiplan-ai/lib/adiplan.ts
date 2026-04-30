@@ -1,10 +1,10 @@
 /**
- * AdiPlan strategic primitives.
- * Sourced from: AdiPlan March Workshop template + the four species-manager
+ * APAC strategic primitives.
+ * Sourced from: APAC March Workshop template + the four species-manager
  * training transcripts (Aileen/Aqua, Vish/Poultry, Antoine/Ruminants, Claire/Swine).
  *
  * The News -> Strategy bridge LLM prompt grounds itself in this list so it
- * can never invent CBIs that aren't in the AdiPlan vocabulary.
+ * can never invent CBIs that aren't in the APAC vocabulary.
  */
 
 export type SpeciesKey = "aqua" | "poultry" | "ruminants" | "swine";

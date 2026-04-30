@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   Sparkles,
@@ -12,40 +12,72 @@ import {
   Newspaper,
   Info,
   X,
+  Bird,
+  Globe2,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import {
-  matrixPersonas,
-  matrixCSFs,
-  getCell,
   cellIntensity,
   isDiagonalWin,
+  getMatrixView,
   type PersonaId,
   type CSFId,
   type MatrixCell,
+  type MatrixViewKind,
 } from "@/lib/personas-matrix";
 import { useAdiPlanStore } from "@/lib/store";
 
+export const dynamic = "force-dynamic";
+
 type SelectedKey = { p: PersonaId; c: CSFId } | null;
 
-export default function PersonasMatrixPage() {
+export default function PersonasMatrixPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <PersonasMatrixPage />
+    </Suspense>
+  );
+}
+
+function PersonasMatrixPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const viewParam = searchParams.get("view") === "poultry" ? "poultry" : "generic";
+  const [view, setView] = useState<MatrixViewKind>(viewParam);
   const [selected, setSelected] = useState<SelectedKey>(null);
   const setMatch = useAdiPlanStore((s) => s.setMatch);
   const setStudioPrefill = useAdiPlanStore((s) => s.setStudioPrefill);
   const setSelectedArticle = useAdiPlanStore((s) => s.setSelectedArticle);
 
+  const matrixView = useMemo(() => getMatrixView({ kind: view }), [view]);
+  const matrixPersonas = matrixView.personas;
+  const matrixCSFs = matrixView.csfs;
+  const cellLookup = useMemo(() => {
+    const m = new Map<string, MatrixCell>();
+    matrixView.cells.forEach((c) => m.set(`${c.personaId}::${c.csfId}`, c));
+    return m;
+  }, [matrixView.cells]);
+  const getCell = (p: PersonaId, c: CSFId): MatrixCell | undefined =>
+    cellLookup.get(`${p}::${c}`);
+
   const selectedCell = useMemo<MatrixCell | undefined>(
     () => (selected ? getCell(selected.p, selected.c) : undefined),
-    [selected]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selected, cellLookup]
   );
+
+  // Reset selection when the view changes (cell ids no longer line up).
+  const switchView = (next: MatrixViewKind) => {
+    setView(next);
+    setSelected(null);
+  };
 
   const launchStrategicFrame = (cellData: MatrixCell) => {
     // Seed the strategic-frame composer with a synthetic match derived
     // from the matrix cell, so the user lands on a pre-filled frame even
     // though they didn't come from a news article.
-    const persona = matrixPersonas.find((p) => p.id === cellData.personaId);
-    const csf = matrixCSFs.find((c) => c.id === cellData.csfId);
+    const persona = matrixView.personas.find((p) => p.id === cellData.personaId);
+    const csf = matrixView.csfs.find((c) => c.id === cellData.csfId);
     if (!persona || !csf) return;
 
     const cbiId = csfToCbi(cellData.csfId);
@@ -93,6 +125,33 @@ export default function PersonasMatrixPage() {
           </div>
         </div>
         <nav className="flex items-center gap-2 text-xs text-adisseo-muted">
+          <div
+            className="flex items-center gap-1 rounded-md border border-adisseo-line bg-white p-1"
+            title="Switch between the generic APAC matrix and the Apr-30 poultry workshop overlay"
+          >
+            <button
+              onClick={() => switchView("generic")}
+              className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                view === "generic"
+                  ? "bg-adisseo-ink-strong text-white"
+                  : "text-adisseo-ink hover:text-adisseo-crimson"
+              }`}
+            >
+              <Globe2 size={11} />
+              Generic
+            </button>
+            <button
+              onClick={() => switchView("poultry")}
+              className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-[11px] font-semibold transition ${
+                view === "poultry"
+                  ? "bg-adisseo-crimson text-white"
+                  : "text-adisseo-ink hover:text-adisseo-crimson"
+              }`}
+            >
+              <Bird size={11} />
+              Poultry workshop
+            </button>
+          </div>
           <Link
             href="/"
             className="rounded-md border border-adisseo-line px-3 py-2 text-xs font-medium text-adisseo-ink hover:border-adisseo-crimson hover:text-adisseo-crimson"
@@ -158,7 +217,15 @@ export default function PersonasMatrixPage() {
 
               {/* === Body rows === */}
               {matrixPersonas.map((persona) => (
-                <Row key={persona.id} personaId={persona.id} onSelect={setSelected} selected={selected} />
+                <Row
+                  key={persona.id}
+                  personaId={persona.id}
+                  onSelect={setSelected}
+                  selected={selected}
+                  personas={matrixPersonas}
+                  csfs={matrixCSFs}
+                  getCell={getCell}
+                />
               ))}
             </div>
 
@@ -220,6 +287,8 @@ export default function PersonasMatrixPage() {
                 cell={selectedCell}
                 onClose={() => setSelected(null)}
                 onCompose={() => launchStrategicFrame(selectedCell)}
+                personas={matrixPersonas}
+                csfs={matrixCSFs}
               />
             )}
           </aside>
@@ -233,12 +302,18 @@ function Row({
   personaId,
   onSelect,
   selected,
+  personas,
+  csfs,
+  getCell,
 }: {
   personaId: PersonaId;
   onSelect: (key: SelectedKey) => void;
   selected: SelectedKey;
+  personas: ReturnType<typeof getMatrixView>["personas"];
+  csfs: ReturnType<typeof getMatrixView>["csfs"];
+  getCell: (p: PersonaId, c: CSFId) => MatrixCell | undefined;
 }) {
-  const persona = matrixPersonas.find((p) => p.id === personaId)!;
+  const persona = personas.find((p) => p.id === personaId)!;
   return (
     <>
       <div className="flex items-center gap-2 rounded-lg bg-adisseo-bg px-3 py-2">
@@ -255,7 +330,7 @@ function Row({
           </p>
         </div>
       </div>
-      {matrixCSFs.map((csf) => {
+      {csfs.map((csf) => {
         const cell = getCell(personaId, csf.id);
         if (!cell) return <div key={csf.id} />;
         const isSelected =
@@ -301,13 +376,17 @@ function CellDetail({
   cell,
   onClose,
   onCompose,
+  personas,
+  csfs,
 }: {
   cell: MatrixCell;
   onClose: () => void;
   onCompose: () => void;
+  personas: ReturnType<typeof getMatrixView>["personas"];
+  csfs: ReturnType<typeof getMatrixView>["csfs"];
 }) {
-  const persona = matrixPersonas.find((p) => p.id === cell.personaId)!;
-  const csf = matrixCSFs.find((c) => c.id === cell.csfId)!;
+  const persona = personas.find((p) => p.id === cell.personaId)!;
+  const csf = csfs.find((c) => c.id === cell.csfId)!;
   const isWin = isDiagonalWin(cell);
   return (
     <div>
@@ -402,11 +481,14 @@ function CellDetail({
  * ============================================================ */
 
 function csfToCbi(csf: CSFId): string {
-  switch (csf) {
+  switch (csf as string) {
     case "csf-margin":
     case "csf-fcr":
+    case "csf-feed-cost":
+    case "csf-rm-cost":
       return "cbi-feed-cost";
     case "csf-disease":
+    case "csf-medication":
       return "cbi-disease-pressure";
     case "csf-regulatory":
       return "cbi-regulatory-shift";
@@ -414,14 +496,24 @@ function csfToCbi(csf: CSFId): string {
       return "cbi-sustainability";
     case "csf-knowledge":
       return "cbi-talent-knowledge";
+    case "csf-uniformity":
+    case "csf-diet-performance":
+      return "cbi-feed-cost";
+    case "csf-rm-supply":
+      return "cbi-supply-continuity";
+    default:
+      return "cbi-feed-cost";
   }
 }
 function csfToCbiLabel(csf: CSFId): string {
-  switch (csf) {
+  switch (csf as string) {
     case "csf-margin":
     case "csf-fcr":
+    case "csf-feed-cost":
+    case "csf-rm-cost":
       return "Feed Cost Volatility";
     case "csf-disease":
+    case "csf-medication":
       return "Disease & Health-Risk Pressure";
     case "csf-regulatory":
       return "Regulatory Tightening";
@@ -429,6 +521,14 @@ function csfToCbiLabel(csf: CSFId): string {
       return "Sustainability & Carbon Pressure";
     case "csf-knowledge":
       return "Knowledge Gap on Farm / In Sales";
+    case "csf-uniformity":
+      return "Flock Uniformity Loss";
+    case "csf-diet-performance":
+      return "Diet Performance Pressure";
+    case "csf-rm-supply":
+      return "Raw-material Supply Continuity";
+    default:
+      return "Customer Success Factor";
   }
 }
 

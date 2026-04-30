@@ -518,7 +518,7 @@ function FrameDocument({
           React.createElement(
             Text,
             null,
-            `AdiPlan AI · Strategic Frame · ${new Date().toISOString().slice(0, 10)}`
+            `APAC AI · Strategic Frame · ${new Date().toISOString().slice(0, 10)}`
           ),
           React.createElement(
             Text,

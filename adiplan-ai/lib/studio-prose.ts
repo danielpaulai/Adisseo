@@ -9,7 +9,6 @@
 import type { RuminantsBrochureData } from "@/lib/ruminants-brochure";
 import type { PoultryDeliverablePack, PoultryEmailBlock } from "@/lib/poultry-pack";
 import type { AquaLeafletData } from "@/lib/aqua-leaflet";
-import type { BillboardPack } from "@/lib/billboards";
 
 /** Aqua leaflet — headline, deck, body sections, CTA. */
 export function collectAquaProse(d: AquaLeafletData | null | undefined): string {
@@ -72,20 +71,6 @@ export function collectRuminantsProse(d: RuminantsBrochureData | null | undefine
     d.ctaBody ?? "",
     d.contactLine ?? "",
     d.citationLine ?? "",
-  ];
-  return parts.filter(Boolean).join("\n\n");
-}
-
-/** Billboard pack — headline, differentiation, RtB, evidence, CTA, visual brief. */
-export function collectBillboardProse(p: BillboardPack | null | undefined): string {
-  if (!p) return "";
-  const parts: string[] = [
-    p.headline,
-    p.differentiation,
-    p.reasonToBelieve,
-    ...(p.evidence ?? []),
-    p.cta,
-    p.visualBrief,
   ];
   return parts.filter(Boolean).join("\n\n");
 }

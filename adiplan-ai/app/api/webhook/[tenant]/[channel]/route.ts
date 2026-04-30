@@ -79,7 +79,7 @@ export async function POST(req: NextRequest, ctx: RouteCtx) {
   }
 
   const rawBody = await req.text();
-  const signatureHeader = req.headers.get("x-adiplan-signature");
+  const signatureHeader = req.headers.get("x-apac-signature");
   const trace = startTrace({
     kind: "distribute",
     title: `webhook ${tenantId}/${ch}`,
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest, ctx: RouteCtx) {
         reason: verify.reason,
         hint:
           verify.reason === "missing-header"
-            ? "Missing x-adiplan-signature header"
+            ? "Missing x-apac-signature header"
             : verify.reason === "stale"
               ? "Timestamp older than 5 minutes (replay protection)"
               : verify.reason === "malformed-header"

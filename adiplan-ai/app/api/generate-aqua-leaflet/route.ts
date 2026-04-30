@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       const { object } = await generateObject({
         model,
         schema: leafletSchema,
-        prompt: `You are AdiPlan AI's Content Studio for Aileen (Adisseo Aqua APAC).
+        prompt: `You are APAC AI's Content Studio for Aileen (Adisseo Aqua APAC).
 
 Generate a 1-page technical leaflet for the magazine "${magazine.name}" (${magazine.country}, ${langName[language]}).
 Audience: ${magazine.audience}. Tone notes: ${magazine.notes}.

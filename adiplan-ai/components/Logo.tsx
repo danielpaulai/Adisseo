@@ -14,7 +14,7 @@ export function Logo({
     <Link
       href="/"
       className="group inline-flex items-center gap-2.5"
-      aria-label="AdiPlan AI home"
+      aria-label="APAC AI home"
     >
       <Image
         src="/brand/logo.png"
@@ -30,7 +30,7 @@ export function Logo({
             Adisseo &middot; APAC
           </span>
           <span className="text-sm font-bold text-adisseo-ink-strong group-hover:text-adisseo-crimson">
-            AdiPlan&nbsp;AI
+            APAC&nbsp;AI
           </span>
         </span>
       )}

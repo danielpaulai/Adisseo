@@ -75,14 +75,18 @@ function ensureFonts() {
   fontsRegistered = true;
 }
 
-const CRIMSON = "#A70A2D";
+// Phase 1 — Hérubel × manga hybrid. The manga aesthetic owns the page
+// composition (panels, speech bubbles, halftone) but the typographic
+// hierarchy + brand signature inherit from lib/design-system-herubel.ts
+// so cross-deliverable consistency stays tight.
+const CRIMSON = "#A70A2D"; // herubel.palette.accent equivalent for legacy refs
 const CRIMSON_DARK = "#6B0518";
 const CYAN = "#00A3C4";
 const ORANGE = "#D97641";
 const SUN_YELLOW = "#F4C430";
-const INK = "#0E1216";
-const PAPER = "#FBF6EE"; // newsprint cream
-const PAPER_DEEP = "#F1E9D8"; // tone for shadow regions
+const INK = "#0E1216"; // herubel.palette.ink
+const PAPER = "#FBF6EE"; // newsprint cream — local override of surface
+const PAPER_DEEP = "#F1E9D8";
 const BLACK = "#000000";
 const WHITE = "#FFFFFF";
 

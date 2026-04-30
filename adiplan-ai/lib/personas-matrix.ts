@@ -312,3 +312,148 @@ export function cellIntensity(cell: MatrixCell): number {
 export function isDiagonalWin(cell: MatrixCell): boolean {
   return cell.personaPriority === 5 && cell.adisseoStrength === 5;
 }
+
+/* ============================================================================
+ * Switchable matrix views (TFIP plan — Phase C)
+ *
+ * The generic matrix above is the default Adisseo APAC view. For poultry, the
+ * Apr-30 workshop produced a six-persona × six-CSF priority grid that is
+ * shipped intact via lib/poultry-workshop.ts. The selector below converts the
+ * workshop data into the shape the matrix UI already understands so we can
+ * toggle "view" without rewriting the page.
+ * ========================================================================== */
+
+import {
+  poultryEnterprisePersonas,
+  poultryWorkshopCSFs,
+  poultryPriorityMatrix,
+  poultryCsfValueProps,
+  type PoultryPersonaId,
+  type PoultryWorkshopCsfId,
+} from "@/lib/poultry-workshop";
+
+export type MatrixViewKind = "generic" | "poultry";
+
+export interface MatrixView {
+  kind: MatrixViewKind;
+  personas: MatrixPersona[];
+  csfs: MatrixCSF[];
+  cells: MatrixCell[];
+  /** Plain-language description of what this view means. */
+  description: string;
+}
+
+const POULTRY_PERSONA_ACCENTS: Record<PoultryPersonaId, string> = {
+  "p-efficiency-feed": "#A70A2D",
+  "p-performance-animal": "#E07A1A",
+  "p-ethical": "#047857",
+  "p-consistency": "#00A3C4",
+  "p-cost-saver": "#7c3aed",
+  "p-low-risk": "#475569",
+};
+
+/** Convert a workshop priority (1 = top → 6 = bottom) into the matrix
+ * priority axis (1..5). Top of the workshop list maps to 5; tail to 1. */
+function priorityToMatrix(priority: number): MatrixCell["personaPriority"] {
+  if (priority <= 1) return 5;
+  if (priority <= 2) return 5;
+  if (priority <= 3) return 4;
+  if (priority <= 4) return 3;
+  if (priority <= 5) return 2;
+  return 1;
+}
+
+/** Adisseo strength per workshop CSF. Calibrated from poultryCsfValueProps —
+ * CSFs we have a flagship product family for score 5; advisory-only score 3. */
+const STRENGTH_BY_CSF: Record<PoultryWorkshopCsfId, MatrixCell["adisseoStrength"]> = {
+  "csf-feed-cost": 5,
+  "csf-diet-performance": 5,
+  "csf-medication": 4,
+  "csf-uniformity": 4,
+  "csf-rm-cost": 4,
+  "csf-rm-supply": 3,
+};
+
+function buildPoultryView(): MatrixView {
+  const personaIdMap: Record<PoultryPersonaId, PersonaId> = {
+    "p-efficiency-feed": "persona-efficiency" as PersonaId,
+    "p-performance-animal": "persona-system-simplifier" as PersonaId,
+    "p-ethical": "persona-sustainability-advocate" as PersonaId,
+    "p-consistency": "persona-knowledge-builder" as PersonaId,
+    "p-cost-saver": "persona-risk-reducer" as PersonaId,
+    "p-low-risk": "persona-risk-reducer" as PersonaId,
+  };
+  // We re-cast the workshop ids into PersonaId-shaped strings so the matrix
+  // UI stays type-safe. The labels below come straight from the workshop.
+  const personas: MatrixPersona[] = poultryEnterprisePersonas.map((p) => ({
+    id: p.id as unknown as PersonaId,
+    label: p.nickname,
+    blurb: p.fullName,
+    accent: POULTRY_PERSONA_ACCENTS[p.id],
+  }));
+
+  const csfs: MatrixCSF[] = poultryWorkshopCSFs.map((c) => ({
+    id: c.id as unknown as CSFId,
+    label: c.label,
+    shortLabel: c.shortLabel,
+    blurb: c.blurb,
+  }));
+
+  const cells: MatrixCell[] = poultryPriorityMatrix.map((p) => {
+    const matrixPriority = priorityToMatrix(p.priority);
+    const strength = STRENGTH_BY_CSF[p.csfId];
+    const valueProp = poultryCsfValueProps.find((v) => v.csfId === p.csfId);
+    const flagship = valueProp?.product[0] ?? "Adisseo poultry portfolio";
+    const answer = valueProp?.oneLiner ?? `Adisseo's answer for ${p.csfId}.`;
+    const deliverable =
+      matrixPriority >= 4
+        ? "Email + 1-slide infographic from /campaign-fanout"
+        : "Brief mention in vet/nutrition email; no infographic";
+    return {
+      personaId: p.personaId as unknown as PersonaId,
+      csfId: p.csfId as unknown as CSFId,
+      personaPriority: matrixPriority,
+      adisseoStrength: strength,
+      adisseoAnswer: answer,
+      flagship,
+      suggestedDeliverable: deliverable,
+      // Surface the original persona mapping for any consumer that needs it.
+      _genericPersona: personaIdMap[p.personaId],
+    } as MatrixCell;
+  });
+
+  return {
+    kind: "poultry",
+    personas,
+    csfs,
+    cells,
+    description:
+      "Poultry A team workshop overlay (Apr 30, 2026) — six enterprise personas × six CSFs from Posters 2 & 7. Lower workshop rank → darker shading.",
+  };
+}
+
+const GENERIC_VIEW: MatrixView = {
+  kind: "generic",
+  personas: matrixPersonas,
+  csfs: matrixCSFs,
+  cells: matrixCells,
+  description:
+    "Adisseo APAC default Personas × CSF matrix — five personas × six CSFs spanning all species.",
+};
+
+const POULTRY_VIEW: MatrixView = buildPoultryView();
+
+/** Returns the matrix to render. Pass species="poultry" or kind="poultry"
+ *  to get the workshop overlay. Default = generic. */
+export function getMatrixView(
+  selector?: { kind?: MatrixViewKind; species?: string } | MatrixViewKind,
+): MatrixView {
+  if (!selector) return GENERIC_VIEW;
+  const kind =
+    typeof selector === "string"
+      ? selector
+      : selector.kind ?? (selector.species === "poultry" ? "poultry" : "generic");
+  return kind === "poultry" ? POULTRY_VIEW : GENERIC_VIEW;
+}
+
+export const MATRIX_VIEWS: MatrixView[] = [GENERIC_VIEW, POULTRY_VIEW];

@@ -23,13 +23,15 @@ export type TraceKind =
   | "render-aqua-leaflet"
   | "render-poultry-pack"
   | "render-ruminants-brochure"
-  | "render-billboard"
   | "render-swine-short"
   | "compose-frame"
   | "voice-memo-transcribe"
   | "voice-fingerprint-build"
   | "og-card"
   | "distribute"
+  | "section-rewrite"
+  | "ingest-workshop-photo"
+  | "ingest-document"
   | "other";
 
 export type TraceStatus = "success" | "warn" | "error";

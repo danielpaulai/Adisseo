@@ -1,5 +1,5 @@
 /**
- * Distribution rails — Phase 4 of AdiPlan.
+ * Distribution rails — Phase 4 of APAC.
  *
  * Once a deliverable clears the trust gate AND HQ approval, it can be
  * distributed to a channel. This module centralises the gating logic

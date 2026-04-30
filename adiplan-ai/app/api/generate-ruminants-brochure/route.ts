@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       const { object } = await generateObject({
         model,
         schema: brochureSchema,
-        prompt: `You are AdiPlan AI's Content Studio for Antoine (Adisseo Ruminants APAC).
+        prompt: `You are APAC AI's Content Studio for Antoine (Adisseo Ruminants APAC).
 
 Generate a 2-page "manga-style" technical brochure aimed at ${audience.name} (${audience.region}, ${audience.type} buyer).
 Audience approach note: ${audience.approachNote}.

@@ -25,12 +25,15 @@ const KIND_LABEL: Record<TraceKind, string> = {
   "render-aqua-leaflet": "Aqua leaflet",
   "render-poultry-pack": "Poultry pack",
   "render-ruminants-brochure": "Ruminants brochure",
-  "render-billboard": "Billboard",
   "render-swine-short": "Swine short",
   "compose-frame": "Strategic frame",
   "voice-memo-transcribe": "Voice memo",
   "voice-fingerprint-build": "Voice profile",
   "og-card": "OG card",
+  distribute: "Distribute",
+  "section-rewrite": "Section rewrite",
+  "ingest-workshop-photo": "Workshop OCR",
+  "ingest-document": "Document OCR",
   other: "Other",
 };
 
@@ -41,12 +44,15 @@ const KIND_TINT: Record<TraceKind, string> = {
   "render-aqua-leaflet": "bg-cyan-100 text-cyan-800",
   "render-poultry-pack": "bg-amber-100 text-amber-800",
   "render-ruminants-brochure": "bg-rose-100 text-rose-800",
-  "render-billboard": "bg-indigo-100 text-indigo-800",
   "render-swine-short": "bg-teal-100 text-teal-800",
   "compose-frame": "bg-orange-100 text-orange-800",
   "voice-memo-transcribe": "bg-stone-100 text-stone-800",
   "voice-fingerprint-build": "bg-fuchsia-100 text-fuchsia-800",
   "og-card": "bg-blue-100 text-blue-800",
+  distribute: "bg-indigo-100 text-indigo-800",
+  "section-rewrite": "bg-lime-100 text-lime-800",
+  "ingest-workshop-photo": "bg-purple-100 text-purple-800",
+  "ingest-document": "bg-yellow-100 text-yellow-800",
   other: "bg-stone-100 text-stone-800",
 };
 

@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       const { object } = await generateObject({
         model,
         schema: matchSchema,
-        prompt: `You are AdiPlan AI, mapping competitor news to Adisseo's marketing strategy framework.
+        prompt: `You are APAC AI, mapping competitor news to Adisseo's marketing strategy framework.
 
 Article from competitor "${article.competitor}" (${article.publishedAt}):
 Title: ${article.title}

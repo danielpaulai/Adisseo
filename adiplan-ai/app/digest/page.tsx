@@ -259,7 +259,7 @@ export default function DigestPage() {
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <div>
               <p className="text-[10px] uppercase tracking-widest text-adisseo-muted">
-                <Mail size={11} className="inline" /> From: AdiPlan AI · digest@adiplan.ai
+                <Mail size={11} className="inline" /> From: APAC AI · digest@adiplan.ai
               </p>
               <p className="mt-1 text-[10px] uppercase tracking-widest text-adisseo-muted">
                 To: {activeManager.name} ({activeManager.speciesLabel} · APAC)

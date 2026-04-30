@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
+  BarChart3,
   Loader2,
   Newspaper,
   Sparkles,
@@ -20,6 +21,15 @@ import type { ScrapedArticle } from "@/lib/scraper-api";
 import { Logo } from "@/components/Logo";
 import { deriveStudioContext } from "@/lib/studio-context";
 import { toast } from "sonner";
+import {
+  scoreArticle,
+  buildComparisonGrid,
+  type LlmHints,
+} from "@/lib/news-scorer";
+import { ThreeAxisRadar } from "@/components/ThreeAxisRadar";
+import { DecisionMatrixFlow } from "@/components/DecisionMatrixFlow";
+import { ComparisonHeatGrid } from "@/components/ComparisonHeatGrid";
+import type { PersonaId } from "@/lib/personas-matrix";
 
 type MatchResponse = {
   article: ScrapedArticle;
@@ -59,6 +69,39 @@ export default function NewsBridgePage() {
   const setMatch = useAdiPlanStore((s) => s.setMatch);
   const setStudioTopic = useAdiPlanStore((s) => s.setStudioTopic);
   const setStudioPrefill = useAdiPlanStore((s) => s.setStudioPrefill);
+
+  // Phase 2 — 3-axis comparison view (open / closed).
+  const [compareOpen, setCompareOpen] = useState(false);
+
+  /**
+   * LLM hints by article id — when the operator has matched an article
+   * with /api/match-article, those CBI / persona picks bias the
+   * deterministic 3-axis score on that article. Other articles still
+   * get pure-deterministic scores from their tags + summary.
+   */
+  const llmHintsById = useMemo<Record<string, LlmHints>>(() => {
+    if (!response) return {};
+    return {
+      [response.match.articleId]: {
+        cbiId: response.match.cbiId,
+        personaId: response.match.personaId as PersonaId,
+      },
+    };
+  }, [response]);
+
+  /** Per-article deterministic 3-axis score, recomputed on feed/match change. */
+  const scoreById = useMemo(() => {
+    const map: Record<string, ReturnType<typeof scoreArticle>> = {};
+    for (const a of articles) {
+      map[a.id] = scoreArticle(a, llmHintsById[a.id]);
+    }
+    return map;
+  }, [articles, llmHintsById]);
+
+  const grid = useMemo(
+    () => buildComparisonGrid(articles, llmHintsById),
+    [articles, llmHintsById]
+  );
 
   const loadFeed = async (force = false) => {
     try {
@@ -150,7 +193,7 @@ export default function NewsBridgePage() {
               The Bridge &middot; News &rarr; Strategy
             </p>
             <h1 className="text-lg font-semibold text-adisseo-ink-strong">
-              Match a competitor article to AdiPlan
+              Match a competitor article to APAC
             </h1>
           </div>
         </div>
@@ -206,57 +249,116 @@ export default function NewsBridgePage() {
             </div>
           )}
 
-          <ul className="space-y-3">
-            {articles.map((a) => (
-              <li
-                key={a.id}
-                className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm transition hover:border-adisseo-crimson"
+          {/* Phase 2 — 3-axis comparison toggle */}
+          {articles.length >= 3 && (
+            <div className="mb-3 flex items-center justify-between rounded-xl border border-adisseo-line bg-white px-3 py-2">
+              <p className="text-[11px] text-adisseo-muted">
+                <span className="font-semibold text-adisseo-ink-strong">
+                  {articles.length} articles loaded.
+                </span>{" "}
+                Open the 3-axis heat grid to spot competitor clustering on
+                CBI / CSF / Persona axes.
+              </p>
+              <button
+                onClick={() => setCompareOpen((v) => !v)}
+                className="inline-flex items-center gap-1.5 rounded-md bg-adisseo-ink-strong px-2.5 py-1.5 text-[11px] font-bold text-white transition hover:bg-adisseo-crimson"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="font-semibold uppercase tracking-widest text-adisseo-crimson">
-                        {a.competitor}
-                      </span>
-                      <span className="text-adisseo-muted">&middot;</span>
-                      <span className="text-adisseo-muted">{a.publishedAt}</span>
-                      <span className="text-adisseo-muted">&middot;</span>
-                      <span className="text-adisseo-muted">{a.region}</span>
-                    </div>
-                    <h3 className="mt-1 text-sm font-semibold leading-snug text-adisseo-ink">
-                      {a.title}
-                    </h3>
-                    <p className="mt-2 text-xs text-adisseo-muted">{a.summary}</p>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {a.species.map((s) => (
-                        <span
-                          key={s}
-                          className="rounded-full bg-adisseo-crimson/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-adisseo-crimson"
-                        >
-                          {s}
+                <BarChart3 size={11} />
+                {compareOpen ? "Hide heat grid" : "Show heat grid"}
+              </button>
+            </div>
+          )}
+
+          {compareOpen && articles.length >= 3 && (
+            <div className="mb-4">
+              <ComparisonHeatGrid grid={grid} />
+            </div>
+          )}
+
+          <ul className="space-y-3">
+            {articles.map((a) => {
+              const sc = scoreById[a.id];
+              return (
+                <li
+                  key={a.id}
+                  className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm transition hover:border-adisseo-crimson"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="font-semibold uppercase tracking-widest text-adisseo-crimson">
+                          {a.competitor}
                         </span>
-                      ))}
-                      {a.tags.slice(0, 4).map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-adisseo-muted"
-                        >
-                          {t}
-                        </span>
-                      ))}
+                        <span className="text-adisseo-muted">&middot;</span>
+                        <span className="text-adisseo-muted">{a.publishedAt}</span>
+                        <span className="text-adisseo-muted">&middot;</span>
+                        <span className="text-adisseo-muted">{a.region}</span>
+                      </div>
+                      <h3 className="mt-1 text-sm font-semibold leading-snug text-adisseo-ink">
+                        {a.title}
+                      </h3>
+                      <p className="mt-2 text-xs text-adisseo-muted">{a.summary}</p>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {a.species.map((s) => (
+                          <span
+                            key={s}
+                            className="rounded-full bg-adisseo-crimson/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-adisseo-crimson"
+                          >
+                            {s}
+                          </span>
+                        ))}
+                        {a.tags.slice(0, 4).map((t) => (
+                          <span
+                            key={t}
+                            className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-adisseo-muted"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Phase 2 — 3-axis mini scoreboard */}
+                      {sc && (
+                        <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-dashed border-adisseo-line pt-2 text-[10px]">
+                          <ScoreChip
+                            tint="#9C2A2A"
+                            kind="CBI"
+                            value={sc.cbi.score}
+                            label={shortLabelFromCbi(sc.cbi.id)}
+                          />
+                          <ScoreChip
+                            tint="#0F4C81"
+                            kind="CSF"
+                            value={sc.csf.score}
+                            label={sc.csf.id.replace("csf-", "")}
+                          />
+                          <ScoreChip
+                            tint="#0E7C46"
+                            kind="Persona"
+                            value={sc.persona.score}
+                            label={sc.persona.id.replace("persona-", "")}
+                          />
+                          <span
+                            className="ml-1 rounded-full bg-adisseo-ink-strong px-2 py-0.5 font-mono text-[10px] font-bold text-white"
+                            title="Composite (mean of top CBI, CSF, Persona scores)"
+                          >
+                            {sc.composite}/100
+                          </span>
+                        </div>
+                      )}
                     </div>
+                    <button
+                      onClick={() => matchArticle(a)}
+                      disabled={loadingMatch}
+                      className="flex flex-none items-center gap-1.5 rounded-md bg-adisseo-crimson px-3 py-2 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
+                    >
+                      {loadingMatch ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                      Match
+                    </button>
                   </div>
-                  <button
-                    onClick={() => matchArticle(a)}
-                    disabled={loadingMatch}
-                    className="flex flex-none items-center gap-1.5 rounded-md bg-adisseo-crimson px-3 py-2 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
-                  >
-                    {loadingMatch ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                    Match
-                  </button>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </section>
 
@@ -264,13 +366,13 @@ export default function NewsBridgePage() {
           <div className="rounded-2xl border border-adisseo-line bg-white p-6 shadow-sm">
             <div className="mb-3 flex items-center gap-2 text-adisseo-muted">
               <Sparkles size={16} />
-              <p className="text-sm font-medium">AdiPlan match result</p>
+              <p className="text-sm font-medium">APAC match result</p>
             </div>
 
             {!response && !loadingMatch && (
               <p className="py-12 text-center text-sm text-adisseo-muted">
                 Click <span className="font-semibold">Match</span> on any article &mdash;
-                AdiPlan will return the CBI it surfaces, the persona to target, and three
+                APAC will return the CBI it surfaces, the persona to target, and three
                 deliverable formats.
               </p>
             )}
@@ -278,7 +380,7 @@ export default function NewsBridgePage() {
             {loadingMatch && (
               <div className="flex flex-col items-center gap-3 py-12 text-adisseo-muted">
                 <Loader2 size={28} className="animate-spin" />
-                <p className="text-sm">Reasoning over the AdiPlan framework&hellip;</p>
+                <p className="text-sm">Reasoning over the APAC framework&hellip;</p>
               </div>
             )}
 
@@ -295,6 +397,19 @@ export default function NewsBridgePage() {
                     {response.article.competitor} &middot; {response.article.publishedAt}
                   </p>
                 </div>
+
+                {/* Phase 4 — Visible 4-layer decision matrix */}
+                <DecisionMatrixFlow
+                  active="output"
+                  inputLabel={response.article.title}
+                  inputSub={`${response.article.competitor} \u00B7 ${response.article.region}`}
+                  synthesisLabel="APAC vault + Adisseo brand voice"
+                  synthesisSub="CBI ladder, persona matrix, regional context"
+                  branchLabel={`${response.match.persona} \u2192 ${response.match.recommendedFormats[0] ?? "carousel"}`}
+                  branchSub={response.match.cbi}
+                  outputLabel={response.match.recommendedFormats[0] ?? "deliverable"}
+                  outputSub="Persona-tuned, region-localised, citation-anchored"
+                />
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl border border-adisseo-line p-4">
@@ -326,6 +441,13 @@ export default function NewsBridgePage() {
                     </p>
                   </div>
                 </div>
+
+                {/* Phase 2 — 3-axis radar of THIS article */}
+                {scoreById[response.match.articleId] && (
+                  <ThreeAxisRadar
+                    score={scoreById[response.match.articleId]}
+                  />
+                )}
 
                 <div className="rounded-xl border border-adisseo-line p-4">
                   <div className="flex items-center gap-2 text-adisseo-crimson">
@@ -363,7 +485,7 @@ export default function NewsBridgePage() {
                         Strategic Frame · Total Value Solution
                       </p>
                       <p className="text-sm font-semibold text-adisseo-ink-strong group-hover:text-white">
-                        Compose the AdiPlan answer before the species deliverables ship
+                        Compose the APAC answer before the species deliverables ship
                       </p>
                     </div>
                   </div>
@@ -486,4 +608,45 @@ function FeedStatusBadge({
       )}
     </div>
   );
+}
+
+/* Phase 2 — local helpers for the 3-axis mini scoreboard. */
+
+function ScoreChip({
+  tint,
+  kind,
+  value,
+  label,
+}: {
+  tint: string;
+  kind: string;
+  value: number;
+  label: string;
+}) {
+  return (
+    <span
+      className="inline-flex items-center gap-1 rounded-full border bg-white px-1.5 py-0.5"
+      style={{ borderColor: tint }}
+      title={`${kind}: ${label} (${value}/100)`}
+    >
+      <span className="h-1.5 w-1.5 rounded-full" style={{ background: tint }} />
+      <span
+        className="text-[9px] font-extrabold uppercase tracking-widest"
+        style={{ color: tint }}
+      >
+        {kind}
+      </span>
+      <span className="text-[10px] font-semibold text-adisseo-ink-strong">
+        {label}
+      </span>
+      <span className="font-mono text-[10px] text-adisseo-muted">{value}</span>
+    </span>
+  );
+}
+
+function shortLabelFromCbi(id: string): string {
+  // cbi-feed-cost → feed-cost, cbi-disease-pressure → disease, etc.
+  const tail = id.replace(/^cbi-/, "");
+  if (tail.length <= 14) return tail;
+  return tail.split("-")[0];
 }

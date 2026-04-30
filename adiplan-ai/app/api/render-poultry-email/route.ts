@@ -485,7 +485,7 @@ export async function POST(req: NextRequest) {
   const html = await render(
     React.createElement(EmailDoc, {
       email,
-      campaignName: body.campaignName ?? "AdiPlan AI · AGP-Free Asia",
+      campaignName: body.campaignName ?? "APAC AI · AGP-Free Asia",
       audienceLabel: body.audienceLabel ?? "Adisseo Poultry APAC",
       origin,
     })

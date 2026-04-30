@@ -22,6 +22,7 @@ import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectSwineProse } from "@/lib/studio-prose";
+import { InlineSectionEditor } from "@/components/InlineSectionEditor";
 
 type Scene = {
   index: number;
@@ -449,10 +450,26 @@ export default function SwineStudioPage() {
           {response && (
             <div className="space-y-6">
               <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
-                    Hook (first 3 seconds)
-                  </p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                      Hook (first 3 seconds)
+                    </p>
+                    {/* Phase 5 — inline edit on hook */}
+                    <InlineSectionEditor
+                      sectionId={`swine-hook-${response.short.scenes.length}`}
+                      sectionLabel="Short · Hook"
+                      value={response.short.hook}
+                      original={response.short.hook}
+                      onChange={(next) => {
+                        setResponse({
+                          ...response,
+                          short: { ...response.short, hook: next },
+                        });
+                      }}
+                      compact
+                    />
+                  </div>
                   <h2 className="mt-1 text-xl font-semibold leading-snug text-adisseo-ink">
                     &ldquo;{response.short.hook}&rdquo;
                   </h2>

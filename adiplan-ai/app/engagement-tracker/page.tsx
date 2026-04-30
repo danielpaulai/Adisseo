@@ -16,7 +16,6 @@ import {
   Mail,
   BookOpen,
   Clapperboard,
-  Bookmark,
   Mic,
   Layers,
   ShieldCheck,
@@ -35,6 +34,20 @@ import {
   type DeliverableKind,
   type SpeciesKey,
 } from "@/lib/engagement";
+import {
+  CHANNEL_METRICS,
+  SEED_BREAKDOWNS,
+  headlineFor,
+  primaryChannelForKind,
+} from "@/lib/engagement-metrics";
+import {
+  ALL_WORKSHOP_METRICS,
+  workshopMetricsByBucket,
+  WORKSHOP_BUCKET_LABEL,
+  WORKSHOP_BUCKET_BLURB,
+  type WorkshopMetric,
+  type WorkshopMetricStatus,
+} from "@/lib/workshop-metrics";
 import { useAdiPlanStore } from "@/lib/store";
 
 const KIND_LABEL: Record<DeliverableKind, string> = {
@@ -43,7 +56,6 @@ const KIND_LABEL: Record<DeliverableKind, string> = {
   carousel: "LinkedIn carousel",
   manga: "Ruminants manga",
   short: "Swine short",
-  billboard: "Billboard",
   "voice-memo": "Voice memo",
   frame: "Strategic frame",
 };
@@ -54,7 +66,6 @@ const KIND_ICON: Record<DeliverableKind, React.ComponentType<{ size?: number }>>
   carousel: Mail,
   manga: BookOpen,
   short: Clapperboard,
-  billboard: Bookmark,
   "voice-memo": Mic,
   frame: Target,
 };
@@ -73,6 +84,10 @@ export default function EngagementTrackerPage() {
   const [filterSpecies, setFilterSpecies] = useState<SpeciesKey | "all">("all");
   const [filterKind, setFilterKind] = useState<DeliverableKind | "all">("all");
   const [sortKey, setSortKey] = useState<SortKey>("conversionRate");
+  /** TFIP plan Phase F — workshop-framework tab toggle. */
+  const [legendTab, setLegendTab] = useState<"per-channel" | "workshop">(
+    "per-channel",
+  );
 
   /* Phase 5 — merge live deliverables (auto-created on ship) with the
    * historical seed dataset so the tracker reflects what just happened. */
@@ -146,11 +161,69 @@ export default function EngagementTrackerPage() {
               Engagement tracker
             </h1>
             <p className="text-sm text-adisseo-muted">
-              Every shipped deliverable. Four numbers each. Graded against the
-              Malaysia-ASF benchmark.
+              Every shipped deliverable. Channel-native signals. Graded against
+              the Malaysia-ASF benchmark.
             </p>
           </div>
         </div>
+
+        {/* Phase 7 / TFIP-F — channel signal legend with workshop-framework tab */}
+        <section className="mb-8 rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+              <Activity size={11} />
+              {legendTab === "per-channel"
+                ? "Per-channel signal mapping · \"views\" replaced by what the buyer actually did"
+                : "Workshop framework · Apr-30 poultry-A team poster 1 (leading + lagging metrics)"}
+            </div>
+            <div className="flex items-center gap-1 rounded-md border border-adisseo-line bg-adisseo-bg p-1">
+              <button
+                onClick={() => setLegendTab("per-channel")}
+                className={`rounded px-2.5 py-1 text-[10px] font-semibold transition ${
+                  legendTab === "per-channel"
+                    ? "bg-white text-adisseo-ink-strong shadow-sm"
+                    : "text-adisseo-muted hover:text-adisseo-ink"
+                }`}
+              >
+                Per-channel
+              </button>
+              <button
+                onClick={() => setLegendTab("workshop")}
+                className={`rounded px-2.5 py-1 text-[10px] font-semibold transition ${
+                  legendTab === "workshop"
+                    ? "bg-adisseo-crimson text-white shadow-sm"
+                    : "text-adisseo-muted hover:text-adisseo-ink"
+                }`}
+              >
+                Workshop framework
+              </button>
+            </div>
+          </div>
+
+          {legendTab === "per-channel" && (
+            <div className="mt-3 grid gap-3 md:grid-cols-3 lg:grid-cols-6">
+              {Object.values(CHANNEL_METRICS).map((m) => (
+                <div
+                  key={m.channel}
+                  className="rounded-lg border border-adisseo-line bg-adisseo-bg p-3"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-ink-strong">
+                    {m.label}
+                  </p>
+                  <p className="mt-1 text-[10px] text-adisseo-muted">
+                    Reach: <span className="font-medium text-adisseo-ink">{m.primaryMetric}</span>
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-adisseo-muted">
+                    Qualified: <span className="font-medium text-adisseo-ink">{m.qualifiedMetric}</span>
+                  </p>
+                  <p className="mt-1 text-[9px] text-adisseo-muted/80">{m.source}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {legendTab === "workshop" && <WorkshopFrameworkPanel />}
+        </section>
 
         {/* MALAYSIA BENCHMARK CALLOUT */}
         <section className="mb-8 overflow-hidden rounded-3xl border border-adisseo-crimson bg-white shadow-sm">
@@ -361,8 +434,8 @@ export default function EngagementTrackerPage() {
               <thead className="bg-adisseo-bg text-[10px] uppercase tracking-widest text-adisseo-muted">
                 <tr>
                   <Th>Deliverable</Th>
-                  <Th align="right">Views</Th>
-                  <Th align="right">Qualified</Th>
+                  <Th align="right">Reach</Th>
+                  <Th align="right">Qualified engagement</Th>
                   <Th align="right">Conv rate</Th>
                   <Th align="right">Conversations</Th>
                   <Th align="right">Conversions</Th>
@@ -376,6 +449,10 @@ export default function EngagementTrackerPage() {
                   const f = aggregateFunnel([d]);
                   const trust = d.trustScore ?? 90;
                   const grade = gradeAgainstBenchmark(f, trust);
+                  const breakdown = SEED_BREAKDOWNS[d.id];
+                  const headline = headlineFor(d, breakdown);
+                  const channel = primaryChannelForKind(d.kind, d.region);
+                  const meta = CHANNEL_METRICS[channel];
                   return (
                     <tr
                       key={d.id}
@@ -403,13 +480,28 @@ export default function EngagementTrackerPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3 text-right text-adisseo-ink">
-                        {d.views.toLocaleString()}
+                        <div className="font-medium">
+                          {headline.reachValue.toLocaleString()}
+                        </div>
+                        <div
+                          className="text-[9px] uppercase tracking-wide text-adisseo-muted"
+                          title={`${meta.label} · ${headline.source}`}
+                        >
+                          {headline.reachLabel}
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-right text-adisseo-ink">
-                        {d.qualifiedViews}
-                        <span className="ml-1 text-[10px] text-adisseo-muted">
-                          ({pct(f.qualifiedRate)})
-                        </span>
+                        <div className="font-medium">
+                          {headline.qualifiedValue.toLocaleString()}
+                        </div>
+                        <div className="text-[9px] uppercase tracking-wide text-adisseo-muted">
+                          {headline.qualifiedLabel}
+                          {f.qualifiedRate > 0 && (
+                            <span className="ml-1 normal-case text-adisseo-muted/80">
+                              · {pct(f.qualifiedRate)}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td
                         className={`px-4 py-3 text-right font-bold ${gradeColor(grade)}`}
@@ -483,15 +575,15 @@ function FunnelStrip({
 }) {
   const stages = [
     {
-      label: "Views",
+      label: "Reach",
       n: funnel.views.toLocaleString(),
-      sub: "All opens / plays / downloads",
+      sub: "Impressions / delivered / plays / downloads (per channel)",
       color: "bg-adisseo-bg text-adisseo-ink-strong border-adisseo-line",
     },
     {
-      label: "Qualified",
+      label: "Qualified engagement",
       n: funnel.qualifiedViews.toLocaleString(),
-      sub: `${pct(funnel.qualifiedRate)} of views · >2.5min watch / >70% scroll`,
+      sub: `${pct(funnel.qualifiedRate)} of reach · LinkedIn engaged / Mailgun clicks / read >80%`,
       color: "bg-adisseo-cyan/10 text-adisseo-cyan border-adisseo-cyan/30",
     },
     {
@@ -644,5 +736,130 @@ function Th({
     <th className={`px-4 py-3 ${alignClass} font-semibold`} scope="col">
       {children}
     </th>
+  );
+}
+
+/* ============================================================================
+ * TFIP plan Phase F — workshop-framework panel
+ * ========================================================================== */
+
+const STATUS_CHIP: Record<
+  WorkshopMetricStatus,
+  { label: string; tone: string }
+> = {
+  "on-track": {
+    label: "On track",
+    tone: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  },
+  watch: {
+    label: "Watch",
+    tone: "bg-amber-50 text-amber-800 border border-amber-200",
+  },
+  "off-track": {
+    label: "Off track",
+    tone: "bg-rose-50 text-rose-700 border border-rose-200",
+  },
+};
+
+function WorkshopFrameworkPanel() {
+  const buckets: WorkshopMetric["bucket"][] = ["leading", "progress", "lagging"];
+  const amberCount = ALL_WORKSHOP_METRICS.filter(
+    (m) => m.status === "watch" || m.status === "off-track",
+  ).length;
+
+  return (
+    <div className="mt-3 space-y-4">
+      <p className="text-[11px] leading-relaxed text-adisseo-muted">
+        Workshop poster 1 in structured form. Three columns mirror the poster
+        layout: <strong>leading</strong> activity we control, <strong>progress</strong>{" "}
+        funnel signals, <strong>lagging</strong> CRM outcomes. Every TFIP-tagged
+        deliverable shipped from{" "}
+        <Link href="/campaign-fanout" className="text-adisseo-crimson underline">
+          /campaign-fanout
+        </Link>{" "}
+        threads <code className="text-adisseo-crimson">campaignId=&quot;tfip&quot;</code>{" "}
+        through to the lagging-metric attribution path.
+      </p>
+
+      {amberCount > 0 && (
+        <div className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-[11px] text-amber-900">
+          <strong>Workshop poster flagged {amberCount}</strong> progress / lagging
+          metrics as amber. They&apos;re tinted below.
+        </div>
+      )}
+
+      <div className="grid gap-3 md:grid-cols-3">
+        {buckets.map((bucket) => (
+          <div
+            key={bucket}
+            className="rounded-xl border border-adisseo-line bg-adisseo-bg p-3"
+          >
+            <div className="text-[10px] font-bold uppercase tracking-widest text-adisseo-ink-strong">
+              {WORKSHOP_BUCKET_LABEL[bucket]}
+            </div>
+            <p className="mt-1 text-[10px] leading-snug text-adisseo-muted">
+              {WORKSHOP_BUCKET_BLURB[bucket]}
+            </p>
+            <ul className="mt-2 space-y-2">
+              {workshopMetricsByBucket(bucket).map((m) => {
+                const chip = m.status ? STATUS_CHIP[m.status] : null;
+                return (
+                  <li
+                    key={m.id}
+                    className="rounded-lg border border-adisseo-line bg-white p-2.5 text-[11px]"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-[11px] font-semibold leading-snug text-adisseo-ink-strong">
+                        {m.label}
+                      </p>
+                      {chip && (
+                        <span
+                          className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${chip.tone}`}
+                        >
+                          {chip.label}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 text-[10px] leading-snug text-adisseo-muted">
+                      {m.definition}
+                    </p>
+                    <div className="mt-1.5 flex items-center justify-between text-[9px] uppercase tracking-wide text-adisseo-muted">
+                      <span>{m.source}</span>
+                      {m.tfipCampaignTag && (
+                        <span
+                          className="rounded-full bg-adisseo-warmth/60 px-1.5 py-0.5 text-[9px] font-semibold text-adisseo-crimson"
+                          title="Depends on the TFIP campaign tag being attached to the deliverable / visit report."
+                        >
+                          tfip-tagged
+                        </span>
+                      )}
+                    </div>
+                    {m.target && (
+                      <div className="mt-1 grid grid-cols-2 gap-2 text-[10px]">
+                        <div className="rounded bg-adisseo-bg px-2 py-1">
+                          <p className="font-semibold uppercase tracking-wider text-adisseo-muted">
+                            Target
+                          </p>
+                          <p className="text-adisseo-ink">{m.target}</p>
+                        </div>
+                        <div className="rounded bg-adisseo-bg px-2 py-1">
+                          <p className="font-semibold uppercase tracking-wider text-adisseo-muted">
+                            Now
+                          </p>
+                          <p className="text-adisseo-ink">{m.current ?? "—"}</p>
+                        </div>
+                      </div>
+                    )}
+                    <p className="mt-1 text-[9px] uppercase tracking-wide text-adisseo-muted">
+                      Owner: {m.owner}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

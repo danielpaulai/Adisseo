@@ -22,7 +22,6 @@ export type DeliverableKind =
   | "carousel"
   | "manga"
   | "short"
-  | "billboard"
   | "voice-memo"
   | "frame";
 
@@ -193,22 +192,6 @@ export const seededDeliverables: DeliverableInstance[] = [
     conversions: 3,
     anchorSignal: "Cargill WeChat playbook Q1 2026",
   },
-  {
-    id: "del-billboard-apac-conf",
-    kind: "billboard",
-    title: "AGP-Free booth poster · VIV Asia 2026",
-    language: "EN",
-    region: "Bangkok",
-    species: "cross",
-    audience: "Conference walk-by",
-    owner: "Ricardo (APAC)",
-    sentAt: "2026-03-08",
-    views: 4200,
-    qualifiedViews: 64,
-    conversations: 18,
-    conversions: 5,
-    anchorSignal: "VIV Asia 2026 booth",
-  },
 ];
 
 /* ============================================================================
@@ -344,7 +327,6 @@ export function deliverableKindForChannel(
   if (hint) {
     const h = hint.toLowerCase();
     if (/manga/.test(h)) return "manga";
-    if (/billboard/.test(h)) return "billboard";
     if (/leaflet|brief/.test(h)) return "leaflet";
     if (/short|video|tiktok|reels/.test(h)) return "short";
     if (/voice/.test(h)) return "voice-memo";

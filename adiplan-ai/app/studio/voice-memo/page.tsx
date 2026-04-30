@@ -12,14 +12,13 @@ import {
   Mail,
   BookOpen,
   Clapperboard,
-  Bookmark,
 } from "lucide-react";
 import { useAdiPlanStore } from "@/lib/store";
 import { Logo } from "@/components/Logo";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { toast } from "sonner";
 
-type SpeciesTarget = "ruminants" | "aqua" | "poultry" | "swine" | "billboard";
+type SpeciesTarget = "ruminants" | "aqua" | "poultry" | "swine";
 
 interface TranscribeResp {
   transcript: string;
@@ -63,13 +62,6 @@ const SPECIES: {
     desc: "Claire’s vertical short with cultural register — record the brief, ship the video script.",
     icon: Clapperboard,
     href: "/studio/swine",
-  },
-  {
-    id: "billboard",
-    label: "Billboard poster",
-    desc: "Drop a verbal pitch, get back the AdiPlan billboard — Headline + Differentiation + RTB.",
-    icon: Bookmark,
-    href: "/studio/billboard",
   },
 ];
 
@@ -212,7 +204,7 @@ export default function VoiceMemoStudioPage() {
             <p className="text-sm text-adisseo-muted">
               Record on the road. Whisper transcribes. The transcript seeds
               whichever species studio you point it at — leaflet, manga
-              brochure, vertical short, billboard.
+              brochure, vertical short.
             </p>
           </div>
         </div>
@@ -356,7 +348,7 @@ export default function VoiceMemoStudioPage() {
               </p>
               Antoine refuses to lose authorship — his voice is the brief.
               The voice memo flow is the cheapest possible way to keep authorship
-              with the species manager while AdiPlan AI handles the production
+              with the species manager while APAC AI handles the production
               cycle. 30s in. A complete deliverable out.
             </div>
           </div>

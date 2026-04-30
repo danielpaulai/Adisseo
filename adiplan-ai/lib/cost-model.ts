@@ -1,7 +1,7 @@
 /**
  * Per-tenant run-cost model.
  *
- * Why this exists: the May 7 conversation centres on whether AdiPlan is a
+ * Why this exists: the May 7 conversation centres on whether APAC is a
  * 10K toy or a 1M production system. A credible cost model makes that
  * conversation concrete. Every number below traces back to a real
  * per-call rate (Anthropic Claude 4.5, OpenAI GPT-4o-mini, Mailgun email
@@ -32,7 +32,6 @@ export type DeliverableKind =
   | "poultry-email"
   | "poultry-carousel"
   | "ruminants-manga"
-  | "billboard"
   | "voice-memo";
 
 interface TokenBudget {
@@ -87,14 +86,6 @@ export const PER_DELIVERABLE_TOKENS: Record<DeliverableKind, TokenBudget> = {
     contentOut: 2_800,
     scoringIn: 2_800,
     scoringOut: 320,
-  },
-  billboard: {
-    synthesisIn: 1_800,
-    synthesisOut: 400,
-    contentIn: 2_500,
-    contentOut: 600,
-    scoringIn: 1_200,
-    scoringOut: 150,
   },
   "voice-memo": {
     // Whisper transcription dominates; tokenization is approximate.
@@ -195,7 +186,7 @@ export interface TenantWorkload {
 /**
  * Workload baseline per tenant. Adisseo runs at the highest volume
  * (4 species managers) — the others scale down because they ride
- * AdiPlan as a blueprint, not as their primary content engine.
+ * APAC as a blueprint, not as their primary content engine.
  */
 export const TENANT_WORKLOADS: Record<TenantId, TenantWorkload> = {
   adisseo: {
@@ -206,7 +197,6 @@ export const TENANT_WORKLOADS: Record<TenantId, TenantWorkload> = {
       "poultry-email": 8,
       "poultry-carousel": 4,
       "ruminants-manga": 2,
-      billboard: 3,
       "voice-memo": 12,
     },
     emailSendsPerMonth: 18_000,
@@ -222,7 +212,6 @@ export const TENANT_WORKLOADS: Record<TenantId, TenantWorkload> = {
       "poultry-email": 4,
       "poultry-carousel": 3,
       "ruminants-manga": 1,
-      billboard: 1,
       "voice-memo": 4,
     },
     emailSendsPerMonth: 9_500,
@@ -238,7 +227,6 @@ export const TENANT_WORKLOADS: Record<TenantId, TenantWorkload> = {
       "poultry-email": 6,
       "poultry-carousel": 2,
       "ruminants-manga": 1,
-      billboard: 0,
       "voice-memo": 3,
     },
     emailSendsPerMonth: 14_500,
@@ -254,7 +242,6 @@ export const TENANT_WORKLOADS: Record<TenantId, TenantWorkload> = {
       "poultry-email": 3,
       "poultry-carousel": 2,
       "ruminants-manga": 0,
-      billboard: 1,
       "voice-memo": 2,
     },
     emailSendsPerMonth: 4_200,
@@ -358,7 +345,6 @@ export const DELIVERABLE_LABEL: Record<DeliverableKind, string> = {
   "poultry-email": "Poultry email blast",
   "poultry-carousel": "Poultry LinkedIn carousel",
   "ruminants-manga": "Ruminants manga brochure",
-  billboard: "Billboard / OOH visual",
   "voice-memo": "Voice memo deliverable",
 };
 

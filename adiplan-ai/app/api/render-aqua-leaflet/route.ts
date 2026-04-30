@@ -18,6 +18,7 @@ import {
   type AquaLanguage,
   type AquaLeafletData,
 } from "@/lib/aqua-leaflet";
+import { herubel } from "@/lib/design-system-herubel";
 
 export const runtime = "nodejs";
 
@@ -43,13 +44,16 @@ function ensureFonts() {
   fontsRegistered = true;
 }
 
-const CRIMSON = "#A70A2D";
-const CYAN = "#00A3C4";
-const ORANGE = "#D97641";
-const INK = "#1F252A";
-const MUTED = "#6B7280";
-const LINE = "#DEDEDE";
-const BG = "#FBF9F9";
+// Hérubel design tokens (lib/design-system-herubel.ts).
+const P = herubel.palette;
+const T = herubel.type;
+const CRIMSON = P.accent;
+const INK = P.ink;
+const MUTED = P.inkSoft;
+const LINE = P.line;
+const BG = P.surface;
+const BLOCK = P.blockTint;
+const ACCENT2 = P.accent2;
 
 /**
  * For Thai pages, the standalone NotoSansThai TTF only contains Thai glyphs.
@@ -108,26 +112,22 @@ function styles(language: AquaLanguage) {
       fontSize: isThai ? 8 : 9,
       color: INK,
       backgroundColor: BG,
-      paddingTop: 18,
+      paddingTop: 28,
       paddingBottom: 36,
-      paddingHorizontal: 32,
+      paddingLeft: 44,
+      paddingRight: 32,
     },
-    crimsonBar: {
+    // Hérubel: thick left rule replaces the top/bottom band.
+    accentRule: {
       position: "absolute",
       left: 0,
-      right: 0,
       top: 0,
-      height: 8,
-      backgroundColor: CRIMSON,
-    },
-    crimsonBarBottom: {
-      position: "absolute",
-      left: 0,
-      right: 0,
       bottom: 0,
-      height: 6,
+      width: 12,
       backgroundColor: CRIMSON,
     },
+    crimsonBar: { display: "none" },
+    crimsonBarBottom: { display: "none" },
     header: {
       flexDirection: "row",
       justifyContent: "space-between",
@@ -138,65 +138,88 @@ function styles(language: AquaLanguage) {
     logo: { width: 78, height: 32, objectFit: "contain" },
     headerRight: { textAlign: "right" },
     eyebrow: {
-      fontSize: 8,
-      letterSpacing: 1.2,
+      fontSize: T.eyebrow.size,
+      letterSpacing: T.eyebrow.letterSpacing,
       color: CRIMSON,
-      fontWeight: 700,
+      fontWeight: T.eyebrow.weight,
       textTransform: "uppercase",
       marginBottom: 2,
     },
-    magazineLine: { fontSize: 8, color: MUTED, letterSpacing: 0.6 },
-    title: {
-      fontSize: 22,
-      fontWeight: 700,
-      color: INK,
-      marginTop: 4,
-      marginBottom: 4,
-      lineHeight: 1.15,
+    magazineLine: {
+      fontSize: T.signature.size,
+      color: MUTED,
+      letterSpacing: T.signature.letterSpacing,
+      fontWeight: T.signature.weight,
+      textTransform: "uppercase",
     },
-    subtitle: { fontSize: 10, color: MUTED, marginBottom: 14, lineHeight: 1.35 },
+    title: {
+      fontSize: 30,
+      fontWeight: 900,
+      color: INK,
+      marginTop: 6,
+      marginBottom: 6,
+      lineHeight: 1.06,
+      letterSpacing: -0.6,
+    },
+    subtitle: {
+      fontSize: T.body.size,
+      color: MUTED,
+      marginBottom: 16,
+      lineHeight: T.body.lineHeight,
+    },
     heroBox: {
       flexDirection: "row",
-      borderTopWidth: 1,
-      borderBottomWidth: 1,
-      borderColor: LINE,
-      paddingVertical: 12,
-      marginBottom: 14,
+      backgroundColor: INK,
+      paddingVertical: 16,
+      paddingHorizontal: 18,
+      marginBottom: 16,
     },
-    heroLeft: {
-      width: 6,
-      backgroundColor: CRIMSON,
-      marginRight: 12,
-    },
+    heroLeft: { display: "none" },
     heroBody: { flex: 1 },
     heroClaim: {
-      fontSize: 13,
-      fontWeight: 700,
-      color: INK,
+      fontSize: 16,
+      fontWeight: 800,
+      color: BG,
       marginBottom: 6,
-      lineHeight: 1.25,
+      lineHeight: 1.18,
+      letterSpacing: -0.2,
     },
-    heroEvidence: { fontSize: 9, color: MUTED, lineHeight: 1.45 },
+    heroEvidence: {
+      fontSize: T.body.size,
+      color: BG,
+      lineHeight: T.body.lineHeight,
+      opacity: 0.86,
+    },
     columns: {
       flexDirection: "row",
       gap: isThai ? 16 : 12,
-      marginBottom: 14,
+      marginBottom: 16,
     },
-    column: { flex: 1, minWidth: 0, flexShrink: 1, flexGrow: 1, flexBasis: 0 },
+    column: {
+      flex: 1,
+      minWidth: 0,
+      flexShrink: 1,
+      flexGrow: 1,
+      flexBasis: 0,
+      backgroundColor: BLOCK,
+      paddingVertical: 10,
+      paddingHorizontal: 11,
+    },
     columnLabel: {
-      fontSize: 8,
-      letterSpacing: 1,
-      color: CYAN,
-      fontWeight: 700,
+      fontSize: T.eyebrow.size,
+      letterSpacing: T.eyebrow.letterSpacing,
+      color: ACCENT2,
+      fontWeight: T.eyebrow.weight,
       textTransform: "uppercase",
-      marginBottom: 4,
+      marginBottom: 6,
     },
     columnHeading: {
-      fontSize: 10,
-      fontWeight: 700,
+      fontSize: 11,
+      fontWeight: 800,
       color: INK,
       marginBottom: 4,
-      lineHeight: 1.3,
+      lineHeight: 1.25,
+      letterSpacing: -0.1,
     },
     columnBody: {
       fontSize: isThai ? 8 : 9,
@@ -210,27 +233,34 @@ function styles(language: AquaLanguage) {
     },
     specBox: {
       flex: 1,
-      borderWidth: 1,
-      borderColor: LINE,
-      paddingVertical: 8,
-      paddingHorizontal: 10,
+      backgroundColor: INK,
+      paddingVertical: 10,
+      paddingHorizontal: 11,
     },
     specLabel: {
-      fontSize: 7,
-      letterSpacing: 0.8,
-      color: MUTED,
+      fontSize: T.signature.size,
+      letterSpacing: T.signature.letterSpacing,
+      color: BG,
+      fontWeight: T.signature.weight,
       textTransform: "uppercase",
-      marginBottom: 2,
+      marginBottom: 4,
+      opacity: 0.7,
     },
-    specValue: { fontSize: 10, fontWeight: 700, color: INK },
+    specValue: {
+      fontSize: 13,
+      fontWeight: 800,
+      color: BG,
+      letterSpacing: -0.1,
+    },
     cta: {
       backgroundColor: CRIMSON,
       color: "white",
-      paddingVertical: 10,
-      paddingHorizontal: 14,
-      fontSize: 10,
-      fontWeight: 700,
-      marginBottom: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      fontSize: T.bodyBold.size,
+      fontWeight: T.bodyBold.weight,
+      marginBottom: 14,
+      letterSpacing: 0.2,
     },
     footer: {
       flexDirection: "row",
@@ -238,16 +268,23 @@ function styles(language: AquaLanguage) {
       borderTopWidth: 1,
       borderColor: LINE,
       paddingTop: 8,
-      fontSize: 7,
+      fontSize: T.signature.size,
       color: MUTED,
     },
     footerLeft: { maxWidth: "62%", lineHeight: 1.4 },
-    footerRight: { textAlign: "right", maxWidth: "35%", lineHeight: 1.4 },
+    footerRight: {
+      textAlign: "right",
+      maxWidth: "35%",
+      lineHeight: 1.4,
+      fontSize: T.signature.size,
+      fontWeight: T.signature.weight,
+      letterSpacing: T.signature.letterSpacing,
+      textTransform: "uppercase",
+    },
     accentDot: {
       width: 6,
       height: 6,
-      backgroundColor: ORANGE,
-      borderRadius: 3,
+      backgroundColor: ACCENT2,
       marginHorizontal: 6,
     },
   });
@@ -270,10 +307,10 @@ function LeafletDocument({
   return React.createElement(
     Document,
     null,
-    React.createElement(
+      React.createElement(
       Page,
       { size: "A4", style: s.page },
-      React.createElement(View, { style: s.crimsonBar }),
+      React.createElement(View, { style: s.accentRule }),
 
       React.createElement(
         View,
@@ -335,10 +372,8 @@ function LeafletDocument({
         View,
         { style: s.footer },
         T(data.contactLine, s.footerLeft),
-        T(data.citationLine, s.footerRight)
-      ),
-
-      React.createElement(View, { style: s.crimsonBarBottom })
+        T(herubel.brand.signature, s.footerRight)
+      )
     )
   );
 }

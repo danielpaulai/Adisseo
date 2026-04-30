@@ -86,7 +86,7 @@ export function PipelineVisual() {
         ))}
       </div>
 
-      {/* ── CENTRE: AdiPlan AI core ──────────────────────────────────── */}
+      {/* ── CENTRE: APAC AI core ──────────────────────────────────── */}
       <div className="flex items-center justify-center">
         <div
           ref={coreRef}
@@ -94,7 +94,7 @@ export function PipelineVisual() {
         >
           <Sparkles size={20} />
           <p className="mt-1 text-[10px] font-semibold uppercase tracking-widest">
-            AdiPlan
+            APAC
           </p>
           <p className="text-[9px] uppercase tracking-widest opacity-80">AI</p>
         </div>
@@ -133,7 +133,7 @@ export function PipelineVisual() {
         ))}
       </div>
 
-      {/* ── BEAMS: scraper → AdiPlan core ────────────────────────────── */}
+      {/* ── BEAMS: scraper → APAC core ────────────────────────────── */}
       {SOURCES.map((s, i) => (
         <AnimatedBeam
           key={`in-${s.id}`}
@@ -150,7 +150,7 @@ export function PipelineVisual() {
         />
       ))}
 
-      {/* ── BEAMS: AdiPlan core → studios (cyan/orange mix) ─────────── */}
+      {/* ── BEAMS: APAC core → studios (cyan/orange mix) ─────────── */}
       {STUDIOS.map((st, i) => (
         <AnimatedBeam
           key={`out-${st.id}`}

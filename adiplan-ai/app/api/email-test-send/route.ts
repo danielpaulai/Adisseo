@@ -67,13 +67,13 @@ export async function POST(req: NextRequest) {
     const result = await sendViaMailgun({
       tenantId: body.tenantId,
       channel: "email",
-      deliverable: "AdiPlan · live-channel test send",
+      deliverable: "APAC · live-channel test send",
       body:
         body.body ??
-        "This is an AdiPlan live-channel test message.\n\nIt confirms your Mailgun credentials are wired correctly: API key, from-domain, and DKIM/SPF.\n\nIf you're seeing this in your inbox, the live email rail is ready for the May 7 demo.",
-      subject: body.subject ?? "AdiPlan · live-channel test send",
-      hashtags: ["#AdiPlan", "#LiveChannel"],
-      manager: "AdiPlan",
+        "This is an APAC live-channel test message.\n\nIt confirms your Mailgun credentials are wired correctly: API key, from-domain, and DKIM/SPF.\n\nIf you're seeing this in your inbox, the live email rail is ready for the May 7 demo.",
+      subject: body.subject ?? "APAC · live-channel test send",
+      hashtags: ["#APAC", "#LiveChannel"],
+      manager: "APAC",
       to: body.to && body.to.length ? body.to : undefined,
     });
     trace.finish({

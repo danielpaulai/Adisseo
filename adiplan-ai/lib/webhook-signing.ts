@@ -1,12 +1,12 @@
 /**
- * Webhook signing — Phase 6 of AdiPlan.
+ * Webhook signing — Phase 6 of APAC.
  *
  * Production webhooks (from LinkedIn / WeChat / WhatsApp / Mailgun /
  * editorial portals) sign their payloads so we can verify they're
  * actually from the channel. We use the same convention here:
  *
- *   X-AdiPlan-Timestamp: <unix seconds>
- *   X-AdiPlan-Signature: t=<ts>,v1=<hex hmac-sha256>
+ *   X-APAC-Timestamp: <unix seconds>
+ *   X-APAC-Signature: t=<ts>,v1=<hex hmac-sha256>
  *
  * The signed string is `${timestamp}.${rawBody}`, hashed with the
  * tenant's webhook secret. Mirror Stripe's exactly because every
@@ -25,7 +25,7 @@ export interface SignatureHeaders {
 }
 
 /**
- * Compute the X-AdiPlan-Signature header value for a payload.
+ * Compute the X-APAC-Signature header value for a payload.
  * Format: `t=<timestamp>,v1=<hex-hmac-sha256>`
  */
 export function signWebhookPayload(
@@ -46,7 +46,7 @@ export type VerifyResult =
   | { ok: false; reason: "missing-header" | "malformed-header" | "stale" | "mismatch" };
 
 /**
- * Verify the X-AdiPlan-Signature header against a raw body + secret.
+ * Verify the X-APAC-Signature header against a raw body + secret.
  *
  *   - Reject if header missing / malformed
  *   - Reject if timestamp is older than 5 minutes (replay)
@@ -100,8 +100,8 @@ export function exampleCurl(
   return [
     `curl -X POST '${webhookUrl}' \\`,
     `  -H 'content-type: application/json' \\`,
-    `  -H 'x-adiplan-timestamp: ${timestamp}' \\`,
-    `  -H 'x-adiplan-signature: ${signature}' \\`,
+    `  -H 'x-apac-timestamp: ${timestamp}' \\`,
+    `  -H 'x-apac-signature: ${signature}' \\`,
     `  -d '${rawBody.replace(/'/g, "'\\''")}'`,
   ].join("\n");
 }

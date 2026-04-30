@@ -1,21 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Building2,
-  CalendarClock,
   CheckCircle2,
   ExternalLink,
   Eye,
-  Send,
   Share2,
   ShieldAlert,
   Sparkles,
   XCircle,
-  Zap,
-  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Logo } from "@/components/Logo";
@@ -37,44 +33,19 @@ import {
   type DemoDeliverable,
 } from "@/lib/distribution";
 import { useAdiPlanStore } from "@/lib/store";
-import {
-  deliverableKindForChannel,
-  type DeliverableInstance,
-} from "@/lib/engagement";
 import type { ChannelPreview as ChannelPreviewType } from "@/lib/channel-adapter";
-
-interface DispatchState {
-  status: "idle" | "shipping" | "shipped" | "blocked";
-  reason?: string;
-  channel?: DistributionChannel;
-  deliverableId?: string;
-}
 
 export default function DistributionPage() {
   const activeTenantId = useAdiPlanStore((s) => s.activeTenantId);
   const tenant = getTenant(activeTenantId);
 
   const distribution = useAdiPlanStore((s) => s.distribution);
-  const pushDistribution = useAdiPlanStore((s) => s.pushDistribution);
-  const patchDistribution = useAdiPlanStore((s) => s.patchDistribution);
-
-  const scheduledSends = useAdiPlanStore((s) => s.scheduledSends);
-  const schedule = useAdiPlanStore((s) => s.schedule);
-  const fireScheduled = useAdiPlanStore((s) => s.fireScheduled);
-  const cancelScheduled = useAdiPlanStore((s) => s.cancelScheduled);
-
-  const pushLiveDeliverable = useAdiPlanStore((s) => s.pushLiveDeliverable);
-  const patchLiveDeliverable = useAdiPlanStore((s) => s.patchLiveDeliverable);
-
-  const pushActivity = useAdiPlanStore((s) => s.pushActivity);
 
   const [filterChannel, setFilterChannel] = useState<DistributionChannel | "all">(
     "all"
   );
-  const [dispatch, setDispatch] = useState<DispatchState>({ status: "idle" });
   const [previewCard, setPreviewCard] = useState<ChannelPreviewType | null>(null);
   const [previewLoading, setPreviewLoading] = useState<string | null>(null);
-  const [scheduleFor, setScheduleFor] = useState<string>("");
   const [openLogPreview, setOpenLogPreview] = useState<string | null>(null);
 
   const tenantDeliverables = useMemo(
@@ -87,19 +58,6 @@ export default function DistributionPage() {
   );
 
   const tenantLog = distribution.filter((l) => l.tenantId === activeTenantId);
-  const tenantQueue = scheduledSends.filter(
-    (q) => q.tenantId === activeTenantId
-  );
-
-  // Default the schedule input to "+2 hours" so the demo always has a time.
-  useEffect(() => {
-    if (scheduleFor) return;
-    const t = new Date(Date.now() + 2 * 60 * 60 * 1000);
-    const local = new Date(t.getTime() - t.getTimezoneOffset() * 60_000)
-      .toISOString()
-      .slice(0, 16);
-    setScheduleFor(local);
-  }, [scheduleFor]);
 
   /* ------------------------------------------------------------------------ */
   /* Preview a channel card without dispatching.                              */
@@ -136,228 +94,6 @@ export default function DistributionPage() {
     }
   }
 
-  /* ------------------------------------------------------------------------ */
-  /* Ship via the channel adapter, push live deliverable, log activity.       */
-  /* ------------------------------------------------------------------------ */
-  async function ship(deliverable: DemoDeliverable, channel: DistributionChannel) {
-    setDispatch({ status: "shipping", channel, deliverableId: deliverable.id });
-    try {
-      const res = await fetch("/api/distribute", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          tenantId: deliverable.tenantId,
-          channel,
-          deliverable: deliverable.label,
-          body: deliverable.body,
-          subject: deliverable.label,
-          hashtags: deliverable.hashtags,
-          region: deliverable.region,
-          species: deliverable.species,
-          manager: deliverable.manager,
-          trustScore: deliverable.trustScore,
-          citationCount: deliverable.citationCount,
-          approvalStatus: deliverable.approvalStatus,
-        }),
-      });
-      const json = await res.json();
-      const channelLabel = CHANNELS[channel].label;
-
-      if (json.status === "shipped") {
-        const deliverableInstanceId = `dx-${Date.now().toString(36)}-${Math.random()
-          .toString(36)
-          .slice(2, 5)}`;
-        const distId = pushDistribution({
-          tenantId: deliverable.tenantId,
-          channel,
-          deliverable: deliverable.label,
-          trustScore: deliverable.trustScore,
-          status: "shipped",
-          audience: json.audience,
-          publicUrl: json.publicUrl,
-          externalId: json.externalId,
-          audienceCount: json.audienceCount,
-          preview: json.preview,
-          deliverableInstanceId,
-          dispatchMode: json.dispatchMode,
-          rateLimited: json.rateLimited,
-          waitMs: json.waitMs,
-        });
-
-        // Phase 5 — auto-create a DeliverableInstance for engagement-tracker.
-        const instance: DeliverableInstance = {
-          id: deliverableInstanceId,
-          kind: deliverableKindForChannel(channel, deliverable.label),
-          title: deliverable.label,
-          language: deliverable.region === "Hokkaido" ? "JA" :
-            deliverable.region === "China" ? "ZH" :
-            deliverable.region === "Vietnam" ? "VI" :
-            deliverable.region === "Indonesia" ? "ID" :
-            deliverable.region === "Thailand" ? "TH" : "EN",
-          region: deliverable.region ?? "APAC",
-          species: deliverable.species,
-          audience: channelLabel,
-          owner: `${deliverable.manager} · ${deliverable.studio}`,
-          sentAt: new Date().toISOString().slice(0, 10),
-          views: 0,
-          qualifiedViews: 0,
-          conversations: 0,
-          conversions: 0,
-          anchorSignal: `${getTenant(deliverable.tenantId).name} · ${channelLabel}`,
-          trustScore: deliverable.trustScore,
-        };
-        pushLiveDeliverable(instance);
-
-        pushActivity({
-          kind: "deliverable",
-          title: `Shipped — ${deliverable.label}`,
-          detail: `${getTenant(deliverable.tenantId).name} → ${channelLabel} · reach ${
-            json.audienceCount?.toLocaleString() ?? "?"
-          } · trust ${deliverable.trustScore}`,
-          tone: "good",
-          href: "/distribution",
-        });
-        toast.success(`Shipped to ${channelLabel}`, {
-          description: `Reach ${json.audienceCount?.toLocaleString() ?? "?"} · open the post → ${
-            json.publicUrl ?? "(mock URL)"
-          }`,
-        });
-        setDispatch({ status: "shipped", channel, deliverableId: deliverable.id });
-
-        // Auto-trigger an engagement callback after 600ms so the demo lands
-        // with non-zero numbers without the operator clicking again.
-        setTimeout(() => simulateEngagement(distId), 600);
-      } else {
-        pushDistribution({
-          tenantId: deliverable.tenantId,
-          channel,
-          deliverable: deliverable.label,
-          trustScore: deliverable.trustScore,
-          status: "blocked",
-          blockReason: json.reason,
-        });
-        pushActivity({
-          kind: "deliverable",
-          title: `Blocked — ${deliverable.label}`,
-          detail: json.reason ?? "Distribution gate failed",
-          tone: "warn",
-          href: "/distribution",
-        });
-        toast.warning("Distribution blocked", {
-          description: json.reason ?? "Gate failed",
-        });
-        setDispatch({
-          status: "blocked",
-          reason: json.reason,
-          channel,
-          deliverableId: deliverable.id,
-        });
-      }
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Request failed";
-      toast.error("Dispatch failed", { description: msg });
-      setDispatch({
-        status: "blocked",
-        reason: msg,
-        channel,
-        deliverableId: deliverable.id,
-      });
-    }
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* Schedule a send for later.                                               */
-  /* ------------------------------------------------------------------------ */
-  async function scheduleShip(
-    deliverable: DemoDeliverable,
-    channel: DistributionChannel
-  ) {
-    if (!scheduleFor) {
-      toast.error("Pick a date/time first");
-      return;
-    }
-    const iso = new Date(scheduleFor).toISOString();
-    schedule({
-      tenantId: deliverable.tenantId,
-      channel,
-      deliverable: deliverable.label,
-      trustScore: deliverable.trustScore,
-      approvalStatus: deliverable.approvalStatus,
-      species: deliverable.species,
-      scheduledFor: iso,
-    });
-    pushActivity({
-      kind: "deliverable",
-      title: `Scheduled — ${deliverable.label}`,
-      detail: `${CHANNELS[channel].label} · ${new Date(iso).toLocaleString()}`,
-      tone: "info",
-      href: "/distribution",
-    });
-    toast.success("Scheduled", {
-      description: `${CHANNELS[channel].label} · ${new Date(iso).toLocaleString()}`,
-    });
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* Fire a queued send now (operator override).                              */
-  /* ------------------------------------------------------------------------ */
-  async function fireQueued(queueId: string) {
-    const q = scheduledSends.find((x) => x.id === queueId);
-    if (!q) return;
-    const deliverable = DEMO_DELIVERABLES.find((d) => d.label === q.deliverable);
-    if (!deliverable) {
-      toast.error("Queued deliverable not found in demo set");
-      return;
-    }
-    fireScheduled(queueId);
-    await ship(deliverable, q.channel);
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* Simulate inbound engagement webhook for a shipped row.                   */
-  /* ------------------------------------------------------------------------ */
-  async function simulateEngagement(distId: string, hoursSinceShip: number = 24) {
-    const row = useAdiPlanStore.getState().distribution.find((d) => d.id === distId);
-    if (!row || row.status !== "shipped") return;
-    try {
-      const res = await fetch("/api/distribution-callback", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          externalId: row.externalId,
-          channel: row.channel,
-          audienceCount: row.audienceCount,
-          trustScore: row.trustScore,
-          citationCount: 4,
-          hoursSinceShip,
-        }),
-      });
-      const json = await res.json();
-      patchDistribution(distId, {
-        engagement: {
-          impressions: json.impressions,
-          qualifiedViews: json.qualifiedViews,
-          conversations: json.conversations,
-          conversions: json.conversions,
-          updatedAt: json.updatedAt,
-        },
-      });
-      if (row.deliverableInstanceId) {
-        patchLiveDeliverable(row.deliverableInstanceId, {
-          views: json.impressions,
-          qualifiedViews: json.qualifiedViews,
-          conversations: json.conversations,
-          conversions: json.conversions,
-        });
-      }
-      toast.info("Engagement update", { description: json.summary });
-    } catch (e) {
-      toast.error("Callback failed", {
-        description: e instanceof Error ? e.message : "Request failed",
-      });
-    }
-  }
-
   return (
     <main className="min-h-screen bg-adisseo-bg pb-24 text-adisseo-ink">
       <header className="sticky top-0 z-20 border-b border-adisseo-line bg-white/95 backdrop-blur">
@@ -388,12 +124,12 @@ export default function DistributionPage() {
                 Distribution rails
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-adisseo-muted">
-                Approved-and-ready deliverables route through tenant-specific
-                channel gates. Each channel runs through its own adapter that
-                produces a channel-native preview, simulated dispatch latency,
-                and a public URL. Every shipped deliverable auto-creates a
-                DeliverableInstance for engagement-tracker grading. Inbound
-                engagement webhook updates the trackers and the audit log.
+                Preview-only by design. Approved deliverables render the
+                channel-native card here so HQ can sanity-check the layout
+                before pushing into Coschedule. We do not auto-distribute —
+                the team owns the publish step in the tool they already pay
+                for. Inbound engagement webhooks still flow into the audit log
+                + engagement-tracker.
               </p>
             </div>
             <div
@@ -459,23 +195,6 @@ export default function DistributionPage() {
             })}
           </div>
 
-          {/* Schedule-for input */}
-          <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-adisseo-line bg-stone-50 px-3 py-2 text-[11px]">
-            <CalendarClock size={12} className="text-adisseo-muted" />
-            <span className="font-semibold text-adisseo-ink-strong">
-              Schedule sends for:
-            </span>
-            <input
-              type="datetime-local"
-              value={scheduleFor}
-              onChange={(e) => setScheduleFor(e.target.value)}
-              className="rounded border border-adisseo-line bg-white px-2 py-1 text-[11px]"
-            />
-            <span className="text-adisseo-muted">
-              Operators can defer dispatch; the queue fires at the scheduled time
-              (or by manual override below).
-            </span>
-          </div>
         </div>
 
         {/* Live preview modal */}
@@ -510,7 +229,8 @@ export default function DistributionPage() {
             Approved-and-ready deliverables ({tenantDeliverables.length})
           </h2>
           <p className="text-xs text-adisseo-muted">
-            Preview the channel-native card, ship now, or queue for later.
+            Preview the channel-native card. The team copies the approved
+            asset into Coschedule for the actual push.
           </p>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             {tenantDeliverables.map((d) => {
@@ -580,15 +300,6 @@ export default function DistributionPage() {
                         (c) => filterChannel === "all" || c.id === filterChannel
                       )
                       .map((c) => {
-                        const isShipping =
-                          dispatch.status === "shipping" &&
-                          dispatch.channel === c.id &&
-                          dispatch.deliverableId === d.id;
-                        const justShipped =
-                          dispatch.status === "shipped" &&
-                          dispatch.channel === c.id &&
-                          dispatch.deliverableId === d.id;
-                        const recommended = d.recommendedChannels.includes(c.id);
                         const previewKey = `${d.id}-${c.id}`;
                         return (
                           <div
@@ -611,35 +322,6 @@ export default function DistributionPage() {
                               )}
                               Preview
                             </button>
-                            <button
-                              disabled={!eligible || isShipping}
-                              onClick={() => ship(d, c.id)}
-                              className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${
-                                justShipped
-                                  ? "bg-emerald-500 text-white"
-                                  : recommended
-                                    ? "bg-adisseo-crimson text-white hover:bg-adisseo-crimson/90"
-                                    : "bg-adisseo-ink-strong text-white hover:bg-adisseo-crimson"
-                              }`}
-                              title={c.blurb}
-                            >
-                              {justShipped ? (
-                                <CheckCircle2 size={9} />
-                              ) : isShipping ? (
-                                <Sparkles size={9} className="animate-pulse" />
-                              ) : (
-                                <Send size={9} />
-                              )}
-                              {isShipping ? "Shipping…" : justShipped ? "Shipped" : "Ship now"}
-                            </button>
-                            <button
-                              disabled={!eligible}
-                              onClick={() => scheduleShip(d, c.id)}
-                              className="inline-flex items-center gap-1 rounded-full bg-white px-1.5 py-0.5 text-[9px] font-semibold text-stone-700 transition hover:text-adisseo-crimson disabled:cursor-not-allowed disabled:opacity-50"
-                              title="Defer dispatch to the scheduled time"
-                            >
-                              <CalendarClock size={9} /> Queue
-                            </button>
                           </div>
                         );
                       })}
@@ -649,6 +331,9 @@ export default function DistributionPage() {
                         Gate failed — fix trust or approval first
                       </span>
                     )}
+                    <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide text-adisseo-muted">
+                      Preview-only · push to Coschedule on approval
+                    </span>
                   </div>
                 </article>
               );
@@ -661,64 +346,6 @@ export default function DistributionPage() {
             )}
           </div>
         </section>
-
-        {/* Scheduled queue */}
-        {tenantQueue.length > 0 && (
-          <section className="mt-10">
-            <h2 className="text-lg font-black text-adisseo-ink-strong">
-              Scheduled queue ({tenantQueue.length})
-            </h2>
-            <p className="text-xs text-adisseo-muted">
-              In production a cron fires these at the scheduled time. Here you
-              can fire one early or cancel.
-            </p>
-            <ul className="mt-4 space-y-2">
-              {tenantQueue.map((q) => (
-                <li
-                  key={q.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-adisseo-line bg-white px-4 py-3"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-adisseo-ink-strong">
-                      <span
-                        className={`rounded-full px-1.5 py-0.5 text-[9px] uppercase tracking-widest ${
-                          q.status === "queued"
-                            ? "bg-amber-100 text-amber-700"
-                            : q.status === "fired"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-stone-200 text-stone-600 line-through"
-                        }`}
-                      >
-                        {q.status}
-                      </span>
-                      {q.deliverable}
-                    </p>
-                    <p className="text-[11px] text-adisseo-muted">
-                      {CHANNELS[q.channel]?.label} · scheduled{" "}
-                      {new Date(q.scheduledFor).toLocaleString()} · trust {q.trustScore}
-                    </p>
-                  </div>
-                  {q.status === "queued" && (
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => fireQueued(q.id)}
-                        className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2.5 py-1 text-[10px] font-bold text-white transition hover:bg-emerald-700"
-                      >
-                        <Zap size={10} /> Fire now
-                      </button>
-                      <button
-                        onClick={() => cancelScheduled(q.id)}
-                        className="inline-flex items-center gap-1 rounded-full border border-adisseo-line px-2.5 py-1 text-[10px] font-semibold text-stone-600 transition hover:text-adisseo-crimson"
-                      >
-                        <Trash2 size={10} /> Cancel
-                      </button>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
 
         {/* Distribution log */}
         <section className="mt-10">
@@ -751,7 +378,7 @@ export default function DistributionPage() {
                       colSpan={7}
                       className="px-3 py-6 text-center text-xs text-adisseo-muted"
                     >
-                      No dispatches yet — ship a deliverable above to populate the log.
+                      No dispatches yet — inbound webhooks (Coschedule, Mailgun) populate the log here.
                     </td>
                   </tr>
                 ) : (
@@ -855,15 +482,6 @@ export default function DistributionPage() {
                                 {expanded ? "Hide preview" : "Preview"}
                               </button>
                             )}
-                            {row.status === "shipped" && (
-                              <button
-                                onClick={() => simulateEngagement(row.id, 24)}
-                                className="ml-2 text-[10px] font-semibold text-adisseo-crimson transition hover:underline"
-                                title="Simulate the channel firing back engagement metrics"
-                              >
-                                ↻ Update
-                              </button>
-                            )}
                           </td>
                         </tr>
                         {expanded && row.preview && (
@@ -894,7 +512,7 @@ export default function DistributionPage() {
           </h2>
           <p className="text-xs text-adisseo-muted">
             Each tenant's compliance team picks which channels are approved.
-            AdiPlan blocks the rest at the API level.
+            APAC blocks the rest at the API level.
           </p>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[640px] text-left text-sm">

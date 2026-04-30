@@ -7,6 +7,7 @@ import type { VoiceProfile } from "@/lib/voice-profile";
 import type { TenantId, DistributionChannel } from "@/lib/tenant";
 import type { ChannelPreview } from "@/lib/channel-adapter";
 import type { DeliverableInstance } from "@/lib/engagement";
+import type { SavedStakeholderMap } from "@/lib/saved-stakeholder-map";
 
 /* ============================================================================
  * Phase 4 — multi-tenant + distribution rails
@@ -89,7 +90,6 @@ export type ActivityKind =
   | "poultry"
   | "ruminants"
   | "swine"
-  | "billboard"
   | "voice-memo";
 
 export type ActivityEntry = {
@@ -120,7 +120,6 @@ export type ApprovalKind =
   | "poultry-pack"
   | "ruminants-brochure"
   | "swine-short"
-  | "billboard"
   | "voice-memo"
   | "strategic-frame";
 
@@ -218,7 +217,7 @@ interface AdiPlanStore {
   setStudioLanguage: (l: AdiPlanStore["studioLanguage"]) => void;
   setStudioAccount: (a: string) => void;
 
-  /** Most recent strategic frame composed in this session (for Billboard reuse + war-room). */
+  /** Most recent strategic frame composed in this session (war-room reuse). */
   composedFrame: StrategicFrame | null;
   setComposedFrame: (f: StrategicFrame | null) => void;
 
@@ -276,6 +275,16 @@ interface AdiPlanStore {
   pushLiveDeliverable: (d: DeliverableInstance) => void;
   patchLiveDeliverable: (id: string, patch: Partial<DeliverableInstance>) => void;
   clearLiveDeliverables: () => void;
+
+  /** Phase 3 (APAC plan) — saved stakeholder maps + recall. */
+  savedMaps: SavedStakeholderMap[];
+  saveMap: (m: Omit<SavedStakeholderMap, "id" | "savedAt"> & { id?: string }) => string;
+  updateMap: (id: string, patch: Partial<SavedStakeholderMap>) => void;
+  deleteMap: (id: string) => void;
+  clearSavedMaps: () => void;
+  /** Active map id loaded into the editor. null = transient unsaved selection. */
+  activeMapId: string | null;
+  setActiveMapId: (id: string | null) => void;
 }
 
 export const useAdiPlanStore = create<AdiPlanStore>()(
@@ -474,6 +483,34 @@ export const useAdiPlanStore = create<AdiPlanStore>()(
           ),
         })),
       clearLiveDeliverables: () => set({ liveDeliverables: [] }),
+
+      savedMaps: [],
+      activeMapId: null,
+      saveMap: (m) => {
+        const id =
+          m.id ?? `map-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 5)}`;
+        const next: SavedStakeholderMap = {
+          ...m,
+          id,
+          savedAt: new Date().toISOString(),
+        };
+        set((s) => ({
+          savedMaps: [next, ...s.savedMaps.filter((x) => x.id !== id)].slice(0, 40),
+          activeMapId: id,
+        }));
+        return id;
+      },
+      updateMap: (id, patch) =>
+        set((s) => ({
+          savedMaps: s.savedMaps.map((m) => (m.id === id ? { ...m, ...patch } : m)),
+        })),
+      deleteMap: (id) =>
+        set((s) => ({
+          savedMaps: s.savedMaps.filter((m) => m.id !== id),
+          activeMapId: s.activeMapId === id ? null : s.activeMapId,
+        })),
+      clearSavedMaps: () => set({ savedMaps: [], activeMapId: null }),
+      setActiveMapId: (id) => set({ activeMapId: id }),
     }),
     { name: "adiplan-ai-state-v1" }
   )

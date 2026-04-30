@@ -26,7 +26,7 @@
  *   ADIPLAN_<TENANT>_EMAIL_FROM_DOMAIN — verified send domain
  *
  * Plus optional overrides:
- *   ADIPLAN_<TENANT>_EMAIL_FROM_NAME    — defaults to "AdiPlan"
+ *   ADIPLAN_<TENANT>_EMAIL_FROM_NAME    — defaults to "APAC"
  *   ADIPLAN_<TENANT>_EMAIL_FROM_ADDRESS — defaults to "adiplan@<domain>"
  *   ADIPLAN_<TENANT>_EMAIL_TEST_TO      — comma-separated test recipients
  *                                         used by /credentials "Test send"
@@ -68,7 +68,7 @@ export function getMailgunConfig(tenantId: TenantId): MailgunConfig | null {
   const domain = envFor(tenantId, "FROM_DOMAIN");
   if (!apiKey || !domain) return null;
 
-  const fromName = envFor(tenantId, "FROM_NAME") ?? "AdiPlan";
+  const fromName = envFor(tenantId, "FROM_NAME") ?? "APAC";
   const fromAddress =
     envFor(tenantId, "FROM_ADDRESS") ?? `adiplan@${domain}`;
   const testRecipients = (envFor(tenantId, "TEST_TO") ?? "")
@@ -88,7 +88,7 @@ export function getMailgunConfig(tenantId: TenantId): MailgunConfig | null {
 /* ----------------------------------------------------------------------------
  * Body composition helpers.
  *
- * Convert the AdiPlan deliverable (subject + body markdown-ish text) into
+ * Convert the APAC deliverable (subject + body markdown-ish text) into
  * the HTML + plain-text payloads Mailgun expects.
  * -------------------------------------------------------------------------- */
 function escapeHtml(s: string): string {
@@ -117,7 +117,7 @@ function bodyToHtml(body: string, hashtags?: string[]): string {
     paragraphs,
     tags,
     `<hr style="margin:32px 0;border:none;border-top:1px solid #eee" />`,
-    `<p style="font-size:11px;color:#999;margin:0">Sent via AdiPlan AI · brand-guardrail and trust-layer cleared.</p>`,
+    `<p style="font-size:11px;color:#999;margin:0">Sent via APAC AI · brand-guardrail and trust-layer cleared.</p>`,
     `</body></html>`,
   ].join("\n");
 }
@@ -153,7 +153,7 @@ export async function sendViaMailgun(
   const subject =
     input.subject?.trim() ||
     input.deliverable.split(/[\.|·\-—]/)[0].trim() ||
-    "AdiPlan update";
+    "APAC update";
   const html = bodyToHtml(input.body, input.hashtags);
   const text = input.body;
 

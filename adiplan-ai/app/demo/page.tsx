@@ -3,7 +3,6 @@ import {
   ArrowRight,
   Newspaper,
   Target,
-  Bookmark,
   BookOpen,
   Activity,
   Sparkles,
@@ -11,6 +10,7 @@ import {
   CheckCircle2,
   Clock,
   Radio,
+  ScanLine,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { DemoSeedAll } from "@/components/DemoSeedAll";
@@ -25,7 +25,7 @@ const STEPS = [
   {
     n: "01",
     title: "Match a competitor article",
-    body: "Open News Bridge. Pick any seeded article (Mintec, Kemin, Cargill\u2026). Click Match. The LLM returns the CBI it surfaces, the persona to target, and three deliverable formats grounded in the AdiPlan vocabulary.",
+    body: "Open News Bridge. Pick any seeded article (Mintec, Kemin, Cargill\u2026). Click Match. The LLM returns the CBI it surfaces, the persona to target, and three deliverable formats grounded in the APAC vocabulary.",
     href: "/news-bridge",
     cta: "Open News Bridge",
     icon: Newspaper,
@@ -34,7 +34,7 @@ const STEPS = [
   {
     n: "02",
     title: "Compose the strategic frame",
-    body: "Hit Compose Strategic Frame. AdiPlan AI synthesises an Enterprise Persona, an Enterprise Insight, and a Pain × Promise × Proof × Proposition card pack — plus an activations row pointing into the species studios.",
+    body: "Hit Compose Strategic Frame. APAC AI synthesises an Enterprise Persona, an Enterprise Insight, and a Pain × Promise × Proof × Proposition card pack — plus an activations row pointing into the species studios.",
     href: "/strategic-frame",
     cta: "Open the frame",
     icon: Target,
@@ -51,15 +51,6 @@ const STEPS = [
   },
   {
     n: "04",
-    title: "Stress-test the billboard",
-    body: "Open Studio · Billboard. The composed frame auto-fills. Pick A2 booth, A1 convention, or square LinkedIn key visual. Get back the AdiPlan billboard — Headline + Differentiation + RTB — self-scored on Unique / Important / Believable.",
-    href: "/studio/billboard",
-    cta: "Open Billboard studio",
-    icon: Bookmark,
-    estTime: "~20s",
-  },
-  {
-    n: "05",
     title: "Open the war room on the big screen",
     body: "Switch to /dashboard. The session’s articles matched, frames composed, and deliverables shipped are all there — with conversion ratios. Hit “Pre-load demo activity” if you need a fuller view for screenshots. This is what regional sales sees on Monday morning.",
     href: "/dashboard",
@@ -68,7 +59,7 @@ const STEPS = [
     estTime: "~10s",
   },
   {
-    n: "06",
+    n: "05",
     title: "Ship a deliverable down a real channel",
     body: "Open /distribution. Pick any approved deliverable, hit Preview to see the LinkedIn carousel / WeChat OA / WhatsApp / email mockup, then Ship now. Every shipped row creates a DeliverableInstance that lights up the engagement tracker; live channels (when env vars are set) get a green LIVE chip.",
     href: "/distribution",
@@ -77,7 +68,7 @@ const STEPS = [
     estTime: "~20s",
   },
   {
-    n: "07",
+    n: "06",
     title: "Land on the Malaysia-ASF benchmark",
     body: "End on /engagement-tracker — the metric Ricardo named on the call. Live + seeded deliverables in one funnel, each row graded against the 43% qualified-to-conversion benchmark. This is the number every species manager will be measured on.",
     href: "/engagement-tracker",
@@ -105,6 +96,12 @@ const SHORTCUTS = [
     title: "The deep deck",
     body: "If the audience asks 'why does this exist?' — open /presentation. The need, the gap, the architecture, what we built, what's missing, how it could be better.",
     href: "/presentation",
+  },
+  {
+    icon: ScanLine,
+    title: "Workshop & PDF ingest",
+    body: "Upload Ricardo's flipchart photos (Claude Vision → matrices / ladders) or Adisseo PDFs (Mistral OCR or offline pdf-parse). Copy JSON into vault seeds.",
+    href: "/tools/ingest",
   },
 ];
 
@@ -215,9 +212,9 @@ export default function DemoPage() {
             Or take a shortcut
           </h3>
           <p className="mt-1 text-sm text-adisseo-muted">
-            Three other entry points if the audience wants something different.
+            Four other entry points if the audience wants something different.
           </p>
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
             {SHORTCUTS.map((s) => {
               const Icon = s.icon;
               return (

@@ -24,7 +24,17 @@ import {
   forceCollide,
 } from "d3-force";
 import Link from "next/link";
-import { Check, ArrowRight, X, MapPin, Layers as LayersIcon, Filter } from "lucide-react";
+import {
+  Check,
+  ArrowRight,
+  X,
+  MapPin,
+  Layers as LayersIcon,
+  Filter,
+  Save,
+  FolderOpen,
+  AlertTriangle,
+} from "lucide-react";
 import {
   seededStakeholders,
   seededEdges,
@@ -40,6 +50,12 @@ import {
 } from "@/lib/stakeholders";
 import { useAdiPlanStore } from "@/lib/store";
 import { Logo } from "@/components/Logo";
+import {
+  SEED_SAVED_MAPS,
+  checkBalance,
+  type SavedStakeholderMap,
+  type SavedMapScope,
+} from "@/lib/saved-stakeholder-map";
 
 type StakeholderNodeData = {
   stakeholder: Stakeholder;
@@ -204,6 +220,93 @@ export default function StakeholderMap() {
   const toggleStakeholder = useAdiPlanStore((s) => s.toggleStakeholder);
   const clearStakeholders = useAdiPlanStore((s) => s.clearStakeholders);
 
+  // APAC plan Phase 3 — saved maps
+  const savedMaps = useAdiPlanStore((s) => s.savedMaps);
+  const saveMap = useAdiPlanStore((s) => s.saveMap);
+  const setActiveMapId = useAdiPlanStore((s) => s.setActiveMapId);
+
+  // hydrate seed maps once on mount if empty
+  useEffect(() => {
+    if (savedMaps.length === 0) {
+      SEED_SAVED_MAPS.forEach((m) => {
+        saveMap({
+          id: m.id,
+          name: m.name,
+          scope: m.scope,
+          scopeLabel: m.scopeLabel,
+          regions: m.regions,
+          species: m.species,
+          description: m.description,
+          nodes: m.nodes,
+          author: m.author,
+        });
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [saveName, setSaveName] = useState("");
+  const [saveScope, setSaveScope] = useState<SavedMapScope>("country");
+  const [saveScopeLabel, setSaveScopeLabel] = useState("Vietnam");
+  const [recallOpen, setRecallOpen] = useState(false);
+
+  const stakeholdersById = useMemo(
+    () => new Map(seededStakeholders.map((s) => [s.id, s])),
+    []
+  );
+
+  const handleSave = useCallback(() => {
+    if (selectedIds.length === 0 || !saveName.trim()) return;
+    const id = saveMap({
+      name: saveName.trim(),
+      scope: saveScope,
+      scopeLabel: saveScopeLabel.trim() || saveScope,
+      regions: filterRegion === "all" ? [] : [filterRegion],
+      species: filterSpecies === "all" ? [] : [filterSpecies],
+      description: undefined,
+      nodes: selectedIds.map((sid) => ({ stakeholderId: sid })),
+      author: "You",
+    });
+    setActiveMapId(id);
+    setSaveOpen(false);
+    setSaveName("");
+  }, [
+    selectedIds,
+    saveName,
+    saveScope,
+    saveScopeLabel,
+    saveMap,
+    setActiveMapId,
+    filterRegion,
+    filterSpecies,
+  ]);
+
+  const handleRecall = useCallback(
+    (m: SavedStakeholderMap) => {
+      clearStakeholders();
+      m.nodes.forEach((n) => toggleStakeholder(n.stakeholderId));
+      setActiveMapId(m.id);
+      setRecallOpen(false);
+    },
+    [clearStakeholders, toggleStakeholder, setActiveMapId]
+  );
+
+  const liveBalance = useMemo(() => {
+    if (selectedIds.length < 2) return null;
+    const fauxMap: SavedStakeholderMap = {
+      id: "live",
+      name: "live",
+      scope: "country",
+      scopeLabel: "live",
+      regions: [],
+      species: [],
+      nodes: selectedIds.map((id) => ({ stakeholderId: id })),
+      savedAt: new Date().toISOString(),
+    };
+    return checkBalance(fauxMap, stakeholdersById);
+  }, [selectedIds, stakeholdersById]);
+
   const positions = useMemo(() => computeLayout(), []);
 
   const initialNodes: StakeholderNodeType[] = useMemo(
@@ -350,6 +453,137 @@ export default function StakeholderMap() {
           >
             Re-run layout
           </button>
+          {/* APAC Phase 3 — Save / Recall */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setRecallOpen((v) => !v);
+                setSaveOpen(false);
+              }}
+              className="flex items-center gap-1.5 rounded-md border border-adisseo-line px-3 py-2 text-xs font-medium text-adisseo-ink hover:bg-adisseo-line/40"
+              title="Recall a saved stakeholder map"
+            >
+              <FolderOpen size={13} />
+              Recall map
+              {savedMaps.length > 0 && (
+                <span className="rounded-full bg-adisseo-line/60 px-1.5 py-0.5 text-[10px] font-bold">
+                  {savedMaps.length}
+                </span>
+              )}
+            </button>
+            {recallOpen && savedMaps.length > 0 && (
+              <div className="absolute right-0 top-full z-30 mt-1 w-72 rounded-xl border border-adisseo-line bg-white p-2 text-xs shadow-lg">
+                <p className="px-2 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                  Saved maps
+                </p>
+                <ul className="max-h-64 space-y-1 overflow-y-auto">
+                  {savedMaps.map((m) => {
+                    const bal = checkBalance(m, stakeholdersById);
+                    return (
+                      <li key={m.id}>
+                        <button
+                          onClick={() => handleRecall(m)}
+                          className="block w-full rounded-md border border-adisseo-line/60 bg-white px-2 py-2 text-left hover:border-adisseo-crimson hover:bg-adisseo-crimson/5"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="truncate font-semibold text-adisseo-ink">
+                              {m.name}
+                            </span>
+                            <span className="ml-2 shrink-0 rounded-full bg-adisseo-line/60 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-adisseo-muted">
+                              {m.scope}
+                            </span>
+                          </div>
+                          <div className="mt-0.5 flex items-center gap-2 text-[10px] text-adisseo-muted">
+                            <span>{m.scopeLabel}</span>
+                            <span>·</span>
+                            <span>{m.nodes.length} nodes</span>
+                            {!bal.ok && (
+                              <>
+                                <span>·</span>
+                                <span className="flex items-center gap-0.5 text-amber-700">
+                                  <AlertTriangle size={9} />
+                                  unbalanced
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {selectedIds.length > 0 && (
+            <button
+              onClick={() => {
+                setSaveOpen((v) => !v);
+                setRecallOpen(false);
+              }}
+              className="flex items-center gap-1.5 rounded-md border border-adisseo-crimson/40 bg-adisseo-crimson/5 px-3 py-2 text-xs font-medium text-adisseo-crimson hover:bg-adisseo-crimson/10"
+              title="Save current selection as a named map"
+            >
+              <Save size={13} />
+              Save map
+            </button>
+          )}
+          {saveOpen && (
+            <div className="absolute right-6 top-20 z-30 w-72 rounded-xl border border-adisseo-line bg-white p-3 text-xs shadow-lg">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                Save current map
+              </p>
+              <input
+                value={saveName}
+                onChange={(e) => setSaveName(e.target.value)}
+                placeholder="e.g. Vietnam — Aqua Q3"
+                className="mt-2 w-full rounded-md border border-adisseo-line px-2 py-1.5 text-xs outline-none focus:border-adisseo-crimson"
+              />
+              <div className="mt-2 grid grid-cols-2 gap-1.5">
+                <select
+                  value={saveScope}
+                  onChange={(e) => setSaveScope(e.target.value as SavedMapScope)}
+                  className="rounded-md border border-adisseo-line px-2 py-1.5 text-[11px] outline-none focus:border-adisseo-crimson"
+                >
+                  <option value="country">Country</option>
+                  <option value="group">Group</option>
+                  <option value="company">Company</option>
+                </select>
+                <input
+                  value={saveScopeLabel}
+                  onChange={(e) => setSaveScopeLabel(e.target.value)}
+                  placeholder="Scope label"
+                  className="rounded-md border border-adisseo-line px-2 py-1.5 text-[11px] outline-none focus:border-adisseo-crimson"
+                />
+              </div>
+              {liveBalance && !liveBalance.ok && (
+                <p className="mt-2 flex items-start gap-1 rounded-md bg-amber-50 px-2 py-1.5 text-[10px] text-amber-800">
+                  <AlertTriangle size={11} className="mt-0.5 shrink-0" />
+                  <span>{liveBalance.summary}</span>
+                </p>
+              )}
+              <div className="mt-2 flex gap-1.5">
+                <button
+                  onClick={handleSave}
+                  disabled={!saveName.trim()}
+                  className="flex-1 rounded-md bg-adisseo-crimson px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-40"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setSaveOpen(false)}
+                  className="rounded-md border border-adisseo-line px-3 py-1.5 text-xs text-adisseo-muted hover:bg-adisseo-line/40"
+                >
+                  Cancel
+                </button>
+              </div>
+              <p className="mt-2 text-[9px] text-adisseo-muted">
+                {selectedIds.length} selected · saves to local store
+              </p>
+            </div>
+          )}
+
           {selectedIds.length > 0 && (
             <button
               onClick={clearStakeholders}
@@ -358,6 +592,14 @@ export default function StakeholderMap() {
               Clear ({selectedIds.length})
             </button>
           )}
+          <Link
+            href="/stakeholder-fanout"
+            className="flex items-center gap-2 rounded-md border border-adisseo-ink/15 bg-adisseo-ink-strong px-3 py-2 text-xs font-medium text-white hover:opacity-90"
+            title="Fan one article into N persona-customized variants"
+          >
+            <LayersIcon size={13} />
+            Fan-out demo
+          </Link>
           <Link
             href="/cbi-ladder"
             className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition ${

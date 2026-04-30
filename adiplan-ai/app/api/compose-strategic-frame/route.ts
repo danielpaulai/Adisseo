@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       const { object } = await generateObject({
         model,
         schema: frameSchema,
-        prompt: `You are AdiPlan AI's Strategic Frame composer. You sit between
+        prompt: `You are APAC AI's Strategic Frame composer. You sit between
 the News -> Strategy bridge and the species Studios.
 
 Goal: turn this match into a Total Value Solution that regional sales / KAMs

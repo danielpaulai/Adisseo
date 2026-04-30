@@ -1,5 +1,5 @@
 /**
- * Channel-credential registry — Phase 6 of AdiPlan.
+ * Channel-credential registry — Phase 6 of APAC.
  *
  * Phase 5 wired the channel-adapter pattern with mock dispatch. Phase 6
  * is the production-readiness shell: each channel declares the env vars

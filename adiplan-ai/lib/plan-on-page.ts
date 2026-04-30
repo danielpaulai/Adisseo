@@ -1,5 +1,5 @@
 /**
- * Plan on a Page — AdiPlan executing-stage output.
+ * Plan on a Page — APAC executing-stage output.
  *
  * Single A4 portrait sheet that pulls everything the user has done in this
  * session (stakeholder selections, CBI ladders, news match, composed frame,
@@ -108,7 +108,6 @@ const ACTIVITY_TO_DELIVERABLE: Partial<Record<ActivityKind, string>> = {
   poultry: "Poultry email + LinkedIn carousel",
   ruminants: "Ruminants manga brochure",
   swine: "Swine <60s vertical short",
-  billboard: "Billboard poster",
   "voice-memo": "Voice memo → deliverable",
   frame: "Strategic frame brief",
 };
@@ -119,7 +118,7 @@ export function buildPlan(input: PlanOnPageInput): PlanOnPageData {
     input.campaignName ??
     input.match?.cbi ??
     input.frame?.cbi ??
-    "AdiPlan APAC — next cycle";
+    "APAC APAC — next cycle";
 
   const author = input.author ?? "Ricardo Communod · Adisseo APAC";
 
@@ -226,7 +225,7 @@ export function buildPlan(input: PlanOnPageInput): PlanOnPageData {
     {
       name: "Days from news → first deliverable",
       target: "\u2264 7",
-      source: "AdiPlan AI demo path: News Bridge → Frame → Studio",
+      source: "APAC AI demo path: News Bridge → Frame → Studio",
     },
   ];
 
@@ -276,7 +275,6 @@ function speciesFromActivity(kind: ActivityKind): string {
   if (kind === "poultry") return "Poultry";
   if (kind === "ruminants") return "Ruminants";
   if (kind === "swine") return "Swine";
-  if (kind === "billboard") return "Cross";
   if (kind === "voice-memo") return "Cross";
   return "Cross";
 }

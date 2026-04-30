@@ -64,7 +64,7 @@ export default function CredentialsPage() {
             Channel credentials &amp; webhook inbox
           </h1>
           <p className="mt-2 max-w-3xl text-sm text-adisseo-muted">
-            AdiPlan ships with mock dispatchers everywhere. To go live for a
+            APAC ships with mock dispatchers everywhere. To go live for a
             tenant + channel, set the env vars listed below. The dispatcher
             detects the presence of every required field at request time and
             falls back to mock when anything is missing — so the demo always
@@ -311,7 +311,7 @@ export default function CredentialsPage() {
             </li>
             <li>
               Operator generates a webhook secret (per tenant) and pastes it
-              into both the channel's webhook config and AdiPlan&rsquo;s env.
+              into both the channel's webhook config and APAC&rsquo;s env.
             </li>
             <li>
               Channel POSTs to{" "}
@@ -320,12 +320,12 @@ export default function CredentialsPage() {
               </code>{" "}
               with{" "}
               <code className="rounded bg-stone-100 px-1 py-0.5 text-[11px] font-mono">
-                x-adiplan-signature: t=&lt;ts&gt;,v1=&lt;hex hmac&gt;
+                x-apac-signature: t=&lt;ts&gt;,v1=&lt;hex hmac&gt;
               </code>
               .
             </li>
             <li>
-              AdiPlan verifies the signature, rejects stale (&gt;5min) /
+              APAC verifies the signature, rejects stale (&gt;5min) /
               malformed / mismatched payloads, and stores accepted events in
               the inbox.
             </li>
@@ -372,8 +372,8 @@ function sampleSignedCurl(tenantId: string, secret: string): string {
   return [
     `curl -X POST 'https://adiplan.example.com/api/webhook/${tenantId}/linkedin' \\`,
     `  -H 'content-type: application/json' \\`,
-    `  -H 'x-adiplan-timestamp: ${sig.timestamp}' \\`,
-    `  -H 'x-adiplan-signature: ${sig.signature}' \\`,
+    `  -H 'x-apac-timestamp: ${sig.timestamp}' \\`,
+    `  -H 'x-apac-signature: ${sig.signature}' \\`,
     `  -d '${body}'`,
   ].join("\n");
 }

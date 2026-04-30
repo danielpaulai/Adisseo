@@ -1,5 +1,5 @@
 /**
- * Channel adapters — Phase 5 of AdiPlan.
+ * Channel adapters — Phase 5 of APAC.
  *
  * Phase 4 wired the gating logic. Phase 5 wires the actual dispatch,
  * but keeps it mock-shaped so we can swap each channel for the real

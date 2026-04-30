@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
   const sp = url.searchParams;
 
   const title = (sp.get("title") ?? "Adisseo APAC — trial-anchored").slice(0, 120);
-  const deck = (sp.get("deck") ?? "AdiPlan AI · trust-gated deliverable").slice(0, 200);
+  const deck = (sp.get("deck") ?? "APAC AI · trust-gated deliverable").slice(0, 200);
   const species = (sp.get("species") ?? "cross") as keyof typeof SPECIES_TINT;
   const manager = sp.get("manager") ?? "Ricardo";
   const trustRaw = sp.get("trust");
@@ -102,7 +102,7 @@ export async function GET(req: NextRequest) {
               A
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: 18, fontWeight: 800, color: "#1c1917" }}>AdiPlan AI</span>
+              <span style={{ fontSize: 18, fontWeight: 800, color: "#1c1917" }}>APAC AI</span>
               <span
                 style={{
                   fontSize: 11,

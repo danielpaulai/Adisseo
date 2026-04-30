@@ -11,7 +11,6 @@ import {
   ArrowRight,
   Sparkles,
   Grid3x3,
-  Bookmark,
   Mic,
   Activity,
   PlayCircle,
@@ -27,6 +26,7 @@ import {
   Building2,
   Share2,
   KeyRound,
+  Bird,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -59,6 +59,40 @@ const modules: Module[] = [
     ready: true,
   },
   {
+    href: "/stakeholder-fanout",
+    icon: Network,
+    stage: "01b · Demo priority 2",
+    title: "Stakeholder Fan-out",
+    blurb:
+      "One article + N saved stakeholder maps → N persona-tuned deliverables. Save a map by name, recall it, watch the same article become a carousel for one buyer group and a manga brochure for another.",
+    cta: "Open fan-out demo",
+    ready: true,
+    highlight: true,
+  },
+  {
+    href: "/campaign-fanout",
+    icon: Bird,
+    species: "poultry",
+    stage: "01c · TFIP demo",
+    title: "Campaign Fan-out · TFIP",
+    blurb:
+      "One campaign (Turning Feed Into Profit) → 6 stakeholder-tuned variants. Three buyers (Nutritionist · Vet · Purchaser) × two channels (email · 1-slide infographic). Workshop ladders + value-prop circles wired straight into the poultry studio.",
+    cta: "Open TFIP fan-out",
+    ready: true,
+    highlight: true,
+  },
+  {
+    href: "/poultry-workshop",
+    icon: BookOpen,
+    species: "poultry",
+    stage: "01d · TFIP reference",
+    title: "Poultry workshop reference",
+    blurb:
+      "All 8 Apr-30 workshop posters in HTML — personas, priority matrix, CBI ladders, value-prop circles, WWWK, ranked insights, and the leading/lagging metrics framework. Single source of truth for the May-7 demo.",
+    cta: "Open workshop deck",
+    ready: true,
+  },
+  {
     href: "/cbi-ladder",
     icon: Layers,
     stage: "02 · Assessing",
@@ -74,7 +108,7 @@ const modules: Module[] = [
     stage: "The Bridge",
     title: "News → Strategy",
     blurb:
-      "Pick a scraped competitor article. Get back the CBI it surfaces, the persona to target, and three deliverable formats — grounded in the AdiPlan vocabulary.",
+      "Pick a scraped competitor article. Get back the CBI it surfaces, the persona to target, and three deliverable formats — grounded in the APAC vocabulary.",
     cta: "Match an article",
     ready: true,
     highlight: true,
@@ -144,22 +178,12 @@ const modules: Module[] = [
     ready: true,
   },
   {
-    href: "/studio/billboard",
-    icon: Bookmark,
-    stage: "05 · Creating",
-    title: "Billboard Campaign generator",
-    blurb:
-      "AdiPlan billboard test in one button — Headline + Adisseo Differentiation + Reason to Believe + Visual brief, scored on Unique / Important / Believable. A2 portrait, A1 convention or square LinkedIn key visual.",
-    cta: "Compose a billboard",
-    ready: true,
-  },
-  {
     href: "/studio/voice-memo",
     icon: Mic,
     stage: "Studio · Voice Memo",
     title: "Voice memo → deliverable",
     blurb:
-      "Antoine records 30s on his phone. Whisper transcribes. The transcript seeds whichever species studio you point it at — manga brochure, leaflet, vertical short, billboard. Authorship stays with the manager.",
+      "Antoine records 30s on his phone. Whisper transcribes. The transcript seeds whichever species studio you point it at — manga brochure, leaflet, vertical short. Authorship stays with the manager.",
     cta: "Open Voice Memo Studio",
     ready: true,
   },
@@ -291,7 +315,7 @@ const modules: Module[] = [
     stage: "Phase 4 · Multi-tenant",
     title: "Tenant directory (Adisseo / DSM / Cargill / Kemin)",
     blurb:
-      "AdiPlan is tenant-aware. Each tenant carries its own brand voice, Vault scope, trust floor, approved channels, and reviewer label. Switch the tenant in the top-bar and every consumer rescopes — ProseQualityCard, Vault, Distribution, Engagement, Approval queue.",
+      "APAC is tenant-aware. Each tenant carries its own brand voice, Vault scope, trust floor, approved channels, and reviewer label. Switch the tenant in the top-bar and every consumer rescopes — ProseQualityCard, Vault, Distribution, Engagement, Approval queue.",
     cta: "Browse tenants",
     ready: true,
   },
@@ -365,6 +389,13 @@ export default function Home() {
             >
               90s script
             </a>
+            <Link
+              href="/design-system"
+              className="hidden rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson md:inline-flex md:items-center md:gap-1"
+              title="Pierre Hérubel design system — palette, typography, slot blueprint, before / after."
+            >
+              Design system
+            </Link>
             <DemoSeedAll compact />
             <LiveModeChip />
             <TenantSwitcher compact />
@@ -376,13 +407,13 @@ export default function Home() {
         <div className="space-y-3">
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
             <Sparkles size={12} />
-            AdiPlan AI &middot; APAC Pilot
+            APAC &middot; Adisseo Pilot
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-adisseo-ink-strong sm:text-5xl">
             News &rarr; Strategy &rarr; Deliverable
           </h1>
           <p className="max-w-3xl text-base text-adisseo-ink">
-            The bridge between Adisseo&apos;s competitor news scraper and the AdiPlan
+            The bridge between Adisseo&apos;s competitor news scraper and the APAC
             marketing framework. Built for Ricardo Communod (Adisseo APAC), demoing to
             the global team.
           </p>

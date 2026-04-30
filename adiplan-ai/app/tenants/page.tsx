@@ -79,7 +79,7 @@ export default function TenantsPage() {
             Tenant directory
           </h1>
           <p className="mt-2 max-w-3xl text-sm text-adisseo-muted">
-            AdiPlan is tenant-aware. Adisseo runs live today; DSM-Firmenich,
+            APAC is tenant-aware. Adisseo runs live today; DSM-Firmenich,
             Cargill, and Kemin are blueprinted with their own brand voice,
             Vault scope, trust floor, approved channels, and reviewer label.
             Switching the tenant in the top-bar rescopes every consumer:
@@ -256,7 +256,7 @@ export default function TenantsPage() {
                 <Coins size={10} /> Run-cost model
               </p>
               <h2 className="mt-2 text-lg font-black text-adisseo-ink-strong">
-                What does AdiPlan actually cost per tenant?
+                What does APAC actually cost per tenant?
               </h2>
               <p className="mt-1 max-w-3xl text-xs text-adisseo-muted">
                 Token rates: Claude Sonnet 4.5 $3/$15 per M, Haiku 4 $0.80/$4

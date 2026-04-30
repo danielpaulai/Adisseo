@@ -1,5 +1,5 @@
 /**
- * Webhook inbox — Phase 6 of AdiPlan.
+ * Webhook inbox — Phase 6 of APAC.
  *
  * The /api/webhook/[tenant]/[channel] endpoint receives inbound
  * engagement events from the channel (LinkedIn UGC engagement webhook,

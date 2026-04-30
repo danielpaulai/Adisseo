@@ -139,7 +139,7 @@ export default function PlanOnPagePage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Executing · AdiPlan
+              Executing · APAC
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               Plan on a Page
@@ -214,7 +214,7 @@ export default function PlanOnPagePage() {
               </ul>
               <p className="mt-3 text-[10px] text-adisseo-muted">
                 Anything missing? The plan still composes — it falls back
-                to AdiPlan defaults so you can demo cold.
+                to APAC defaults so you can demo cold.
               </p>
             </Section>
 

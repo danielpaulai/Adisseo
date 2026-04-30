@@ -612,7 +612,7 @@ function PlanPdf({ data }: { data: PlanOnPageData }) {
         React.createElement(
           Text,
           {},
-          `${data.competitor ? `Anchor: ${data.competitor}` : "AdiPlan AI"} · APAC pilot`
+          `${data.competitor ? `Anchor: ${data.competitor}` : "APAC AI"} · APAC pilot`
         )
       )
     )

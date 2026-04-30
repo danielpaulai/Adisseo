@@ -1,7 +1,7 @@
 /**
  * Strategic Frame layer — between News Bridge match output and species Studios.
  *
- * Per the AdiPlan March workshop, the strategic frame turns a CBI + persona
+ * Per the APAC March workshop, the strategic frame turns a CBI + persona
  * pair into:
  *   1. Enterprise Persona — the synthesised buyer the team is talking to
  *   2. Enterprise Insight — the unifying tension this enterprise faces *now*

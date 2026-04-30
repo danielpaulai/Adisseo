@@ -1,4 +1,4 @@
-# AdiPlan AI
+# APAC AI
 
 News &rarr; Strategy &rarr; Deliverable bridge for Adisseo APAC.
 
@@ -10,7 +10,6 @@ Pilot for Ricardo Communod. Demoing to Adisseo global team **Thu May 7, 2026**.
 - [ ] Module 02 — CBI / CSF Ladder
 - [ ] Module 03 — Enterprise Personas
 - [ ] Module 04 — Total Value Solution
-- [ ] Module 05 — Billboard Campaign
 - [ ] News &rarr; Strategy bridge (RAG)
 - [ ] Content Studio (Aqua / Poultry / Ruminants / Swine)
 

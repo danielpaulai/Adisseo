@@ -1,5 +1,5 @@
 /**
- * We Wish We Knew (WWWK) — AdiPlan "Assessing" deliverable.
+ * We Wish We Knew (WWWK) — APAC "Assessing" deliverable.
  *
  * From context.md row 50:
  *    "Research questions tied to specific decisions."
@@ -150,7 +150,7 @@ const PERSONA_TEMPLATES: Record<
     },
     {
       question: "What's the smallest, most-credible methane-delta number the buyer will publish in a press release?",
-      decision: "What proof-point to anchor the manga brochure / billboard cover on.",
+      decision: "What proof-point to anchor the manga brochure / poster cover on.",
       hypothesis: "12% methane reduction with audit-grade data is the floor; below that gets buried.",
       whoToAsk: "Sustainability + comms",
       method: "Online survey",

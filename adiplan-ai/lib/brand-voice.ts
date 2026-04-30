@@ -70,6 +70,12 @@ const ADISSEO: BrandVoice = {
     { id: "adi-passionate", name: 'Banned: "passionate"', severity: "medium", pattern: /\bpassionate(ly)?\b/gi, fix: "Adisseo's voice is competent, not passionate. Drop." },
     { id: "adi-proud", name: 'Banned: "proud to announce"', severity: "medium", pattern: /\bproud to (announce|introduce|present)\b/gi, fix: "Lead with the news, not the announcement." },
     { id: "adi-empower", name: 'Banned: "empower / empowering"', severity: "medium", pattern: /\bempower(ing|ed|s)?\b/gi, fix: "Replace with the specific capability gained." },
+    /* Poultry-specific (Phase 6 — Vish desk). */
+    { id: "adi-broiler-best", name: 'Poultry: "broiler-best"', severity: "high", pattern: /\bbroiler[-\s]?best\b/gi, fix: "Cite the FCR / CV% / mortality vs control." },
+    { id: "adi-miracle-additive", name: 'Poultry: "miracle additive"', severity: "high", pattern: /\bmiracle[-\s]?(additive|ingredient|premix)\b/gi, fix: "Drop. Adisseo voice never uses miracle." },
+    { id: "adi-zero-failure", name: 'Poultry: "zero failure / zero loss"', severity: "high", pattern: /\bzero[-\s]?(failure|loss(es)?)\b/gi, fix: "Cite the cycle-level mortality figure with confidence band." },
+    { id: "adi-replace-antibiotics", name: 'Poultry: "replace antibiotics"', severity: "high", pattern: /\breplaces?\s+antibiotics?\b/gi, fix: 'Reframe as "supports performance under AGP-free protocols". Adisseo never positions as a drug substitute.' },
+    { id: "adi-poultry-hyperbole", name: 'Poultry: "unprecedented results"', severity: "medium", pattern: /\bunprecedented\s+(results|gains|performance)\b/gi, fix: "Cite the trial cycles and the comparator." },
   ],
   required: [],
   claimGuards: [

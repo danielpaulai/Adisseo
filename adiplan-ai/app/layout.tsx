@@ -3,9 +3,9 @@ import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AdiPlan AI · Adisseo APAC",
+  title: "APAC AI · Adisseo APAC",
   description:
-    "News-to-strategy bridge for Adisseo APAC — built around the AdiPlan marketing framework.",
+    "News-to-strategy bridge for Adisseo APAC — built around the APAC marketing framework.",
   icons: {
     icon: "/brand/logo.png",
     shortcut: "/brand/logo.png",

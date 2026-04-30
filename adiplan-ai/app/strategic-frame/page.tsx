@@ -21,6 +21,7 @@ import type { ScrapedArticle } from "@/lib/scraper-api";
 import type { StrategicFrame } from "@/lib/strategic-frame";
 import type { SpeciesKey } from "@/lib/adiplan";
 import { Logo, SpeciesIcon } from "@/components/Logo";
+import { DecisionMatrixFlow } from "@/components/DecisionMatrixFlow";
 import { toast } from "sonner";
 
 type ComposeResponse = {
@@ -228,7 +229,7 @@ export default function StrategicFramePage() {
               The Strategic Frame &middot; Total Value Solution
             </p>
             <h1 className="text-lg font-semibold text-adisseo-ink-strong">
-              Compose the AdiPlan answer before the species deliverables ship
+              Compose the APAC answer before the species deliverables ship
             </h1>
           </div>
         </div>
@@ -300,6 +301,19 @@ export default function StrategicFramePage() {
 
         {response && (
           <article className="space-y-6">
+            {/* Phase 4 — Visible 4-layer decision matrix */}
+            <DecisionMatrixFlow
+              active="output"
+              inputLabel={response.frame.cbi}
+              inputSub={`Persona: ${response.frame.persona}`}
+              synthesisLabel="APAC vault + persona matrix + CBI ladder"
+              synthesisSub="Pain × Promise × Proof × Proposition"
+              branchLabel={response.frame.enterprisePersona.slice(0, 120)}
+              branchSub={response.frame.enterpriseInsight.slice(0, 80)}
+              outputLabel={response.frame.oneLineSummary}
+              outputSub="Total Value Solution composed"
+            />
+
             {/* === One-liner === */}
             <div className="rounded-2xl border border-adisseo-line bg-gradient-to-br from-adisseo-crimson to-[#7d0822] p-6 text-white shadow-lg print:shadow-none">
               <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest opacity-80">

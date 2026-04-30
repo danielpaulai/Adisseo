@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       const { object } = await generateObject({
         model,
         schema: packSchema,
-        prompt: `You are AdiPlan AI's Content Studio for Vish (Adisseo Poultry APAC).
+        prompt: `You are APAC AI's Content Studio for Vish (Adisseo Poultry APAC).
 
 Generate two coordinated deliverables for the same campaign and audience:
   (1) a technical email blast (HTML-ready, structured)

@@ -6,7 +6,26 @@
  * - Audience splits across integrators (CP, Japfa, Charoen Pokphand) vs
  *   independent commercial farms.
  * - Channels: email blast (technical) + LinkedIn carousel (visibility).
+ *
+ * TFIP plan Phase E (Apr-30 workshop):
+ * - New audience overlays for Nutritionist / Vet / Purchaser stakeholder roles
+ *   (poster 6 ladder), keyed by id "audience-nutritionist" / "audience-vet" /
+ *   "audience-purchaser".
+ * - When `campaignId === "tfip"`, deterministicPoultryPack() composes the email
+ *   and carousel from poultryStakeholderLadders + poultryCsfValueProps so the
+ *   subject, intro, body, metrics table and CTA reflect the workshop ladder.
+ * - New `infographic` deliverable kind sibling to email/carousel — single-slide
+ *   layout reusing the carousel pipeline with the Hérubel slot blueprint.
  */
+
+import { TFIP_CAMPAIGN, TFIP_PRIMARY_METRICS } from "@/lib/poultry-tfip-campaign";
+import {
+  ladderFor,
+  valuePropFor,
+  csfById,
+  type PoultryStakeholderId,
+  type PoultryWorkshopCsfId,
+} from "@/lib/poultry-workshop";
 
 export type PoultryCampaign = {
   id: string;
@@ -16,6 +35,17 @@ export type PoultryCampaign = {
 };
 
 export const poultryCampaigns: PoultryCampaign[] = [
+  {
+    id: "tfip",
+    name: TFIP_CAMPAIGN.name,
+    blurb:
+      "Adisseo APAC's flagship poultry campaign — Reveal · Formulate · Capture. Anchored on PNE, FDC, ADICT, Rovabio Advance, Rhodimet AT88, FRA LeciMax, Microvit and SustainWay. The corpus comes from the Apr-30 WeTransfer drop.",
+    hookCues: [
+      "Up to 3% feed-cost savings when PNE + FDC + ADICT are used together.",
+      "€1.86/ton per 1% energy error — safety margins are not free.",
+      "Rhodimet AT88 nets 27 cents/ton in full-matrix grower broiler diets.",
+    ],
+  },
   {
     id: "agp-free-asia",
     name: "AGP-Free Asia",
@@ -58,6 +88,31 @@ export type PoultryAudience = {
 };
 
 export const poultryAudiences: PoultryAudience[] = [
+  /* TFIP stakeholder overlays (Apr-30 workshop, Poster 6) */
+  {
+    id: "audience-nutritionist",
+    segment: "integrator",
+    name: "Nutritionist (technical / formulation desk)",
+    country: "APAC",
+    approachNote:
+      "Speak in matrix values, €/MT, AMEn, digestible-AA. Cite trial cycles and the comparator. No hyperbole.",
+  },
+  {
+    id: "audience-vet",
+    segment: "integrator",
+    name: "Veterinarian (gut-health / AGP-free desk)",
+    country: "APAC",
+    approachNote:
+      "Anchor on gut integrity, mortality, AGP-free protocols. Adisseo never positions as a drug substitute.",
+  },
+  {
+    id: "audience-purchaser",
+    segment: "integrator",
+    name: "Purchaser (procurement / RM continuity)",
+    country: "APAC",
+    approachNote:
+      "Speak in €/ton, lead-time risk, dual-sourcing, lot consistency. No bird-performance claims unless tied to cost.",
+  },
   {
     id: "integrator-cp",
     segment: "integrator",
@@ -130,12 +185,47 @@ export type PoultryCarouselSlide = {
   attribution?: string;
 };
 
+/**
+ * Infographic deliverable — TFIP plan Phase E.
+ *
+ * A single-slide layout that re-uses the carousel rendering pipeline at
+ * /api/render-poultry-carousel. Anchored on a single CSF + CBI pulled from
+ * the workshop ladder.
+ */
+export type PoultryInfographicDeliverable = {
+  csfLabel: string;
+  csfId: string;
+  /** The CBI rung this infographic addresses. */
+  cbi: string;
+  /** Hérubel slot blueprint slug — see lib/design-system-herubel.ts. */
+  herubelSlot: "claim" | "ladder" | "circles" | "metric-cards";
+  title: string;
+  subtitle: string;
+  /** 3-4 bullets of evidence. */
+  evidence: string[];
+  /** A single big stat for visual punch. */
+  bigStat: { value: string; label: string };
+  /** Workshop one-liner used as the hero strip. */
+  workshopOneLiner: string;
+  /** Suggested rendering palette (tints, accents). */
+  palette: { accent: string; tint: string };
+  cta: string;
+};
+
 export type PoultryDeliverablePack = {
   campaignId: string;
   audienceId: string;
   email: PoultryEmailDeliverable;
   carousel: PoultryCarouselSlide[];
+  /** Optional single-slide infographic — populated for TFIP packs. */
+  infographic?: PoultryInfographicDeliverable;
   guardrailNotes: string[];
+};
+
+const STAKEHOLDER_AUDIENCE_TO_LADDER: Record<string, PoultryStakeholderId> = {
+  "audience-nutritionist": "nutritionist",
+  "audience-vet": "vet",
+  "audience-purchaser": "purchaser",
 };
 
 export function deterministicPoultryPack(
@@ -146,6 +236,11 @@ export function deterministicPoultryPack(
     poultryCampaigns.find((c) => c.id === campaignId) ?? poultryCampaigns[0];
   const audience =
     poultryAudiences.find((a) => a.id === audienceId) ?? poultryAudiences[0];
+
+  // TFIP campaign branch — workshop-ladder driven.
+  if (campaignId === "tfip" && STAKEHOLDER_AUDIENCE_TO_LADDER[audienceId]) {
+    return composeTfipStakeholderPack(audienceId);
+  }
 
   const email: PoultryEmailDeliverable = {
     subject: `${campaign.name}: the FCR delta nobody talks about`,
@@ -252,4 +347,182 @@ export function deterministicPoultryPack(
         : "Lead with FCR/CV% delta, defer narrative; technical team reads first.",
     ],
   };
+}
+
+/* ============================================================================
+ * TFIP-specific stakeholder pack composer (Apr-30 workshop)
+ * ========================================================================== */
+
+const PALETTE_BY_STAKEHOLDER: Record<
+  PoultryStakeholderId,
+  { accent: string; tint: string }
+> = {
+  nutritionist: { accent: "#A70A2D", tint: "#FCEAEE" },
+  vet: { accent: "#047857", tint: "#E5F5EC" },
+  purchaser: { accent: "#1E3A8A", tint: "#E5ECFB" },
+};
+
+const HERUBEL_SLOT_BY_STAKEHOLDER: Record<
+  PoultryStakeholderId,
+  PoultryInfographicDeliverable["herubelSlot"]
+> = {
+  nutritionist: "metric-cards",
+  vet: "ladder",
+  purchaser: "claim",
+};
+
+function composeTfipStakeholderPack(audienceId: string): PoultryDeliverablePack {
+  const stakeholderId = STAKEHOLDER_AUDIENCE_TO_LADDER[audienceId];
+  const ladder = ladderFor(stakeholderId);
+  const audience = poultryAudiences.find((a) => a.id === audienceId)!;
+  const primaryCsfId = ladder.csfIds[0];
+  const valueProp = valuePropFor(primaryCsfId);
+  const csf = csfById(primaryCsfId);
+  const palette = PALETTE_BY_STAKEHOLDER[stakeholderId];
+
+  // Headline numbers anchored to TFIP — every email/infographic cites at least
+  // one €/MT figure from the leaflet or the white paper so the citation
+  // checker resolves the claim.
+  const heroMetric = (() => {
+    if (stakeholderId === "nutritionist") {
+      return TFIP_PRIMARY_METRICS.find((m) => m.label.startsWith("Feed-cost savings"))!;
+    }
+    if (stakeholderId === "purchaser") {
+      return TFIP_PRIMARY_METRICS.find((m) => m.label.startsWith("Rhodimet"))!;
+    }
+    return TFIP_PRIMARY_METRICS.find((m) => m.label.includes("Rovabio US"))!;
+  })();
+
+  const subject = ladder.emailHook;
+  const intro = `${ladder.personalValue} The TFIP framework — Reveal · Formulate · Capture — gives you a deterministic path: PNE on raw materials, ADICT on the matrix, FDC on the cycle, and SustainWay on the scope-3 column.`;
+
+  const ctaHref = `mailto:adiplan.poultry@adisseo.com?subject=TFIP%20${encodeURIComponent(stakeholderId)}%20follow-up`;
+
+  const email: PoultryEmailDeliverable = {
+    subject,
+    preheader: TFIP_CAMPAIGN.taglines[0],
+    greeting: `Dear ${ladder.fullName},`,
+    intro,
+    body: [
+      {
+        kind: "p",
+        text: `For the ${ladder.fullName.toLowerCase()}, the TFIP framework anchors on a single CSF: ${csf?.label ?? primaryCsfId}. Adisseo's lead answer is "${valueProp?.oneLiner ?? "Reveal · Formulate · Capture."}"`,
+      },
+      {
+        kind: "bullets",
+        items: ladder.cbis.slice(0, 4),
+      },
+      {
+        kind: "callout",
+        label: "Headline number",
+        text: `${heroMetric.label}: ${heroMetric.value}. Source: ${heroMetric.source}.`,
+      },
+      {
+        kind: "p",
+        text: `Voice cue for this conversation: ${ladder.voiceCue}`,
+      },
+    ],
+    metricsTable: [
+      { metric: "Feed-cost savings (PNE+FDC+ADICT)", control: "0%", treatment: "up to 3%", delta: "+3 pts" },
+      { metric: "Rhodimet AT88 net saving", control: "—", treatment: "27 cents/ton", delta: "+27¢/MT" },
+      { metric: "Rovabio US-corn diets", control: "—", treatment: "€16.1/MT", delta: "+€16.1/MT" },
+      { metric: "Rovabio EU wheat/barley", control: "—", treatment: "€16.4/MT", delta: "+€16.4/MT" },
+    ],
+    ctaLabel: "Open the TFIP follow-up",
+    ctaHref,
+    signOff: "Best,",
+    signature: "Vish Iyer · Adisseo Poultry APAC",
+    footnote: `Sources: TFIP Leaflet, Measure-Adjust-Optimize white paper, SustainWay deck. Audience overlay: ${audience.approachNote}`,
+  };
+
+  const carousel: PoultryCarouselSlide[] = [
+    {
+      index: 1,
+      kind: "cover",
+      eyebrow: TFIP_CAMPAIGN.name,
+      headline: ladder.infographicTitle,
+      body: ladder.personalValue,
+    },
+    {
+      index: 2,
+      kind: "stat",
+      eyebrow: "The Adisseo answer",
+      headline: valueProp?.oneLiner ?? "Reveal · Formulate · Capture.",
+      bigStat: { value: heroMetric.value, label: heroMetric.label },
+      body: `Source: ${heroMetric.source}.`,
+    },
+    {
+      index: 3,
+      kind: "list",
+      eyebrow: `${ladder.fullName} CBI ladder`,
+      headline: "What needs to be solved to unlock the CSF.",
+      bullets: ladder.cbis.slice(0, 4),
+    },
+    {
+      index: 4,
+      kind: "list",
+      eyebrow: "Adisseo product / service rings",
+      headline: valueProp?.oneLiner ?? "Reveal · Formulate · Capture.",
+      bullets: [
+        ...(valueProp?.product.slice(0, 2) ?? []),
+        ...(valueProp?.services.slice(0, 1) ?? []),
+        ...(valueProp?.advisory.slice(0, 1) ?? []),
+      ],
+    },
+    {
+      index: 5,
+      kind: "cta",
+      eyebrow: "Next step",
+      headline: ladder.emailHook,
+      body: `${ladder.voiceCue}`,
+      attribution: "Adisseo APAC · TFIP campaign · Apr-30 workshop",
+    },
+  ];
+
+  const infographic: PoultryInfographicDeliverable = {
+    csfLabel: csf?.label ?? primaryCsfId,
+    csfId: primaryCsfId,
+    cbi: ladder.cbis[0],
+    herubelSlot: HERUBEL_SLOT_BY_STAKEHOLDER[stakeholderId],
+    title: ladder.infographicTitle,
+    subtitle: ladder.personalValue,
+    evidence: ladder.cbis.slice(0, 3),
+    bigStat: { value: heroMetric.value, label: heroMetric.label },
+    workshopOneLiner: valueProp?.oneLiner ?? "Reveal · Formulate · Capture.",
+    palette,
+    cta: ladder.emailHook,
+  };
+
+  return {
+    campaignId: "tfip",
+    audienceId,
+    email,
+    carousel,
+    infographic,
+    guardrailNotes: [
+      "Anchor every claim on a TFIP vault entry (leaflet, white paper, SustainWay deck).",
+      "No 'replaces antibiotics', no 'miracle additive', no 'zero failure' — Adisseo poultry brand voice rejects these.",
+      "Cite €/MT and trial source on every claim.",
+      `Stakeholder voice cue: ${ladder.voiceCue}`,
+      `Audience approach: ${audience.approachNote}`,
+    ],
+  };
+}
+
+/* ============================================================================
+ * Helpers exported for /campaign-fanout
+ * ========================================================================== */
+
+export function tfipStakeholderAudiences(): PoultryAudience[] {
+  return poultryAudiences.filter((a) => a.id in STAKEHOLDER_AUDIENCE_TO_LADDER);
+}
+
+export type PoultryChannel = "email" | "infographic";
+
+export const POULTRY_CHANNELS: PoultryChannel[] = ["email", "infographic"];
+
+export function tfipCsfFor(audienceId: string): PoultryWorkshopCsfId | null {
+  const stakeholderId = STAKEHOLDER_AUDIENCE_TO_LADDER[audienceId];
+  if (!stakeholderId) return null;
+  return ladderFor(stakeholderId).csfIds[0];
 }

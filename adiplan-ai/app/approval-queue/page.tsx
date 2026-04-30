@@ -20,7 +20,6 @@ const KIND_LABEL: Record<ApprovalRequest["kind"], string> = {
   "poultry-pack": "Poultry pack",
   "ruminants-brochure": "Ruminants brochure",
   "swine-short": "Swine short",
-  billboard: "Billboard",
   "voice-memo": "Voice memo",
   "strategic-frame": "Strategic frame",
 };
@@ -30,7 +29,6 @@ const KIND_TONE: Record<ApprovalRequest["kind"], string> = {
   "poultry-pack": "bg-amber-100 text-amber-800",
   "ruminants-brochure": "bg-emerald-100 text-emerald-800",
   "swine-short": "bg-rose-100 text-rose-800",
-  billboard: "bg-orange-100 text-orange-800",
   "voice-memo": "bg-violet-100 text-violet-800",
   "strategic-frame": "bg-stone-200 text-stone-800",
 };
@@ -58,14 +56,6 @@ const DEMO_SEED: Omit<ApprovalRequest, "id" | "sentAt" | "status">[] = [
     sender: "Antoine · Ruminants",
     href: "/studio/ruminants",
     payload: { language: "ja", audience: "JP dairy co-ops" },
-  },
-  {
-    kind: "billboard",
-    title: "Billboard · “Move the cycle. Be the answer this quarter.”",
-    summary: "A2 portrait · EN · SE-Asia airport hoarding test",
-    sender: "AdiPlan AI",
-    href: "/studio/billboard",
-    payload: { format: "A2", language: "en" },
   },
 ];
 

@@ -25,6 +25,7 @@ import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectRuminantsProse } from "@/lib/studio-prose";
+import { InlineSectionEditor } from "@/components/InlineSectionEditor";
 
 type BrochureResponse = {
   brochure: RuminantsBrochureData;
@@ -434,6 +435,41 @@ export default function RuminantsStudioPage() {
                 >
                   Open in new tab <ArrowRight size={12} />
                 </Link>
+              </div>
+              {/* Phase 5 — inline section editor */}
+              <div className="grid gap-2 border-b border-adisseo-line bg-adisseo-warmth/30 p-3 md:grid-cols-2">
+                <InlineSectionEditor
+                  sectionId={`ruminants-cover-${response.brochure.language}`}
+                  sectionLabel="Brochure · Cover title"
+                  value={response.brochure.coverTitle}
+                  original={response.brochure.coverTitle}
+                  language={response.brochure.language === "ja" ? "en" : "en"}
+                  onChange={(next) => {
+                    const merged = {
+                      ...response,
+                      brochure: { ...response.brochure, coverTitle: next },
+                    };
+                    setResponse(merged);
+                    renderPdf(merged.brochure);
+                  }}
+                  compact
+                />
+                <InlineSectionEditor
+                  sectionId={`ruminants-hook-${response.brochure.language}`}
+                  sectionLabel="Brochure · Cover hook"
+                  value={response.brochure.coverHook}
+                  original={response.brochure.coverHook}
+                  language={response.brochure.language === "ja" ? "en" : "en"}
+                  onChange={(next) => {
+                    const merged = {
+                      ...response,
+                      brochure: { ...response.brochure, coverHook: next },
+                    };
+                    setResponse(merged);
+                    renderPdf(merged.brochure);
+                  }}
+                  compact
+                />
               </div>
               <iframe
                 src={pdfUrl}
