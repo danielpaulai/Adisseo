@@ -35,6 +35,7 @@ import {
   type DeliverableKind,
   type SpeciesKey,
 } from "@/lib/engagement";
+import { useAdiPlanStore } from "@/lib/store";
 
 const KIND_LABEL: Record<DeliverableKind, string> = {
   leaflet: "Aqua leaflet",
@@ -73,8 +74,16 @@ export default function EngagementTrackerPage() {
   const [filterKind, setFilterKind] = useState<DeliverableKind | "all">("all");
   const [sortKey, setSortKey] = useState<SortKey>("conversionRate");
 
+  /* Phase 5 — merge live deliverables (auto-created on ship) with the
+   * historical seed dataset so the tracker reflects what just happened. */
+  const liveDeliverables = useAdiPlanStore((s) => s.liveDeliverables);
+  const allDeliverables: DeliverableInstance[] = useMemo(
+    () => [...liveDeliverables, ...seededDeliverables],
+    [liveDeliverables]
+  );
+
   const filtered = useMemo(() => {
-    let items: DeliverableInstance[] = seededDeliverables;
+    let items: DeliverableInstance[] = allDeliverables;
     if (filterSpecies !== "all")
       items = items.filter((d) => d.species === filterSpecies);
     if (filterKind !== "all") items = items.filter((d) => d.kind === filterKind);
@@ -92,12 +101,12 @@ export default function EngagementTrackerPage() {
           : b.conversions / Math.max(b.qualifiedViews, 1);
       return bRate - aRate;
     });
-  }, [filterSpecies, filterKind, sortKey]);
+  }, [allDeliverables, filterSpecies, filterKind, sortKey]);
 
   const overall = aggregateFunnel(filtered);
   const overallTrust = meanTrustScore(filtered);
-  const bySpecies = groupBySpecies(seededDeliverables);
-  const byKind = groupByKind(seededDeliverables);
+  const bySpecies = groupBySpecies(allDeliverables);
+  const byKind = groupByKind(allDeliverables);
 
   return (
     <main className="min-h-screen bg-adisseo-bg">
@@ -238,7 +247,7 @@ export default function EngagementTrackerPage() {
             </div>
             <ul className="space-y-2">
               {bySpecies.map((s) => {
-                const items = seededDeliverables.filter((d) => d.species === s.species);
+                const items = allDeliverables.filter((d) => d.species === s.species);
                 const trust = meanTrustScore(items);
                 return (
                   <li key={s.species} className="flex items-center gap-3">
@@ -279,7 +288,7 @@ export default function EngagementTrackerPage() {
             <ul className="space-y-2">
               {byKind.map((k) => {
                 const Icon = KIND_ICON[k.kind];
-                const items = seededDeliverables.filter((d) => d.kind === k.kind);
+                const items = allDeliverables.filter((d) => d.kind === k.kind);
                 const trust = meanTrustScore(items);
                 return (
                   <li key={k.kind} className="flex items-center gap-3">

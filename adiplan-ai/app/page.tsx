@@ -295,10 +295,10 @@ const modules: Module[] = [
   {
     href: "/distribution",
     icon: Share2,
-    stage: "Phase 4 · Distribution",
-    title: "Distribution rails (LinkedIn / WeChat / WhatsApp / email / trade-mag)",
+    stage: "Phase 5 · Closed loop",
+    title: "Distribution rails — preview / ship / schedule / measure",
     blurb:
-      "Approved-and-ready deliverables route through tenant-specific channel gates. Trust composite must clear the floor, HQ approval must be green, species must be in tenant scope. Every dispatch logs to the audit table — legal can show who shipped what, when, where.",
+      "Each channel has a typed adapter producing a channel-native preview (LinkedIn carousel, WeChat OA card, WhatsApp bubble, email, trade-mag submission). Ship now, queue for later, or simulate the inbound engagement webhook. Every shipped deliverable auto-creates a DeliverableInstance and the trackers light up in real time.",
     cta: "Open distribution rails",
     ready: true,
   },
@@ -307,7 +307,7 @@ const modules: Module[] = [
 const upcoming = [
   {
     species: null,
-    text: "Phase 5 · Auto-distribute to live LinkedIn / WeChat / WhatsApp APIs (currently mocked dispatch with full gating logic)",
+    text: "Phase 6 · Swap channel-adapter mocks for live LinkedIn UGC, WeChat OA Publish, WhatsApp Business, Mailgun / SES, and per-publication editorial submission portals",
   },
   {
     species: null,

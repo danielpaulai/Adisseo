@@ -4,28 +4,54 @@ import {
   type DistributionRequest,
   type DistributionResult,
 } from "@/lib/distribution";
+import {
+  buildPreview,
+  getAdapter,
+  type ChannelDispatchResult,
+  type ChannelPreview,
+} from "@/lib/channel-adapter";
 import { startTrace } from "@/lib/llm-trace";
 
 export const runtime = "nodejs";
 
+export interface DistributeApiRequest extends DistributionRequest {
+  /** Body / caption text used by the channel adapter to build a preview. */
+  body?: string;
+  /** Subject line for email + trade-mag. */
+  subject?: string;
+  hashtags?: string[];
+  region?: string;
+  manager?: string;
+  citationCount?: number;
+  /** If true, skip the dispatch and return only the preview. */
+  previewOnly?: boolean;
+}
+
 export interface DistributeApiResponse extends DistributionResult {
   /** Server-side timestamp the dispatch was processed. */
   shippedAt: string;
+  /* Phase 5 — channel-native dispatch enrichments. */
+  preview?: ChannelPreview;
+  publicUrl?: string;
+  externalId?: string;
+  audienceCount?: number;
 }
 
 /**
  * POST /api/distribute
  *
- * Validates a deliverable can be sent to the requested channel under
- * the active tenant's gating rules, then "ships" it (mock).
+ * Phase 4 — gates a dispatch under the active tenant's rules.
+ * Phase 5 — on success, dispatches via the per-channel adapter, returning
+ * the channel-native preview, public URL, audience reach, and external id.
  *
- * Returns the evaluation + a server-stamped timestamp. The client is
- * responsible for persisting the dispatch to the store + activity log.
+ * If `previewOnly: true` is set, returns only the preview (no gate, no
+ * dispatch, no trace span). The /distribution UI uses this for live
+ * previews before the user hits "Ship".
  */
 export async function POST(req: NextRequest) {
-  let body: DistributionRequest;
+  let body: DistributeApiRequest;
   try {
-    body = (await req.json()) as DistributionRequest;
+    body = (await req.json()) as DistributeApiRequest;
   } catch {
     return NextResponse.json(
       { error: "Invalid JSON body" },
@@ -40,9 +66,27 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Preview-only fast path.
+  if (body.previewOnly) {
+    const preview = buildPreview({
+      tenantId: body.tenantId,
+      channel: body.channel,
+      deliverable: body.deliverable,
+      body: body.body ?? body.deliverable,
+      subject: body.subject,
+      hashtags: body.hashtags,
+      region: body.region,
+      species: body.species,
+      manager: body.manager,
+      trustScore: body.trustScore,
+      citationCount: body.citationCount,
+    });
+    return NextResponse.json({ previewOnly: true, preview }, { status: 200 });
+  }
+
   const trace = startTrace({
     kind: "distribute",
-    title: `${body.tenantId} → ${body.channel}`,
+    title: `${body.tenantId} \u2192 ${body.channel}`,
     model: "deterministic",
     determined: true,
     payload: JSON.stringify({
@@ -58,20 +102,40 @@ export async function POST(req: NextRequest) {
 
   const result = evaluateDistribution(body);
 
-  // Simulate distribution latency only when shipping.
-  if (result.status === "shipped" && result.mockLatencyMs > 0) {
-    await new Promise((res) =>
-      setTimeout(res, Math.min(result.mockLatencyMs, 2_500))
-    );
+  let dispatch: ChannelDispatchResult | null = null;
+  if (result.status === "shipped") {
+    const adapter = getAdapter(body.channel);
+    dispatch = await adapter.dispatch({
+      tenantId: body.tenantId,
+      channel: body.channel,
+      deliverable: body.deliverable,
+      body: body.body ?? body.deliverable,
+      subject: body.subject,
+      hashtags: body.hashtags,
+      region: body.region,
+      species: body.species,
+      manager: body.manager,
+      trustScore: body.trustScore,
+      citationCount: body.citationCount,
+    });
   }
 
   const shippedAt = new Date().toISOString();
-  const response: DistributeApiResponse = { ...result, shippedAt };
+  const response: DistributeApiResponse = {
+    ...result,
+    shippedAt,
+    preview: dispatch?.preview,
+    publicUrl: dispatch?.publicUrl,
+    externalId: dispatch?.externalId,
+    audienceCount: dispatch?.audienceCount,
+  };
 
   trace.finish({
     summary:
       result.status === "shipped"
-        ? `Shipped to ${result.channelMeta.label}`
+        ? `Shipped to ${result.channelMeta.label} \u2014 reach ${
+            dispatch?.audienceCount ?? "?"
+          }`
         : `Blocked: ${result.reason ?? "unknown"}`,
     outputTokens: 0,
     status: result.status === "shipped" ? "success" : "warn",

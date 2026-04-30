@@ -364,15 +364,17 @@ const MODULES = [
     href: "/distribution",
     icon: Radio,
     num: "25",
-    layer: "Phase 4 · Distribution",
-    title: "Distribution rails — LinkedIn / WeChat / WhatsApp / email / trade-mag",
+    layer: "Phase 5 · Closed loop",
+    title: "Distribution rails — preview / ship / schedule / measure",
     blurb:
-      "Approved-and-ready deliverables route through tenant-specific channel gates. Trust composite must clear the floor, HQ approval must be green, species must be in tenant scope, channel must be approved. Every dispatch logs trust, channel, audience, and any blocker reason — legal can audit who shipped what.",
+      "Each channel has a typed ChannelAdapter producing a channel-native preview (LinkedIn carousel + caption + hashtags + anchor footer, WeChat OA push card, WhatsApp message bubble with attachment chip, email with from/subject/preheader/body, trade-mag editorial submission). Ship now, queue for a scheduled time, or simulate the inbound engagement webhook. Every shipped deliverable auto-creates a DeliverableInstance and lights up the engagement tracker.",
     moves: [
-      "Five channels seeded (LinkedIn / WeChat / WhatsApp / email / trade-mag)",
-      "Per-tenant approved-channel list enforced at the API",
-      "Mock dispatch with realistic latency simulation",
-      "Distribution log + observability spans for every push",
+      "ChannelAdapter pattern — one swap-point per channel for live API integration",
+      "5 channel-native preview cards (LinkedIn / WeChat / WhatsApp / email / trade-mag)",
+      "Scheduled-send queue with fire-now / cancel operator overrides",
+      "/api/distribution-callback simulates inbound engagement webhooks",
+      "Auto-creates DeliverableInstance on ship → engagement-tracker grades it",
+      "Public URL + external id + audience reach surfaced on every row",
     ],
   },
 ];
@@ -396,6 +398,11 @@ const ROADMAP = [
   {
     title: "Phase 4 · Multi-tenant + distribution rails (LIVE)",
     body: "Four tenants modelled (Adisseo live; DSM-Firmenich, Cargill, Kemin blueprinted). Tenant id flows through ProseQualityCard, Vault, Approval queue, and Distribution. Five distribution channels (LinkedIn / WeChat / WhatsApp / email / trade-mag) gated on tenant approval, trust floor, HQ approval, and species scope. Every dispatch logs to the distribution audit table + the observability ring.",
+    icon: Radio,
+  },
+  {
+    title: "Phase 5 · Closed-loop dispatch + measurement (LIVE)",
+    body: "Per-channel ChannelAdapter pattern lets us swap mocks for live LinkedIn / WeChat / WhatsApp / email / trade-mag without touching the gate. Each adapter produces a channel-native preview (real-feeling LinkedIn carousel, WeChat push card, WhatsApp bubble, email, editorial submission). Scheduled-send queue with operator override. /api/distribution-callback simulates the inbound engagement webhook → patches the dispatch row + the engagement tracker (auto-created DeliverableInstance) so the demo's funnel grades a deliverable end-to-end in one click.",
     icon: Radio,
   },
   {
@@ -467,7 +474,11 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
     status: "wired",
   },
   {
-    label: "Phase 5 · Live LinkedIn / WeChat / WhatsApp API integration (currently mocked)",
+    label: "Phase 5 · Closed-loop dispatch + measurement",
+    status: "wired",
+  },
+  {
+    label: "Phase 6 · Swap channel-adapter mocks for live LinkedIn UGC / WeChat OA / WhatsApp Business / Mailgun / editorial portals",
     status: "deferred",
   },
 ];

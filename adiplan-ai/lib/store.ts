@@ -5,9 +5,12 @@ import { persist } from "zustand/middleware";
 import type { StrategicFrame } from "@/lib/strategic-frame";
 import type { VoiceProfile } from "@/lib/voice-profile";
 import type { TenantId, DistributionChannel } from "@/lib/tenant";
+import type { ChannelPreview } from "@/lib/channel-adapter";
+import type { DeliverableInstance } from "@/lib/engagement";
 
 /* ============================================================================
  * Phase 4 — multi-tenant + distribution rails
+ * Phase 5 — extended with live preview, public URL, audience count, engagement
  * ========================================================================== */
 export interface DistributionLog {
   id: string;
@@ -24,6 +27,47 @@ export interface DistributionLog {
   audience?: string;
   /** ISO. */
   shippedAt: string;
+  /* Phase 5 */
+  /** Resolvable URL the recipient would land on (mock or real). */
+  publicUrl?: string;
+  /** Mock confirmation id from the channel. */
+  externalId?: string;
+  /** Reach for the dispatch. */
+  audienceCount?: number;
+  /** Channel-native preview payload (for the row drill-down). */
+  preview?: ChannelPreview;
+  /** Inbound engagement (filled by /api/distribution-callback). */
+  engagement?: {
+    impressions: number;
+    qualifiedViews: number;
+    conversations: number;
+    conversions: number;
+    updatedAt: string;
+  };
+  /** Owning deliverable id (links to DeliverableInstance for engagement-tracker). */
+  deliverableInstanceId?: string;
+}
+
+/* ============================================================================
+ * Phase 5 — scheduled-send queue. Operators can defer a dispatch to a
+ * specific ISO timestamp; the /distribution UI displays the queue and an
+ * operator (or in production, a cron) flips it into the live distribution
+ * log when the time arrives.
+ * ========================================================================== */
+export interface ScheduledSend {
+  id: string;
+  tenantId: TenantId;
+  channel: DistributionChannel;
+  deliverable: string;
+  trustScore?: number;
+  approvalStatus?: "approved" | "pending" | "rejected";
+  species?: "aqua" | "poultry" | "ruminants" | "swine" | "cross";
+  /** ISO timestamp when the queue should fire. */
+  scheduledFor: string;
+  /** ISO timestamp when the entry was queued. */
+  queuedAt: string;
+  /** "queued" | "fired" | "cancelled". */
+  status: "queued" | "fired" | "cancelled";
 }
 
 /* ============================================================================
@@ -208,6 +252,23 @@ interface AdiPlanStore {
     shippedAt?: string;
   }) => string;
   clearDistribution: () => void;
+  /** Phase 5 — patch an existing dispatch (e.g. with engagement metrics). */
+  patchDistribution: (id: string, patch: Partial<DistributionLog>) => void;
+
+  /** Phase 5 — scheduled-send queue. */
+  scheduledSends: ScheduledSend[];
+  schedule: (entry: Omit<ScheduledSend, "id" | "queuedAt" | "status"> & {
+    id?: string;
+  }) => string;
+  fireScheduled: (id: string) => void;
+  cancelScheduled: (id: string) => void;
+  clearScheduled: () => void;
+
+  /** Phase 5 — live deliverables (auto-created on ship, feed engagement-tracker). */
+  liveDeliverables: DeliverableInstance[];
+  pushLiveDeliverable: (d: DeliverableInstance) => void;
+  patchLiveDeliverable: (id: string, patch: Partial<DeliverableInstance>) => void;
+  clearLiveDeliverables: () => void;
 }
 
 export const useAdiPlanStore = create<AdiPlanStore>()(
@@ -337,11 +398,72 @@ export const useAdiPlanStore = create<AdiPlanStore>()(
           status: entry.status,
           blockReason: entry.blockReason,
           audience: entry.audience,
+          publicUrl: entry.publicUrl,
+          externalId: entry.externalId,
+          audienceCount: entry.audienceCount,
+          preview: entry.preview,
+          engagement: entry.engagement,
+          deliverableInstanceId: entry.deliverableInstanceId,
         };
         set((s) => ({ distribution: [next, ...s.distribution].slice(0, 80) }));
         return id;
       },
       clearDistribution: () => set({ distribution: [] }),
+      patchDistribution: (id, patch) =>
+        set((s) => ({
+          distribution: s.distribution.map((d) =>
+            d.id === id ? { ...d, ...patch } : d
+          ),
+        })),
+
+      scheduledSends: [],
+      schedule: (entry) => {
+        const id =
+          entry.id ?? `sch-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+        const queuedAt = new Date().toISOString();
+        const next: ScheduledSend = {
+          id,
+          queuedAt,
+          status: "queued",
+          tenantId: entry.tenantId,
+          channel: entry.channel,
+          deliverable: entry.deliverable,
+          trustScore: entry.trustScore,
+          approvalStatus: entry.approvalStatus,
+          species: entry.species,
+          scheduledFor: entry.scheduledFor,
+        };
+        set((s) => ({
+          scheduledSends: [next, ...s.scheduledSends].slice(0, 40),
+        }));
+        return id;
+      },
+      fireScheduled: (id) =>
+        set((s) => ({
+          scheduledSends: s.scheduledSends.map((q) =>
+            q.id === id ? { ...q, status: "fired" } : q
+          ),
+        })),
+      cancelScheduled: (id) =>
+        set((s) => ({
+          scheduledSends: s.scheduledSends.map((q) =>
+            q.id === id ? { ...q, status: "cancelled" } : q
+          ),
+        })),
+      clearScheduled: () => set({ scheduledSends: [] }),
+
+      liveDeliverables: [],
+      pushLiveDeliverable: (d) =>
+        set((s) => ({
+          liveDeliverables: [d, ...s.liveDeliverables].slice(0, 60),
+        })),
+      patchLiveDeliverable: (id, patch) =>
+        set((s) => ({
+          liveDeliverables: s.liveDeliverables.map((d) =>
+            d.id === id ? { ...d, ...patch } : d
+          ),
+        })),
+      clearLiveDeliverables: () => set({ liveDeliverables: [] }),
     }),
     { name: "adiplan-ai-state-v1" }
   )

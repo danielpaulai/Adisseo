@@ -323,3 +323,43 @@ export function pct(n: number): string {
   if (!isFinite(n) || isNaN(n)) return "0%";
   return `${(n * 100).toFixed(1)}%`;
 }
+
+/* ============================================================================
+ * Phase 5 — channel → DeliverableKind mapping
+ *
+ * When a dispatch ships, the distribution rail auto-creates a
+ * DeliverableInstance so the engagement tracker can grade it. The mapping
+ * picks the most representative kind for each channel: LinkedIn carousels,
+ * email blasts, WhatsApp carousels, WeChat shorts, trade-mag specs.
+ * ========================================================================== */
+export function deliverableKindForChannel(
+  channel:
+    | "linkedin"
+    | "wechat"
+    | "whatsapp"
+    | "email"
+    | "trade-mag",
+  hint?: string
+): DeliverableKind {
+  if (hint) {
+    const h = hint.toLowerCase();
+    if (/manga/.test(h)) return "manga";
+    if (/billboard/.test(h)) return "billboard";
+    if (/leaflet|brief/.test(h)) return "leaflet";
+    if (/short|video|tiktok|reels/.test(h)) return "short";
+    if (/voice/.test(h)) return "voice-memo";
+    if (/frame|tvs/.test(h)) return "frame";
+  }
+  switch (channel) {
+    case "linkedin":
+      return "carousel";
+    case "wechat":
+      return "short";
+    case "whatsapp":
+      return "carousel";
+    case "email":
+      return "email";
+    case "trade-mag":
+      return "leaflet";
+  }
+}
