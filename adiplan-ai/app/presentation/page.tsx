@@ -34,6 +34,7 @@ import {
   Image as ImageIcon,
   Eye,
   Building2,
+  KeyRound,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -377,6 +378,23 @@ const MODULES = [
       "Public URL + external id + audience reach surfaced on every row",
     ],
   },
+  {
+    href: "/credentials",
+    icon: KeyRound,
+    num: "26",
+    layer: "Phase 6 · Production-readiness",
+    title: "Channel credentials & HMAC-signed webhook inbox",
+    blurb:
+      "The production shell that turns Phase 5's mocks into a real integration story. Every tenant + channel declares the env vars it needs (LinkedIn org URN + OAuth, WeChat OA AppID + AppSecret, WhatsApp business number + access token, email provider + key, trade-mag portal token). The dispatcher checks presence per-request and routes through the live HTTP shell (with retry + rate-limit) or the mock — partial roll-outs are safe. Inbound webhooks at /api/webhook/[tenant]/[channel] verify Stripe-style HMAC-SHA256 signatures with a 5-minute replay window.",
+    moves: [
+      "Per-tenant credential matrix on /credentials with env-var presence indicators",
+      "Token-bucket rate-limiter per tenant + channel (e.g. LinkedIn 25/min, email 240/min)",
+      "Exponential-backoff retry around live dispatch (3 attempts, 250ms base)",
+      "HMAC-SHA256 webhook verification with 5-minute replay protection",
+      "Per-tenant webhook secret + copy-paste curl in /credentials",
+      "Live / mock / hybrid chip in every top-bar — instant integration-state read-out",
+    ],
+  },
 ];
 
 const ROADMAP = [
@@ -404,6 +422,11 @@ const ROADMAP = [
     title: "Phase 5 · Closed-loop dispatch + measurement (LIVE)",
     body: "Per-channel ChannelAdapter pattern lets us swap mocks for live LinkedIn / WeChat / WhatsApp / email / trade-mag without touching the gate. Each adapter produces a channel-native preview (real-feeling LinkedIn carousel, WeChat push card, WhatsApp bubble, email, editorial submission). Scheduled-send queue with operator override. /api/distribution-callback simulates the inbound engagement webhook → patches the dispatch row + the engagement tracker (auto-created DeliverableInstance) so the demo's funnel grades a deliverable end-to-end in one click.",
     icon: Radio,
+  },
+  {
+    title: "Phase 6 · Production-readiness shell (LIVE)",
+    body: "The credential matrix, HMAC-signed webhooks, retry + rate-limit, and per-tenant webhook secrets are all in place. /credentials renders the env-var presence per tenant + channel; the dispatcher reads at request time and falls back to mock cleanly when anything's missing. /api/webhook/[tenant]/[channel] verifies Stripe-style HMAC-SHA256 signatures (5-minute replay window) and stores accepted events in the inbox. Going live for any tenant + channel is now an env-var change.",
+    icon: KeyRound,
   },
   {
     title: "Live measurement plumbing",
@@ -478,7 +501,11 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
     status: "wired",
   },
   {
-    label: "Phase 6 · Swap channel-adapter mocks for live LinkedIn UGC / WeChat OA / WhatsApp Business / Mailgun / editorial portals",
+    label: "Phase 6 · Production-readiness (credentials, HMAC webhooks, retry + rate-limit)",
+    status: "wired",
+  },
+  {
+    label: "Phase 7 · Swap dispatcher live-shells for actual LinkedIn UGC / WeChat OA / WhatsApp Cloud / Mailgun / editorial-portal HTTP calls",
     status: "deferred",
   },
 ];
@@ -712,7 +739,7 @@ export default function PresentationPage() {
         id="shipped"
         num="04"
         title="What AdiPlan AI ships today"
-        subtitle="25 live modules — every one runnable in the browser, no setup required"
+        subtitle="26 live modules — every one runnable in the browser, no setup required"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {MODULES.map((m) => (

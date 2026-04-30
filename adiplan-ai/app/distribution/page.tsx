@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { Logo } from "@/components/Logo";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
+import { LiveModeChip } from "@/components/LiveModeChip";
 import {
   ChannelPreview,
   ChannelIcon,
@@ -178,6 +179,9 @@ export default function DistributionPage() {
           audienceCount: json.audienceCount,
           preview: json.preview,
           deliverableInstanceId,
+          dispatchMode: json.dispatchMode,
+          rateLimited: json.rateLimited,
+          waitMs: json.waitMs,
         });
 
         // Phase 5 — auto-create a DeliverableInstance for engagement-tracker.
@@ -366,7 +370,10 @@ export default function DistributionPage() {
             Home
           </Link>
           <Logo />
-          <TenantSwitcher />
+          <div className="flex items-center gap-2">
+            <LiveModeChip />
+            <TenantSwitcher />
+          </div>
         </div>
       </header>
 
@@ -375,7 +382,7 @@ export default function DistributionPage() {
           <div className="flex items-start justify-between gap-6">
             <div>
               <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
-                <Share2 size={10} /> Phase 5 · Closed loop
+                <Share2 size={10} /> Phase 6 · Production-readiness
               </p>
               <h1 className="mt-3 text-3xl font-black text-adisseo-ink-strong">
                 Distribution rails
@@ -760,7 +767,7 @@ export default function DistributionPage() {
                           </td>
                           <td className="px-3 py-2">
                             <span
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
+                              className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
                                 row.status === "shipped"
                                   ? "bg-emerald-100 text-emerald-700"
                                   : row.status === "blocked"
@@ -770,6 +777,30 @@ export default function DistributionPage() {
                             >
                               {row.status}
                             </span>
+                            {row.dispatchMode && (
+                              <span
+                                className={`ml-1 inline-block rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest ${
+                                  row.dispatchMode === "live"
+                                    ? "bg-emerald-500 text-white"
+                                    : "bg-stone-200 text-stone-700"
+                                }`}
+                                title={
+                                  row.dispatchMode === "live"
+                                    ? "Dispatched via live channel API"
+                                    : "Dispatched via mock channel adapter"
+                                }
+                              >
+                                {row.dispatchMode}
+                              </span>
+                            )}
+                            {row.rateLimited && (
+                              <span
+                                className="ml-1 inline-block rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-amber-800"
+                                title={`Rate-limited; waited ${row.waitMs ?? 0}ms`}
+                              >
+                                throttled
+                              </span>
+                            )}
                           </td>
                           <td className="px-3 py-2 text-xs font-semibold text-adisseo-ink-strong">
                             {CHANNELS[row.channel]?.label ?? row.channel}

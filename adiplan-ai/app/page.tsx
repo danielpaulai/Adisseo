@@ -26,11 +26,13 @@ import {
   Eye,
   Building2,
   Share2,
+  KeyRound,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
 import { LiveExampleCTA } from "@/components/LiveExampleCTA";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
+import { LiveModeChip } from "@/components/LiveModeChip";
 
 type Module = {
   href: string;
@@ -302,16 +304,26 @@ const modules: Module[] = [
     cta: "Open distribution rails",
     ready: true,
   },
+  {
+    href: "/credentials",
+    icon: KeyRound,
+    stage: "Phase 6 · Production-readiness",
+    title: "Channel credentials & HMAC-signed webhooks",
+    blurb:
+      "Every tenant + channel declares the env vars it needs to flip from mock to live. The dispatcher detects presence at request time and falls back to mock when anything's missing. Inbound webhooks land at /api/webhook/[tenant]/[channel] with HMAC-SHA256 verification (Stripe-style headers), 5-minute replay guard, and a per-tenant secret. Per-channel rate-limits and exponential-backoff retry round out the production shell.",
+    cta: "Open credentials matrix",
+    ready: true,
+  },
 ];
 
 const upcoming = [
   {
     species: null,
-    text: "Phase 6 · Swap channel-adapter mocks for live LinkedIn UGC, WeChat OA Publish, WhatsApp Business, Mailgun / SES, and per-publication editorial submission portals",
+    text: "Phase 7 · Swap dispatcher live-shells for actual LinkedIn UGC / WeChat OA Publish / WhatsApp Cloud / Mailgun / editorial-portal HTTP calls (Phase 6 ships the credential matrix, HMAC verify, retry, and rate-limit plumbing — only the fetch() bodies remain)",
   },
   {
     species: null,
-    text: "Replace in-memory trace ring with Langfuse / Helicone for production observability",
+    text: "Replace in-memory trace ring + webhook inbox with Langfuse / Helicone + a durable event store",
   },
   {
     species: null,
@@ -329,11 +341,12 @@ export default function Home() {
       <header className="border-b border-adisseo-line bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4">
           <Logo size="md" />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <span className="hidden text-xs text-adisseo-muted sm:inline">
               Demo target:{" "}
               <span className="font-medium text-adisseo-ink-strong">Thu May 7, 2026</span>
             </span>
+            <LiveModeChip />
             <TenantSwitcher compact />
           </div>
         </div>

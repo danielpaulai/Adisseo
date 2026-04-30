@@ -6,10 +6,10 @@ import {
 } from "@/lib/distribution";
 import {
   buildPreview,
-  getAdapter,
   type ChannelDispatchResult,
   type ChannelPreview,
 } from "@/lib/channel-adapter";
+import { dispatchViaChannel } from "@/lib/channel-dispatcher";
 import { startTrace } from "@/lib/llm-trace";
 
 export const runtime = "nodejs";
@@ -35,6 +35,10 @@ export interface DistributeApiResponse extends DistributionResult {
   publicUrl?: string;
   externalId?: string;
   audienceCount?: number;
+  /* Phase 6 — production-readiness signals. */
+  dispatchMode?: "live" | "mock";
+  rateLimited?: boolean;
+  waitMs?: number;
 }
 
 /**
@@ -103,9 +107,11 @@ export async function POST(req: NextRequest) {
   const result = evaluateDistribution(body);
 
   let dispatch: ChannelDispatchResult | null = null;
+  let dispatchMode: "live" | "mock" | undefined;
+  let rateLimited = false;
+  let waitMs = 0;
   if (result.status === "shipped") {
-    const adapter = getAdapter(body.channel);
-    dispatch = await adapter.dispatch({
+    const decision = await dispatchViaChannel({
       tenantId: body.tenantId,
       channel: body.channel,
       deliverable: body.deliverable,
@@ -118,6 +124,10 @@ export async function POST(req: NextRequest) {
       trustScore: body.trustScore,
       citationCount: body.citationCount,
     });
+    dispatch = decision.result;
+    dispatchMode = decision.mode;
+    rateLimited = decision.rateLimited;
+    waitMs = decision.waitMs;
   }
 
   const shippedAt = new Date().toISOString();
@@ -128,14 +138,17 @@ export async function POST(req: NextRequest) {
     publicUrl: dispatch?.publicUrl,
     externalId: dispatch?.externalId,
     audienceCount: dispatch?.audienceCount,
+    dispatchMode,
+    rateLimited,
+    waitMs,
   };
 
   trace.finish({
     summary:
       result.status === "shipped"
-        ? `Shipped to ${result.channelMeta.label} \u2014 reach ${
+        ? `${dispatchMode === "live" ? "LIVE" : "mock"} \u2192 ${result.channelMeta.label} \u2014 reach ${
             dispatch?.audienceCount ?? "?"
-          }`
+          }${rateLimited ? ` (rate-limited ${waitMs}ms)` : ""}`
         : `Blocked: ${result.reason ?? "unknown"}`,
     outputTokens: 0,
     status: result.status === "shipped" ? "success" : "warn",

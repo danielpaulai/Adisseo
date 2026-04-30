@@ -46,6 +46,13 @@ export interface DistributionLog {
   };
   /** Owning deliverable id (links to DeliverableInstance for engagement-tracker). */
   deliverableInstanceId?: string;
+  /* Phase 6 — production-readiness signals. */
+  /** "live" if dispatched via the live HTTP shell, "mock" otherwise. */
+  dispatchMode?: "live" | "mock";
+  /** True if the rate-limit gate held the call back. */
+  rateLimited?: boolean;
+  /** Wait ms applied by the rate-limiter (0 = none). */
+  waitMs?: number;
 }
 
 /* ============================================================================
@@ -404,6 +411,9 @@ export const useAdiPlanStore = create<AdiPlanStore>()(
           preview: entry.preview,
           engagement: entry.engagement,
           deliverableInstanceId: entry.deliverableInstanceId,
+          dispatchMode: entry.dispatchMode,
+          rateLimited: entry.rateLimited,
+          waitMs: entry.waitMs,
         };
         set((s) => ({ distribution: [next, ...s.distribution].slice(0, 80) }));
         return id;

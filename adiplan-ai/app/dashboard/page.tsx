@@ -20,6 +20,7 @@ import {
 import { useAdiPlanStore, type ActivityEntry, type ActivityKind } from "@/lib/store";
 import { Logo } from "@/components/Logo";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
+import { LiveModeChip } from "@/components/LiveModeChip";
 
 /* ----------------------------------------------------------------------------
  * Demo-seed payload — populates the war-room with realistic recent activity
@@ -284,6 +285,13 @@ export default function DashboardPage() {
             >
               Distribution
             </Link>
+            <Link
+              href="/credentials"
+              className="text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Credentials
+            </Link>
+            <LiveModeChip />
             <TenantSwitcher compact />
           </nav>
         </div>
