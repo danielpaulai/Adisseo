@@ -205,6 +205,28 @@ create index if not exists vault_entries_tenant_idx
   on public.vault_entries (tenant_id);
 
 ------------------------------------------------------------------------------
+-- approval_requests  (Phase 8 — HQ brand-guardrail queue, synced from client)
+------------------------------------------------------------------------------
+create table if not exists public.approval_requests (
+  id                  text primary key,
+  tenant_id           text not null references public.tenants(id) on delete cascade,
+  kind                text not null,
+  title               text not null,
+  summary             text not null,
+  sender              text not null,
+  href                text,
+  payload             jsonb,
+  status              text not null check (status in ('pending','approved','rejected')),
+  sent_at             timestamptz not null,
+  reviewed_at         timestamptz,
+  reviewer_comment    text,
+  reviewer            text
+);
+
+create index if not exists approval_requests_tenant_idx
+  on public.approval_requests (tenant_id, sent_at desc);
+
+------------------------------------------------------------------------------
 -- profiles  (auth users → tenant + role binding)
 ------------------------------------------------------------------------------
 create table if not exists public.profiles (
@@ -227,6 +249,7 @@ alter table public.distribution_log     enable row level security;
 alter table public.inline_edits         enable row level security;
 alter table public.engagement_log       enable row level security;
 alter table public.vault_entries        enable row level security;
+alter table public.approval_requests    enable row level security;
 alter table public.profiles             enable row level security;
 
 create policy "tenant_read_self" on public.stakeholder_maps
@@ -245,6 +268,22 @@ create policy "tenant_update_self" on public.stakeholder_maps
 drop policy if exists "tenant_delete_self" on public.stakeholder_maps;
 create policy "tenant_delete_self" on public.stakeholder_maps
   for delete using (
+    tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
+  );
+
+drop policy if exists "approval_req_select" on public.approval_requests;
+create policy "approval_req_select" on public.approval_requests
+  for select using (
+    tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
+  );
+drop policy if exists "approval_req_insert" on public.approval_requests;
+create policy "approval_req_insert" on public.approval_requests
+  for insert with check (
+    tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
+  );
+drop policy if exists "approval_req_update" on public.approval_requests;
+create policy "approval_req_update" on public.approval_requests
+  for update using (
     tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
   );
 

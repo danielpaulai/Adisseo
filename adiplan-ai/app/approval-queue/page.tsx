@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { Logo } from "@/components/Logo";
 import { useAdiPlanStore, type ApprovalRequest, type ApprovalStatus } from "@/lib/store";
+import { syncApprovalAfterLocalMutation } from "@/lib/approval-requests-supabase";
 
 const KIND_LABEL: Record<ApprovalRequest["kind"], string> = {
   "aqua-leaflet": "Aqua leaflet",
@@ -97,6 +98,12 @@ export default function ApprovalQueuePage() {
     }
     const req = approvals.find((a) => a.id === id);
     decideApproval(id, decision, comment.trim() || "Approved as-is.", "Ricardo Communod");
+    void syncApprovalAfterLocalMutation(id).then((r) => {
+      if (r.ok || r.skipped) return;
+      toast.error("Could not sync decision to Supabase", {
+        description: r.error ?? "Unknown error",
+      });
+    });
     if (req) {
       pushActivity({
         kind: "frame",

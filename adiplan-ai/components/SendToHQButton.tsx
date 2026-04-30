@@ -9,6 +9,7 @@ import {
   type ApprovalKind,
   type ApprovalRequest,
 } from "@/lib/store";
+import { syncApprovalAfterLocalMutation } from "@/lib/approval-requests-supabase";
 
 interface Props {
   /** What kind of deliverable this is. */
@@ -67,6 +68,12 @@ export function SendToHQButton({
       payload,
       href,
       sender: sender ?? SENDER_BY_KIND[kind],
+    });
+    void syncApprovalAfterLocalMutation(id).then((r) => {
+      if (r.ok || r.skipped) return;
+      toast.error("Could not sync approval to Supabase", {
+        description: r.error ?? "Unknown error",
+      });
     });
     setJustSent(id);
     toast.success("Sent to HQ for brand review", {

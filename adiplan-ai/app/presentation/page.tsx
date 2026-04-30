@@ -535,7 +535,7 @@ const PHASE8_LANE_B = [
   {
     title: "Phase 8 · Pilot backbone (now)",
     body:
-      "Code today: Supabase client, SQL migration (RLS + tenant-scoped tables), /login with magic-link allowlist + demo fallback. Stakeholder maps: auto-merge from Postgres on sign-in + upsert after each save (stakeholder_maps). Definition of done: run scripts/supabase-migrate.sql on a Singapore project; wire env on Vercel; extend the same pattern to approval queue + distribution audit rows; Ricardo + species managers sign in without shared demo passwords; rotate any key that lived in a public repo window.",
+      "Code today: Supabase client, SQL migration (RLS + tenant-scoped tables), /login with magic-link allowlist + demo fallback. Stakeholder maps + HQ approval queue: auto-merge from Postgres on sign-in; upsert after each save / approve / reject (stakeholder_maps + approval_requests). Definition of done: run scripts/supabase-migrate.sql on a Singapore project; wire env on Vercel; extend the same pattern to distribution audit rows + engagement; Ricardo + species managers sign in without shared demo passwords; rotate any key that lived in a public repo window.",
     icon: Database,
   },
   {
