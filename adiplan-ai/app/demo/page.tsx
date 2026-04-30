@@ -10,8 +10,10 @@ import {
   Mic,
   CheckCircle2,
   Clock,
+  Radio,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { DemoSeedAll } from "@/components/DemoSeedAll";
 
 /* =============================================================================
  * /demo — guided 5-step walkthrough.
@@ -67,8 +69,17 @@ const STEPS = [
   },
   {
     n: "06",
+    title: "Ship a deliverable down a real channel",
+    body: "Open /distribution. Pick any approved deliverable, hit Preview to see the LinkedIn carousel / WeChat OA / WhatsApp / email mockup, then Ship now. Every shipped row creates a DeliverableInstance that lights up the engagement tracker; live channels (when env vars are set) get a green LIVE chip.",
+    href: "/distribution",
+    cta: "Open distribution rails",
+    icon: Radio,
+    estTime: "~20s",
+  },
+  {
+    n: "07",
     title: "Land on the Malaysia-ASF benchmark",
-    body: "End on /engagement-tracker — the metric Ricardo named on the call. 9 historical APAC deliverables, 4-stage funnel, each row graded against the 43% qualified-to-conversion benchmark. This is the number every species manager will be measured on.",
+    body: "End on /engagement-tracker — the metric Ricardo named on the call. Live + seeded deliverables in one funnel, each row graded against the 43% qualified-to-conversion benchmark. This is the number every species manager will be measured on.",
     href: "/engagement-tracker",
     cta: "Open the engagement tracker",
     icon: Target,
@@ -103,12 +114,22 @@ export default function DemoPage() {
       <header className="border-b border-adisseo-line bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Logo size="sm" />
-          <Link
-            href="/"
-            className="text-xs font-medium text-adisseo-muted hover:text-adisseo-crimson"
-          >
-            Home
-          </Link>
+          <div className="flex items-center gap-3">
+            <a
+              href="/api/render-adisseo-onepager"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-adisseo-line px-3 py-1.5 text-xs font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+            >
+              Decision-maker PDF
+            </a>
+            <Link
+              href="/"
+              className="text-xs font-medium text-adisseo-muted hover:text-adisseo-crimson"
+            >
+              Home
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -128,11 +149,15 @@ export default function DemoPage() {
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-2 text-[11px] text-adisseo-muted">
           <Clock size={12} />
-          <span className="font-semibold text-adisseo-ink-strong">~2.5 minutes total</span>
+          <span className="font-semibold text-adisseo-ink-strong">~3 minutes total</span>
           <span>·</span>
-          <span>6 steps</span>
+          <span>7 steps</span>
           <span>·</span>
           <span>1 demo path</span>
+        </div>
+
+        <div className="mt-10">
+          <DemoSeedAll />
         </div>
 
         <ol className="mt-10 space-y-4">

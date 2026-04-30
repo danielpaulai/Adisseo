@@ -536,6 +536,14 @@ export default function PresentationPage() {
             >
               Live demo
             </Link>
+            <a
+              href="/api/render-adisseo-onepager"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-adisseo-line px-3 py-1.5 text-xs font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+            >
+              Download leave-behind PDF
+            </a>
             <Link
               href="#live"
               className="rounded-full bg-adisseo-crimson px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90"

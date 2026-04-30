@@ -21,6 +21,7 @@ import { useAdiPlanStore, type ActivityEntry, type ActivityKind } from "@/lib/st
 import { Logo } from "@/components/Logo";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
 import { LiveModeChip } from "@/components/LiveModeChip";
+import { DemoSeedAll } from "@/components/DemoSeedAll";
 
 /* ----------------------------------------------------------------------------
  * Demo-seed payload — populates the war-room with realistic recent activity
@@ -398,6 +399,7 @@ export default function DashboardPage() {
               >
                 Pre-load demo activity
               </button>
+              <DemoSeedAll compact />
               {activity.length > 0 && (
                 <button
                   onClick={() => {

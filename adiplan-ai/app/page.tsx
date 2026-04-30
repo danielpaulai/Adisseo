@@ -33,6 +33,7 @@ import { PipelineVisual } from "@/components/PipelineVisual";
 import { LiveExampleCTA } from "@/components/LiveExampleCTA";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
 import { LiveModeChip } from "@/components/LiveModeChip";
+import { DemoSeedAll } from "@/components/DemoSeedAll";
 
 type Module = {
   href: string;
@@ -346,6 +347,16 @@ export default function Home() {
               Demo target:{" "}
               <span className="font-medium text-adisseo-ink-strong">Thu May 7, 2026</span>
             </span>
+            <a
+              href="/api/render-adisseo-onepager"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson md:inline-flex md:items-center md:gap-1"
+              title="One-page decision-maker brief, A4 portrait, brand-aligned. Generated from the live module registry."
+            >
+              Leave-behind PDF
+            </a>
+            <DemoSeedAll compact />
             <LiveModeChip />
             <TenantSwitcher compact />
           </div>

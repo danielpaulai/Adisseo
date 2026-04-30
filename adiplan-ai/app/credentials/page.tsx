@@ -14,6 +14,7 @@ import {
 import { Logo } from "@/components/Logo";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
 import { LiveModeChip } from "@/components/LiveModeChip";
+import { EmailTestSendButton } from "@/components/EmailTestSendButton";
 import { TENANT_LIST, CHANNELS } from "@/lib/tenant";
 import {
   getTenantCredentials,
@@ -222,6 +223,14 @@ export default function CredentialsPage() {
                           <code className="rounded bg-stone-100 px-1 py-0.5 text-[10px] font-mono text-stone-700">
                             POST /api/webhook/{t.id}/{c.channel}
                           </code>
+                          {c.channel === "email" && (
+                            <div className="mt-1 flex justify-end">
+                              <EmailTestSendButton
+                                tenantId={t.id}
+                                ready={c.ready}
+                              />
+                            </div>
+                          )}
                         </td>
                       </tr>
                     ))}

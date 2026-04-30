@@ -110,24 +110,34 @@ export async function POST(req: NextRequest) {
   let dispatchMode: "live" | "mock" | undefined;
   let rateLimited = false;
   let waitMs = 0;
+  let dispatchError: string | undefined;
   if (result.status === "shipped") {
-    const decision = await dispatchViaChannel({
-      tenantId: body.tenantId,
-      channel: body.channel,
-      deliverable: body.deliverable,
-      body: body.body ?? body.deliverable,
-      subject: body.subject,
-      hashtags: body.hashtags,
-      region: body.region,
-      species: body.species,
-      manager: body.manager,
-      trustScore: body.trustScore,
-      citationCount: body.citationCount,
-    });
-    dispatch = decision.result;
-    dispatchMode = decision.mode;
-    rateLimited = decision.rateLimited;
-    waitMs = decision.waitMs;
+    try {
+      const decision = await dispatchViaChannel({
+        tenantId: body.tenantId,
+        channel: body.channel,
+        deliverable: body.deliverable,
+        body: body.body ?? body.deliverable,
+        subject: body.subject,
+        hashtags: body.hashtags,
+        region: body.region,
+        species: body.species,
+        manager: body.manager,
+        trustScore: body.trustScore,
+        citationCount: body.citationCount,
+      });
+      dispatch = decision.result;
+      dispatchMode = decision.mode;
+      rateLimited = decision.rateLimited;
+      waitMs = decision.waitMs;
+    } catch (e) {
+      // Live channel rejected the call (Mailgun 4xx, etc.). Demote the gate
+      // result so the response surfaces as "blocked" with the live error
+      // text — no 500, no UI breakage.
+      dispatchError = e instanceof Error ? e.message : String(e);
+      result.status = "blocked";
+      result.reason = `Channel dispatch failed: ${dispatchError}`;
+    }
   }
 
   const shippedAt = new Date().toISOString();

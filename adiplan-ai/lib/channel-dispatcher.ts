@@ -25,6 +25,7 @@ import {
 } from "@/lib/channel-adapter";
 import { getTenant, type DistributionChannel, type TenantId } from "@/lib/tenant";
 import { isLive, getTenantCredentials } from "@/lib/channel-credentials";
+import { getMailgunConfig, sendViaMailgun } from "@/lib/live-channels/email-mailgun";
 
 /* ----------------------------------------------------------------------------
  * Token-bucket rate limiter (in-memory, server-side).
@@ -135,16 +136,33 @@ async function dispatchLive(
   input: ChannelDispatchInput
 ): Promise<ChannelDispatchResult> {
   return withRetry(async () => {
-    // Mock the live HTTP call. In production this is e.g.
-    //   await fetch("https://api.linkedin.com/v2/ugcPosts", {...})
+    /* ----------------------------------------------------------------------
+     * Real live-API integrations.
+     *
+     * As channels graduate from stub → real, branch in here. Each branch
+     * reads the per-tenant config from env, makes the actual HTTP call,
+     * and returns the same ChannelDispatchResult shape as the stub.
+     * -------------------------------------------------------------------- */
+    if (input.channel === "email") {
+      // Mailgun is the only currently-wired live channel.
+      if (getMailgunConfig(input.tenantId)) {
+        return await sendViaMailgun(input);
+      }
+    }
+
+    /* ----------------------------------------------------------------------
+     * Fallback live-API stub.
+     *
+     * For channels without a real integration yet (LinkedIn / WeChat /
+     * WhatsApp / trade-mag), simulate the live latency window and return
+     * a "pretend live" result so /observability + /distribution can show
+     * the live-vs-mock distinction even before the real fetch() body is
+     * implemented.
+     * -------------------------------------------------------------------- */
     const adapter = getAdapter(input.channel);
     const start = Date.now();
-    // Live path "feels" different from mock: 2-3x latency, slight reach delta.
-    const liveLatency = (adapter as unknown as { channel: DistributionChannel }).channel
-      ? 1.7 // arbitrary but stable
-      : 1;
     await new Promise((r) =>
-      setTimeout(r, Math.min(2_500, 800 + Math.floor(Math.random() * 600) * liveLatency))
+      setTimeout(r, Math.min(2_500, 800 + Math.floor(Math.random() * 1_200)))
     );
     const result = adapter.preview(input);
     const externalId = `live-${input.channel}-${Date.now().toString(36)}`;
