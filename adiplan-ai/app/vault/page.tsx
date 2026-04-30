@@ -19,7 +19,7 @@ import {
 import { Logo } from "@/components/Logo";
 import {
   searchVault,
-  seededVault,
+  fullVault,
   vaultRegions,
   VAULT_KIND_LABEL,
   VAULT_KIND_TONE,
@@ -69,7 +69,7 @@ export default function VaultPage() {
   );
 
   const stats = useMemo(() => {
-    const scoped = seededVault.filter(
+    const scoped = fullVault.filter(
       (e) => (e.tenantId ?? "adisseo") === activeTenantId
     );
     const byKind: Partial<Record<VaultKind, number>> = {};
@@ -206,7 +206,7 @@ export default function VaultPage() {
               <span className="text-adisseo-ink-strong">Verified only</span>
             </label>
             <span className="ml-auto text-adisseo-muted">
-              {hits.length} of {seededVault.length} entries
+              {hits.length} of {fullVault.length} entries
             </span>
           </div>
         </section>

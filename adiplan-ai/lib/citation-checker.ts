@@ -30,7 +30,38 @@
  * trust layer for UI consistency.
  */
 
-import { seededVault, type VaultEntry } from "@/lib/vault";
+import { fullVault, type VaultEntry } from "@/lib/vault";
+
+/**
+ * Hosts whose URLs are treated as resolved-against-vault even when the
+ * exact path isn't in the seed. This is the trust whitelist — anything
+ * matching adisseo.com lands on the brand's own corpus, so the
+ * citation-checker accepts it as authoritative.
+ */
+const TRUSTED_HOSTS = [
+  "adisseo.com",
+  "www.adisseo.com",
+];
+
+/**
+ * Strips a URL down to its hostname for whitelist matching.
+ * Returns null when the URL is unparseable.
+ */
+function urlHost(raw: string): string | null {
+  try {
+    const u = new URL(raw);
+    return u.hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+/** True when a URL belongs to a trusted host (e.g. adisseo.com). */
+function isTrustedUrl(raw: string): boolean {
+  const host = urlHost(raw);
+  if (!host) return false;
+  return TRUSTED_HOSTS.some((h) => host === h || host.endsWith("." + h));
+}
 
 export interface CitationDetected {
   /** Raw match string. */
@@ -91,7 +122,7 @@ function uniqByMatch(items: CitationDetected[]): CitationDetected[] {
 
 export function detectCitations(
   text: string,
-  vault: VaultEntry[] = seededVault
+  vault: VaultEntry[] = fullVault
 ): CitationDetected[] {
   if (!text || text.trim().length === 0) return [];
   const findings: CitationDetected[] = [];
@@ -111,11 +142,18 @@ export function detectCitations(
   }
 
   while ((m = URL_RE.exec(text)) !== null) {
+    const url = m[0];
+    const internal = url.startsWith("internal://");
+    const trusted = !internal && isTrustedUrl(url);
+    // If the URL is in the vault, treat it as fully resolved even
+    // when matched as plain text (instead of via vault id ref).
+    const resolved = vault.find((v) => v.sourceUrl === url);
     findings.push({
-      match: m[0],
+      match: url,
       kind: "url",
       index: m.index,
-      external: !m[0].startsWith("internal://"),
+      resolved,
+      external: !internal && !trusted,
     });
   }
 
@@ -174,7 +212,7 @@ export function detectCitations(
 
 export function scoreCitations(
   text: string,
-  vault: VaultEntry[] = seededVault
+  vault: VaultEntry[] = fullVault
 ): CitationReport {
   const cleanText = (text ?? "").trim();
   const citations = detectCitations(cleanText, vault);

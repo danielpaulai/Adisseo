@@ -123,6 +123,14 @@ export default function DemoPage() {
             >
               Decision-maker PDF
             </a>
+            <a
+              href="/api/render-demo-script"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-adisseo-line px-3 py-1.5 text-xs font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+            >
+              90s shoot script
+            </a>
             <Link
               href="/"
               className="text-xs font-medium text-adisseo-muted hover:text-adisseo-crimson"

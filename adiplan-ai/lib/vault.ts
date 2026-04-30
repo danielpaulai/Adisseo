@@ -528,6 +528,24 @@ export const seededVault: VaultEntry[] = [
 ];
 
 /* ============================================================================
+ * Real adisseo.com corpus, merged.
+ *
+ * Phase 7 (May 7 prep) — append real entries scraped from the live
+ * adisseo.com pages so studio citations resolve to the actual brand
+ * site. The seeded entries above stay illustrative for trial protocols
+ * the public site doesn't expose; the real entries below cover the
+ * canonical product evidence (Rhodimet, Selisseo, Rovabio, Smartline,
+ * mycotoxin program, aqua feed-quality).
+ *
+ * Imported from a sibling module so it can be refreshed independently
+ * of the seeded set.
+ * ========================================================================== */
+import { adisseoRealVault } from "@/lib/vault-adisseo-real";
+
+/** Combined corpus used by every search / lookup helper below. */
+export const fullVault: VaultEntry[] = [...adisseoRealVault, ...seededVault];
+
+/* ============================================================================
  * Search + lookup
  * ========================================================================== */
 
@@ -570,7 +588,7 @@ function tokenize(s: string): string[] {
  * would be a pgvector + BM25 hybrid retriever — but the shape stays the
  * same for the studios.
  */
-export function searchVault(query: VaultQuery, vault: VaultEntry[] = seededVault): VaultHit[] {
+export function searchVault(query: VaultQuery, vault: VaultEntry[] = fullVault): VaultHit[] {
   const text = (query.text ?? "").trim();
   const tokens = tokenize(text);
   const limit = query.limit ?? 12;
@@ -630,7 +648,7 @@ export function searchVault(query: VaultQuery, vault: VaultEntry[] = seededVault
   return hits.slice(0, limit);
 }
 
-export function getVaultEntry(id: string, vault: VaultEntry[] = seededVault): VaultEntry | null {
+export function getVaultEntry(id: string, vault: VaultEntry[] = fullVault): VaultEntry | null {
   return vault.find((e) => e.id === id) ?? null;
 }
 
@@ -656,7 +674,7 @@ export const VAULT_KIND_TONE: Record<
 };
 
 /** All distinct regions in the seeded vault. */
-export function vaultRegions(vault: VaultEntry[] = seededVault): string[] {
+export function vaultRegions(vault: VaultEntry[] = fullVault): string[] {
   const set = new Set<string>();
   for (const e of vault) for (const r of e.regions) set.add(r);
   return Array.from(set).sort();

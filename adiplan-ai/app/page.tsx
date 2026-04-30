@@ -356,6 +356,15 @@ export default function Home() {
             >
               Leave-behind PDF
             </a>
+            <a
+              href="/api/render-demo-script"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson md:inline-flex md:items-center md:gap-1"
+              title="90-second demo shooting script, A4 portrait. Print and tape next to the trackpad."
+            >
+              90s script
+            </a>
             <DemoSeedAll compact />
             <LiveModeChip />
             <TenantSwitcher compact />

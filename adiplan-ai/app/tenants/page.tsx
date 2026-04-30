@@ -7,8 +7,10 @@ import {
   ArrowRight,
   Building2,
   CheckCircle2,
+  Coins,
   Layers,
   Shield,
+  TrendingDown,
   Users,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
@@ -19,12 +21,18 @@ import {
   type TenantConfig,
 } from "@/lib/tenant";
 import { BRAND_VOICES } from "@/lib/brand-voice";
-import { seededVault } from "@/lib/vault";
+import { fullVault } from "@/lib/vault";
 import { DEMO_DELIVERABLES } from "@/lib/distribution";
 import { useAdiPlanStore } from "@/lib/store";
+import {
+  estimateMonthlyCost,
+  estimatePerDeliverableCost,
+  DELIVERABLE_LABEL,
+  type DeliverableKind,
+} from "@/lib/cost-model";
 
 function tenantStats(t: TenantConfig) {
-  const vaultEntries = seededVault.filter(
+  const vaultEntries = fullVault.filter(
     (e) => (e.tenantId ?? "adisseo") === t.id
   ).length;
   const deliverables = DEMO_DELIVERABLES.filter((d) => d.tenantId === t.id).length;
@@ -41,7 +49,7 @@ export default function TenantsPage() {
       tenants: TENANT_LIST.length,
       live: TENANT_LIST.filter((t) => t.id === "adisseo").length,
       blueprints: TENANT_LIST.length - 1,
-      vaultPartitions: new Set(seededVault.map((e) => e.tenantId ?? "adisseo")).size,
+      vaultPartitions: new Set(fullVault.map((e) => e.tenantId ?? "adisseo")).size,
       deliverables: DEMO_DELIVERABLES.length,
     };
   }, []);
@@ -240,6 +248,66 @@ export default function TenantsPage() {
           })}
         </section>
 
+        {/* COST MODEL --------------------------------------------------- */}
+        <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-6">
+          <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-800">
+                <Coins size={10} /> Run-cost model
+              </p>
+              <h2 className="mt-2 text-lg font-black text-adisseo-ink-strong">
+                What does AdiPlan actually cost per tenant?
+              </h2>
+              <p className="mt-1 max-w-3xl text-xs text-adisseo-muted">
+                Token rates: Claude Sonnet 4.5 $3/$15 per M, Haiku 4 $0.80/$4
+                per M; Mailgun $0.80/1k; Whisper $0.006/min. Fixed bucket
+                covers Vercel + Postgres/pgvector + Langfuse + SOC2 add-ons.
+                Numbers compose from real workload assumptions, not guesses.
+              </p>
+            </div>
+          </div>
+
+          {/* Aggregate strip */}
+          <CostAggregate />
+
+          {/* Per-tenant cards */}
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            {TENANT_LIST.map((t) => (
+              <TenantCostCard key={t.id} tenantId={t.id} accent={t.accent} name={t.name} />
+            ))}
+          </div>
+
+          {/* Per-deliverable unit-cost matrix */}
+          <div className="mt-6 rounded-xl border border-adisseo-line bg-stone-50 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
+              Per-deliverable unit cost (USD, includes synthesis + content + scoring tokens)
+            </p>
+            <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-4">
+              {(Object.keys(DELIVERABLE_LABEL) as DeliverableKind[]).map((k) => {
+                const unit = estimatePerDeliverableCost(k);
+                return (
+                  <div
+                    key={k}
+                    className="rounded-lg border border-adisseo-line bg-white p-2"
+                  >
+                    <p className="text-[10px] font-semibold text-adisseo-muted">
+                      {DELIVERABLE_LABEL[k]}
+                    </p>
+                    <p className="mt-0.5 text-base font-black text-adisseo-ink-strong">
+                      ${unit.toFixed(3)}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="mt-3 text-[11px] text-adisseo-muted">
+              Cheaper than a single Mintec analyst hour, often 100x cheaper
+              than the equivalent agency-built piece. Multiply by tenant
+              workload to size monthly LLM spend.
+            </p>
+          </div>
+        </section>
+
         <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-6">
           <h2 className="text-lg font-black text-adisseo-ink-strong">
             What "tenant-aware" actually means here
@@ -277,5 +345,183 @@ export default function TenantsPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+/* ===================================================================== */
+/*  Cost-model helpers                                                   */
+/* ===================================================================== */
+
+function fmtUSD(n: number, fractionDigits = 0): string {
+  return `$${n.toLocaleString("en-US", {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  })}`;
+}
+
+function CostAggregate() {
+  const rows = TENANT_LIST.map((t) => estimateMonthlyCost(t.id));
+  const totalMonthly = rows.reduce((sum, r) => sum + r.monthlyTotal, 0);
+  const totalSavings = rows.reduce((sum, r) => sum + r.monthlySavings, 0);
+  const totalAnnual = rows.reduce((sum, r) => sum + r.annualisedSavings, 0);
+  const totalHours = rows.reduce((sum, r) => sum + r.hoursSavedMonthly, 0);
+
+  return (
+    <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4">
+      <div className="rounded-xl border border-adisseo-line bg-white p-3 text-center">
+        <p className="text-[10px] uppercase tracking-widest text-adisseo-muted">
+          Monthly run cost
+        </p>
+        <p className="mt-1 text-xl font-black text-adisseo-ink-strong">
+          {fmtUSD(totalMonthly)}
+        </p>
+        <p className="text-[10px] text-adisseo-muted">across all 4 tenants</p>
+      </div>
+      <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-center">
+        <p className="text-[10px] uppercase tracking-widest text-emerald-700">
+          Monthly savings
+        </p>
+        <p className="mt-1 text-xl font-black text-emerald-800">
+          {fmtUSD(totalSavings)}
+        </p>
+        <p className="text-[10px] text-emerald-700">vs. agency baseline</p>
+      </div>
+      <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-center">
+        <p className="text-[10px] uppercase tracking-widest text-emerald-700">
+          Annualised
+        </p>
+        <p className="mt-1 text-xl font-black text-emerald-800">
+          {fmtUSD(totalAnnual)}
+        </p>
+        <p className="text-[10px] text-emerald-700">savings / year</p>
+      </div>
+      <div className="rounded-xl border border-adisseo-line bg-white p-3 text-center">
+        <p className="text-[10px] uppercase tracking-widest text-adisseo-muted">
+          Marketing-ops hours
+        </p>
+        <p className="mt-1 text-xl font-black text-adisseo-ink-strong">
+          {totalHours}
+        </p>
+        <p className="text-[10px] text-adisseo-muted">saved / month</p>
+      </div>
+    </div>
+  );
+}
+
+function TenantCostCard({
+  tenantId,
+  accent,
+  name,
+}: {
+  tenantId: TenantConfig["id"];
+  accent: string;
+  name: string;
+}) {
+  const cost = estimateMonthlyCost(tenantId);
+  const top = [...cost.perDeliverable]
+    .sort((a, b) => b.subtotal - a.subtotal)
+    .slice(0, 3);
+  const variableTotal = cost.llmTotal + cost.emailTotal + cost.whisperTotal;
+
+  return (
+    <article className="rounded-xl border border-adisseo-line bg-white p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p
+            className="text-[11px] font-bold uppercase tracking-widest"
+            style={{ color: accent }}
+          >
+            {name}
+          </p>
+          <p className="text-[10px] text-adisseo-muted">
+            {cost.perDeliverable.reduce((s, p) => s + p.count, 0)}{" "}
+            deliverables / month
+          </p>
+        </div>
+        <div className="rounded-full bg-emerald-100 px-2 py-0.5 text-right">
+          <p className="text-[9px] font-bold uppercase tracking-widest text-emerald-700">
+            <TrendingDown size={9} className="-mt-0.5 mr-0.5 inline" />
+            Saves
+          </p>
+          <p className="text-sm font-black text-emerald-800">
+            {fmtUSD(cost.monthlySavings)}/mo
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-3 gap-2 text-[10px]">
+        <div className="rounded-lg bg-stone-50 p-2 text-center">
+          <p className="text-adisseo-muted">Run cost</p>
+          <p className="text-sm font-bold text-adisseo-ink-strong">
+            {fmtUSD(cost.monthlyTotal)}
+          </p>
+        </div>
+        <div className="rounded-lg bg-stone-50 p-2 text-center">
+          <p className="text-adisseo-muted">Agency baseline</p>
+          <p className="text-sm font-bold text-adisseo-ink-strong">
+            {fmtUSD(cost.agencyBenchmarkMonthly)}
+          </p>
+        </div>
+        <div className="rounded-lg bg-stone-50 p-2 text-center">
+          <p className="text-adisseo-muted">Hrs saved</p>
+          <p className="text-sm font-bold text-adisseo-ink-strong">
+            {cost.hoursSavedMonthly}h
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-4 gap-1 text-[10px]">
+        <CostBucket label="LLM" value={cost.llmTotal} total={variableTotal} />
+        <CostBucket label="Email" value={cost.emailTotal} total={variableTotal} />
+        <CostBucket
+          label="Voice"
+          value={cost.whisperTotal}
+          total={variableTotal}
+        />
+        <CostBucket label="Fixed" value={cost.fixedTotal} total={cost.monthlyTotal} />
+      </div>
+
+      {top.length > 0 && (
+        <div className="mt-3">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
+            Top spend by deliverable
+          </p>
+          <ul className="mt-1 space-y-0.5 text-[11px] text-adisseo-ink">
+            {top.map((p) => (
+              <li
+                key={p.kind}
+                className="flex items-center justify-between gap-2"
+              >
+                <span>
+                  {DELIVERABLE_LABEL[p.kind]} ×{p.count}
+                </span>
+                <span className="font-bold tabular-nums text-adisseo-ink-strong">
+                  {fmtUSD(p.subtotal, 2)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </article>
+  );
+}
+
+function CostBucket({
+  label,
+  value,
+  total,
+}: {
+  label: string;
+  value: number;
+  total: number;
+}) {
+  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+  return (
+    <div className="rounded-md border border-adisseo-line p-1.5 text-center">
+      <p className="text-adisseo-muted">{label}</p>
+      <p className="font-bold text-adisseo-ink-strong">${value.toFixed(0)}</p>
+      <p className="text-[9px] text-adisseo-muted">{pct}%</p>
+    </div>
   );
 }
