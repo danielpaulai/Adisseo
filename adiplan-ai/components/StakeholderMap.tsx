@@ -24,6 +24,7 @@ import {
   forceCollide,
 } from "d3-force";
 import Link from "next/link";
+import { toast } from "sonner";
 import {
   Check,
   ArrowRight,
@@ -56,6 +57,7 @@ import {
   type SavedStakeholderMap,
   type SavedMapScope,
 } from "@/lib/saved-stakeholder-map";
+import { syncSavedStakeholderMapAfterLocalSave } from "@/lib/stakeholder-map-supabase";
 
 type StakeholderNodeData = {
   stakeholder: Stakeholder;
@@ -267,6 +269,12 @@ export default function StakeholderMap() {
       description: undefined,
       nodes: selectedIds.map((sid) => ({ stakeholderId: sid })),
       author: "You",
+    });
+    void syncSavedStakeholderMapAfterLocalSave(id).then((r) => {
+      if (r.ok || r.skipped) return;
+      toast.error("Could not sync map to Supabase", {
+        description: r.error ?? "Unknown error",
+      });
     });
     setActiveMapId(id);
     setSaveOpen(false);

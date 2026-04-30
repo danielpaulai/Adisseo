@@ -242,6 +242,12 @@ create policy "tenant_update_self" on public.stakeholder_maps
     tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
   );
 
+drop policy if exists "tenant_delete_self" on public.stakeholder_maps;
+create policy "tenant_delete_self" on public.stakeholder_maps
+  for delete using (
+    tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
+  );
+
 -- Mirror policies for the rest of the per-tenant tables. Kept inline rather
 -- than via DO-blocks so the policy names are explicit in the dashboard.
 create policy "deliverables_read"  on public.deliverables  for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
