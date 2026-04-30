@@ -34,6 +34,9 @@ import {
   Eye,
   Building2,
   KeyRound,
+  CalendarClock,
+  Milestone,
+  TrendingUp,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -51,7 +54,8 @@ import { PipelineVisual } from "@/components/PipelineVisual";
  *   06. By the numbers
  *   07. What's still missing (honest WIP list)
  *   08. How it could be better (roadmap)
- *   09. Open it live (full module grid)
+ *   09. Phase 8 + Lane B horizons (pilot backbone → 12-month program)
+ *   10. Open it live (full module grid)
  * ============================================================================= */
 
 const TOC = [
@@ -63,7 +67,8 @@ const TOC = [
   { id: "numbers", num: "06", title: "By the numbers" },
   { id: "missing", num: "07", title: "What's still missing" },
   { id: "roadmap", num: "08", title: "How it could be better" },
-  { id: "live", num: "09", title: "Open it live" },
+  { id: "phase8-laneb", num: "09", title: "Phase 8 & Lane B" },
+  { id: "live", num: "10", title: "Open it live" },
 ];
 
 const MODULES = [
@@ -518,6 +523,45 @@ const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[]
     label: "Phase 7 · Swap dispatcher live-shells for actual LinkedIn UGC / WeChat OA / WhatsApp Cloud / Mailgun / editorial-portal HTTP calls",
     status: "deferred",
   },
+  {
+    label:
+      "Phase 8 · Supabase persistence (maps, approvals, logs) + magic-link RBAC + Singapore-region pilot deploy",
+    status: "in-progress",
+  },
+];
+
+/** Ricardo masterplan backlog — explicit horizons so Phase 8 vs Lane B is not ambiguous. */
+const PHASE8_LANE_B = [
+  {
+    title: "Phase 8 · Pilot backbone (now)",
+    body:
+      "Code today: Supabase client, SQL migration (RLS + tenant-scoped tables), /login with magic-link allowlist + demo fallback. Definition of done: run scripts/supabase-migrate.sql on a Singapore project; wire env on Vercel; hydrate stakeholder maps, approval queue, and distribution audit rows from Postgres (not only Zustand); Ricardo + species managers sign in without sharing demo passwords; rotate any key that lived in a public repo window.",
+    icon: Database,
+  },
+  {
+    title: "Lane B · ~90 days",
+    body:
+      "Four-species real corpora (poultry TFIP seeded — extend Aqua, Ruminants, Swine with the same citation discipline). Marketing calendar integration (CoSchedule-class OAuth or pragmatic ICS export first). APAC RBAC rollout beyond email allowlist: roles surfaced in UI, reviewer vs species-manager vs viewer. Optional: pgvector hybrid retrieval on the Vault.",
+    icon: CalendarClock,
+  },
+  {
+    title: "Lane B · ~6 months",
+    body:
+      "Self-serve tenant onboarding paths for blueprint customers (DSM-Firmenich, Cargill, Kemin): provisioning checklist, isolated Vault slice, pricing narrative packaged for procurement. SOC 2 Type 1 readiness — controls mapping and audit trail on LLM calls / exports — not a marketing claim until an auditor signs.",
+    icon: Building2,
+  },
+  {
+    title: "Lane B · ~9 month checkpoint",
+    body:
+      "Mid-horizon proof: second design-partner tier live on the rails, TFIP-class campaigns reproducible without Danny in the loop, Hérubel-style infographic outputs running on production templates with legal-approved asset locks. Leading indicators: shipped campaigns per quarter per species manager, vault citation coverage %.",
+    icon: Milestone,
+  },
+  {
+    title: "Lane B · ~12 months",
+    body:
+      "Productize the Hérubel infographic engine as its own SKU. Partner-facing read-only API (approved frames + deliverables + engagement aggregates) with SLA. Instrument revenue attribution toward a credible $1–2M ARR narrative — tied to tenant seat count + workflow automation savings, not vanity AI demos.",
+    icon: TrendingUp,
+  },
 ];
 
 export default function PresentationPage() {
@@ -877,10 +921,43 @@ export default function PresentationPage() {
         </div>
       </Section>
 
-      {/* ============================== 09 · LIVE ============================== */}
+      {/* ============================== 09 · PHASE 8 + LANE B ============================== */}
+      <Section
+        id="phase8-laneb"
+        num="09"
+        title="Phase 8 & Lane B horizons"
+        subtitle="What “missing” meant on the masterplan: pilot backbone first, then commercialisation milestones — not one undifferentiated backlog"
+      >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {PHASE8_LANE_B.map((r, i) => (
+            <RoadmapCard key={r.title} idx={i + 1} {...r} />
+          ))}
+        </div>
+        <p className="mt-8 rounded-2xl border border-adisseo-line bg-adisseo-bg px-5 py-4 text-xs leading-relaxed text-adisseo-muted">
+          <strong className="text-adisseo-ink-strong">How to read this.</strong> Phase 8 is
+          engineering closure on persistence and identity for the pilot. Lane B is a{" "}
+          <em>program</em>: content, integrations, compliance, pricing, and partnerships —
+          ship it as vertical slices (one species corpus, one calendar spike) rather than as a
+          single mega-release. Capabilities already live under{" "}
+          <Link href="/login" className="font-semibold text-adisseo-crimson hover:underline">
+            /login
+          </Link>
+          ,{" "}
+          <code className="rounded bg-white px-1 py-0.5 font-mono text-[11px]">
+            scripts/supabase-migrate.sql
+          </code>
+          , and{" "}
+          <Link href="/credentials" className="font-semibold text-adisseo-crimson hover:underline">
+            /credentials
+          </Link>{" "}
+          continue to carry the integration surface while Postgres catches up.
+        </p>
+      </Section>
+
+      {/* ============================== 10 · LIVE ============================== */}
       <Section
         id="live"
-        num="09"
+        num="10"
         title="Open it live"
         subtitle="Every module is one click away — no setup, no auth, no hand-waving"
       >
