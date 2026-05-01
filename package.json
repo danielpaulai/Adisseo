@@ -1,4 +1,13 @@
 {
+  "name": "adisseo-monorepo",
+  "private": true,
+  "workspaces": ["adiplan-ai"],
+  "scripts": {
+    "build": "npm run build -w adiplan-ai",
+    "dev": "npm run dev -w adiplan-ai",
+    "lint": "npm run lint -w adiplan-ai",
+    "start": "npm run start -w adiplan-ai"
+  },
   "dependencies": {
     "pdf-parse": "^2.4.5"
   },
