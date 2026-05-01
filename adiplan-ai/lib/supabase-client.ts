@@ -69,7 +69,7 @@ export function getSupabase(): SupabaseClient | null {
       detectSessionInUrl: true,
     },
     global: {
-      headers: { "x-apac-app": "adiplan-ai-pilot" },
+      headers: { "x-apac-app": "adiplan-ai" },
     },
   });
   return _client;

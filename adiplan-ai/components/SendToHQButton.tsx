@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, ShieldCheck, Send, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -51,6 +52,7 @@ export function SendToHQButton({
   gateBlocked = false,
   gateReason,
 }: Props) {
+  const router = useRouter();
   const requestApproval = useAdiPlanStore((s) => s.requestApproval);
   const approvals = useAdiPlanStore((s) => s.approvals);
   const [justSent, setJustSent] = useState<string | null>(null);
@@ -77,7 +79,12 @@ export function SendToHQButton({
     });
     setJustSent(id);
     toast.success("Sent to HQ for brand review", {
-      description: "Ricardo will see it in the approval queue.",
+      description: "Track status and reviewer notes in the approval queue.",
+      duration: 10000,
+      action: {
+        label: "Open approval queue",
+        onClick: () => router.push("/approval-queue"),
+      },
     });
   };
 

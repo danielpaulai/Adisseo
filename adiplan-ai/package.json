@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "supabase:link": "npx supabase@latest link --project-ref ihstnqqefnmkjcvtlffe",
+    "supabase:migrate": "npx supabase@latest db query --linked --file scripts/supabase-migrate.sql --agent=no",
+    "supabase:verify": "npx supabase@latest db query --linked --file scripts/supabase-verify.sql --agent=no"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.71",

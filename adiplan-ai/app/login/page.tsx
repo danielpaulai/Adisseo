@@ -70,7 +70,7 @@ export default function LoginPage() {
         <div className="flex items-center justify-between">
           <Logo size="md" />
           <span className="rounded-full border border-adisseo-line bg-adisseo-warmth/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
-            APAC pilot
+            APAC
           </span>
         </div>
 

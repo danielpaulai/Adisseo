@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "APAC AI · Adisseo APAC",
   description:
-    "News-to-strategy bridge for Adisseo APAC — built around the APAC marketing framework.",
+    "Competitor intelligence through species studios — Vault-grounded deliverables with trust gates and distribution rails for Adisseo APAC.",
   icons: {
     icon: "/brand/logo.png",
     shortcut: "/brand/logo.png",

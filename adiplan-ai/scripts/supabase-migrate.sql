@@ -252,14 +252,17 @@ alter table public.vault_entries        enable row level security;
 alter table public.approval_requests    enable row level security;
 alter table public.profiles             enable row level security;
 
+drop policy if exists "tenant_read_self" on public.stakeholder_maps;
 create policy "tenant_read_self" on public.stakeholder_maps
   for select using (
     tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
   );
+drop policy if exists "tenant_write_self" on public.stakeholder_maps;
 create policy "tenant_write_self" on public.stakeholder_maps
   for insert with check (
     tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
   );
+drop policy if exists "tenant_update_self" on public.stakeholder_maps;
 create policy "tenant_update_self" on public.stakeholder_maps
   for update using (
     tenant_id = (select tenant_id from public.profiles where user_id = auth.uid())
@@ -289,22 +292,37 @@ create policy "approval_req_update" on public.approval_requests
 
 -- Mirror policies for the rest of the per-tenant tables. Kept inline rather
 -- than via DO-blocks so the policy names are explicit in the dashboard.
+drop policy if exists "deliverables_read" on public.deliverables;
 create policy "deliverables_read"  on public.deliverables  for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "deliverables_write" on public.deliverables;
 create policy "deliverables_write" on public.deliverables  for insert with check (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "distribution_read" on public.distribution_log;
 create policy "distribution_read"  on public.distribution_log for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "distribution_write" on public.distribution_log;
 create policy "distribution_write" on public.distribution_log for insert with check (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "vault_read" on public.vault_entries;
 create policy "vault_read"         on public.vault_entries for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "vault_write" on public.vault_entries;
 create policy "vault_write"        on public.vault_entries for insert with check (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "inline_edit_read" on public.inline_edits;
 create policy "inline_edit_read"   on public.inline_edits  for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "inline_edit_write" on public.inline_edits;
 create policy "inline_edit_write"  on public.inline_edits  for insert with check (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "engagement_read" on public.engagement_log;
 create policy "engagement_read"    on public.engagement_log for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "engagement_write" on public.engagement_log;
 create policy "engagement_write"   on public.engagement_log for insert with check (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "articles_read" on public.articles;
 create policy "articles_read"      on public.articles      for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "articles_write" on public.articles;
 create policy "articles_write"     on public.articles      for insert with check (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "frames_read" on public.frames;
 create policy "frames_read"        on public.frames        for select using (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
+drop policy if exists "frames_write" on public.frames;
 create policy "frames_write"       on public.frames        for insert with check (tenant_id = (select tenant_id from public.profiles where user_id = auth.uid()));
 
 -- profiles — every user can read their own row
+drop policy if exists "profiles_self_read" on public.profiles;
 create policy "profiles_self_read" on public.profiles
   for select using (user_id = auth.uid());
 
