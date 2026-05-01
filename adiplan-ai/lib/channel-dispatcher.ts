@@ -46,7 +46,6 @@ interface Bucket {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var __adiplanRateBuckets: Map<string, Bucket> | undefined;
 }
 

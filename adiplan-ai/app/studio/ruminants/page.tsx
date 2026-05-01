@@ -20,7 +20,9 @@ import {
   type RuminantsBrochureData,
   type RuminantsLanguage,
 } from "@/lib/ruminants-brochure";
-import { Logo, SpeciesIcon } from "@/components/Logo";
+import { SpeciesIcon } from "@/components/Logo";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import { SendToHQButton } from "@/components/SendToHQButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
@@ -151,11 +153,10 @@ export default function RuminantsStudioPage() {
   const campaign = ruminantsCampaigns.find((c) => c.id === campaignId);
 
   return (
+    <WorkspaceShell>
     <main className="min-h-screen bg-adisseo-bg">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-adisseo-line bg-white px-6 py-4">
         <div className="flex items-center gap-4">
-          <Logo size="md" />
-          <div className="h-6 w-px bg-adisseo-line" />
           <SpeciesIcon species="ruminants" size={32} className="opacity-80" />
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
@@ -184,6 +185,10 @@ export default function RuminantsStudioPage() {
           </Link>
         </div>
       </header>
+
+      <div className="mx-auto max-w-7xl px-6 pt-4 lg:pt-5">
+        <WorkflowRibbon />
+      </div>
 
       <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[380px,1fr]">
         <aside className="space-y-5 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
@@ -482,5 +487,6 @@ export default function RuminantsStudioPage() {
         </section>
       </div>
     </main>
+    </WorkspaceShell>
   );
 }

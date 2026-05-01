@@ -20,7 +20,8 @@ import {
   Layers,
   ShieldCheck,
 } from "lucide-react";
-import { Logo } from "@/components/Logo";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import {
   aggregateFunnel,
   groupBySpecies,
@@ -124,30 +125,8 @@ export default function EngagementTrackerPage() {
   const byKind = groupByKind(allDeliverables);
 
   return (
+    <WorkspaceShell>
     <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Logo size="sm" />
-          <nav className="flex items-center gap-4 text-xs">
-            <Link href="/" className="text-adisseo-muted hover:text-adisseo-crimson">
-              Home
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              War Room
-            </Link>
-            <Link
-              href="/presentation"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Deep deck
-            </Link>
-          </nav>
-        </div>
-      </header>
-
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-6 flex items-baseline gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
@@ -166,6 +145,8 @@ export default function EngagementTrackerPage() {
             </p>
           </div>
         </div>
+
+        <WorkflowRibbon />
 
         {/* Phase 7 / TFIP-F — channel signal legend with workshop-framework tab */}
         <section className="mb-8 rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm">
@@ -536,6 +517,7 @@ export default function EngagementTrackerPage() {
         </p>
       </div>
     </main>
+    </WorkspaceShell>
   );
 }
 

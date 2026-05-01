@@ -35,7 +35,6 @@ export interface InboundEvent {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var __adiplanWebhookInbox: { events: InboundEvent[]; cap: number } | undefined;
 }
 

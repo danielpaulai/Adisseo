@@ -159,7 +159,6 @@ function cell(
   };
 }
 
-/* eslint-disable prettier/prettier */
 export const matrixCells: MatrixCell[] = [
   // === Efficiency Optimizer ===
   cell("persona-efficiency", "csf-margin", 5, 5,
@@ -291,7 +290,6 @@ export const matrixCells: MatrixCell[] = [
     "Local-magazine + MyCommand + Claire's TikToks",
     "Manga · MCQ · TikTok bundle"),
 ];
-/* eslint-enable prettier/prettier */
 
 export function getCell(p: PersonaId, c: CSFId): MatrixCell | undefined {
   return matrixCells.find((m) => m.personaId === p && m.csfId === c);

@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { Fragment, useMemo, useState } from "react";
 import {
-  ArrowLeft,
   Building2,
   CheckCircle2,
   ExternalLink,
@@ -14,9 +12,8 @@ import {
   XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Logo } from "@/components/Logo";
-import { TenantSwitcher } from "@/components/TenantSwitcher";
-import { LiveModeChip } from "@/components/LiveModeChip";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import {
   ChannelPreview,
   ChannelIcon,
@@ -95,24 +92,8 @@ export default function DistributionPage() {
   }
 
   return (
-    <main className="min-h-screen bg-adisseo-bg pb-24 text-adisseo-ink">
-      <header className="sticky top-0 z-20 border-b border-adisseo-line bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-3">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-adisseo-muted transition hover:text-adisseo-crimson"
-          >
-            <ArrowLeft size={14} />
-            Home
-          </Link>
-          <Logo />
-          <div className="flex items-center gap-2">
-            <LiveModeChip />
-            <TenantSwitcher />
-          </div>
-        </div>
-      </header>
-
+    <WorkspaceShell>
+      <main className="min-h-screen bg-adisseo-bg pb-24 text-adisseo-ink">
       <div className="mx-auto max-w-6xl px-6 pt-10">
         <div className="rounded-3xl border border-adisseo-line bg-white p-8 shadow-sm">
           <div className="flex items-start justify-between gap-6">
@@ -196,6 +177,8 @@ export default function DistributionPage() {
           </div>
 
         </div>
+
+        <WorkflowRibbon />
 
         {/* Live preview modal */}
         {previewCard && (
@@ -565,5 +548,6 @@ export default function DistributionPage() {
         </section>
       </div>
     </main>
+    </WorkspaceShell>
   );
 }

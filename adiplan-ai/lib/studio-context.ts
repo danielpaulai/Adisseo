@@ -14,6 +14,45 @@
 
 import type { ScrapedArticle } from "@/lib/scraper-api";
 import type { MatchedArticle } from "@/lib/store";
+import type { SpeciesKey } from "@/lib/adiplan";
+
+const STUDIO_HREF: Record<SpeciesKey, string> = {
+  aqua: "/studio/aqua",
+  poultry: "/studio/poultry",
+  ruminants: "/studio/ruminants",
+  swine: "/studio/swine",
+};
+
+/** Prefer poultry-first hand-off when multiple species fit (demo default). */
+const SPECIES_PRIMARY_ORDER: SpeciesKey[] = [
+  "poultry",
+  "aqua",
+  "ruminants",
+  "swine",
+];
+
+export function primarySpeciesFromFit(speciesFit: SpeciesKey[]): SpeciesKey {
+  const hit = SPECIES_PRIMARY_ORDER.find((s) => speciesFit.includes(s));
+  return hit ?? speciesFit[0] ?? "poultry";
+}
+
+export function studioLabelShort(species: SpeciesKey): string {
+  const labels: Record<SpeciesKey, string> = {
+    aqua: "Aqua",
+    poultry: "Poultry",
+    ruminants: "Ruminants",
+    swine: "Swine",
+  };
+  return labels[species];
+}
+
+/** First studio route from APAC species fit (fallback: poultry). */
+export function primaryStudioHrefFromSpeciesFit(
+  speciesFit: SpeciesKey[]
+): string {
+  const species = primarySpeciesFromFit(speciesFit);
+  return STUDIO_HREF[species];
+}
 
 export interface StudioContextHints {
   topic: string;

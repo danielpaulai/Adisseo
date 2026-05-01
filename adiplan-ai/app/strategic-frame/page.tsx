@@ -20,8 +20,10 @@ import { useAdiPlanStore } from "@/lib/store";
 import type { ScrapedArticle } from "@/lib/scraper-api";
 import type { StrategicFrame } from "@/lib/strategic-frame";
 import type { SpeciesKey } from "@/lib/adiplan";
-import { Logo, SpeciesIcon } from "@/components/Logo";
+import { SpeciesIcon } from "@/components/Logo";
 import { DecisionMatrixFlow } from "@/components/DecisionMatrixFlow";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import { toast } from "sonner";
 
 type ComposeResponse = {
@@ -219,11 +221,10 @@ export default function StrategicFramePage() {
   };
 
   return (
+    <WorkspaceShell>
     <main className="min-h-screen bg-adisseo-bg print:bg-white">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-adisseo-line bg-white px-6 py-4 print:hidden">
         <div className="flex items-center gap-4">
-          <Logo size="md" />
-          <div className="h-6 w-px bg-adisseo-line" />
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               The Strategic Frame &middot; Total Value Solution
@@ -249,6 +250,9 @@ export default function StrategicFramePage() {
       </header>
 
       <div className="mx-auto max-w-5xl px-6 py-8 print:max-w-full print:px-12 print:py-6">
+        <div className="print:hidden">
+          <WorkflowRibbon />
+        </div>
         {/* === Source ribbon === */}
         {(article || match) && (
           <div className="mb-6 rounded-2xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-4 print:border-adisseo-line">
@@ -459,6 +463,7 @@ export default function StrategicFramePage() {
         )}
       </div>
     </main>
+    </WorkspaceShell>
   );
 }
 

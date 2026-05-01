@@ -197,7 +197,6 @@ export default function OgCardsPage() {
                   aspectRatio: variant === "square" ? "1 / 1" : "1200 / 630",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <Image
                   src={url}
                   alt="OG card preview"

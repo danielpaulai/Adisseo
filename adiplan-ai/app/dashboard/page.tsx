@@ -17,10 +17,10 @@ import {
   Grid3x3,
 } from "lucide-react";
 import { useAdiPlanStore, type ActivityEntry, type ActivityKind } from "@/lib/store";
-import { Logo } from "@/components/Logo";
-import { TenantSwitcher } from "@/components/TenantSwitcher";
-import { LiveModeChip } from "@/components/LiveModeChip";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import { DemoSeedAll } from "@/components/DemoSeedAll";
+import { LiveModeChip } from "@/components/LiveModeChip";
 
 /* ----------------------------------------------------------------------------
  * Demo-seed payload — populates the war-room with realistic recent activity
@@ -181,126 +181,30 @@ export default function DashboardPage() {
     : 0;
 
   return (
-    <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Logo size="sm" />
-          <nav className="flex items-center gap-4 text-xs">
-            <Link href="/" className="text-adisseo-muted hover:text-adisseo-crimson">
-              Home
-            </Link>
-            <Link
-              href="/news-bridge"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              News Bridge
-            </Link>
-            <Link
-              href="/strategic-frame"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Strategic Frame
-            </Link>
-            <Link
-              href="/engagement-tracker"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Engagement
-            </Link>
-            <Link
-              href="/approval-queue"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              HQ queue
-            </Link>
-            <Link
-              href="/plan-on-page"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Plan on a Page
-            </Link>
-            <Link
-              href="/trust-layer"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Trust layer
-            </Link>
-            <Link
-              href="/vault"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Vault
-            </Link>
-            <Link
-              href="/research-deep"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Research
-            </Link>
-            <Link
-              href="/digest"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Digest
-            </Link>
-            <Link
-              href="/voice-fingerprint"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Voice
-            </Link>
-            <Link
-              href="/og-cards"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              OG cards
-            </Link>
-            <Link
-              href="/observability"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Observability
-            </Link>
-            <Link
-              href="/tenants"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Tenants
-            </Link>
-            <Link
-              href="/distribution"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Distribution
-            </Link>
-            <Link
-              href="/credentials"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Credentials
-            </Link>
-            <LiveModeChip />
-            <TenantSwitcher compact />
-          </nav>
-        </div>
-      </header>
-
+    <WorkspaceShell>
+      <main className="min-h-screen bg-adisseo-bg">
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <div className="mb-8 flex items-baseline gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
-            <Activity size={16} />
-          </span>
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Sales war-room
-            </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
-              What got shipped this session
-            </h1>
-            <p className="text-sm text-adisseo-muted">
-              Every news match, composed strategic frame, and species deliverable
-              that moved through APAC AI — most-recent first.
-            </p>
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex items-baseline gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
+              <Activity size={16} />
+            </span>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+                Sales war-room
+              </p>
+              <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+                What got shipped this session
+              </h1>
+              <p className="text-sm text-adisseo-muted">
+                Every news match, composed strategic frame, and species deliverable
+                that moved through APAC AI — most-recent first.
+              </p>
+            </div>
+          </div>
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
+            <DemoSeedAll compact />
+            <LiveModeChip />
           </div>
         </div>
 
@@ -329,6 +233,8 @@ export default function DashboardPage() {
             sub={`${frameToShip}% Frame → Deliverable`}
           />
         </div>
+
+        <WorkflowRibbon />
 
         {/* CURRENT FRAME */}
         {composedFrame && (
@@ -471,6 +377,7 @@ export default function DashboardPage() {
         </section>
       </div>
     </main>
+    </WorkspaceShell>
   );
 }
 
@@ -488,7 +395,7 @@ function Stat({
   href?: string;
 }) {
   const inner = (
-    <div className="flex h-full flex-col rounded-2xl border border-adisseo-line bg-white p-4 transition hover:border-adisseo-crimson">
+    <div className="flex h-full flex-col rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md">
       <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-adisseo-muted">
         {Icon && <Icon size={11} />}
         {label}

@@ -54,7 +54,6 @@ interface BrowserCache {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var __htmlPdfBrowser: BrowserCache | undefined;
 }
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
   Loader2,
   Mic,
@@ -14,7 +13,8 @@ import {
   Clapperboard,
 } from "lucide-react";
 import { useAdiPlanStore } from "@/lib/store";
-import { Logo } from "@/components/Logo";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { toast } from "sonner";
 
@@ -171,24 +171,8 @@ export default function VoiceMemoStudioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Logo size="sm" />
-          <nav className="flex items-center gap-4 text-xs">
-            <Link href="/" className="text-adisseo-muted hover:text-adisseo-crimson">
-              Home
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              War Room
-            </Link>
-          </nav>
-        </div>
-      </header>
-
+    <WorkspaceShell>
+      <main className="min-h-screen bg-adisseo-bg">
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8 flex items-baseline gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
@@ -208,6 +192,8 @@ export default function VoiceMemoStudioPage() {
             </p>
           </div>
         </div>
+
+        <WorkflowRibbon />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.2fr]">
           {/* LEFT: record + transcript */}
@@ -355,5 +341,6 @@ export default function VoiceMemoStudioPage() {
         </div>
       </div>
     </main>
+    </WorkspaceShell>
   );
 }

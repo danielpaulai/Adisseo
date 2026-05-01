@@ -15,11 +15,18 @@ import {
   RefreshCw,
   Radio,
   AlertTriangle,
+  Clapperboard,
 } from "lucide-react";
 import { useAdiPlanStore } from "@/lib/store";
 import type { ScrapedArticle } from "@/lib/scraper-api";
-import { Logo } from "@/components/Logo";
-import { deriveStudioContext } from "@/lib/studio-context";
+import {
+  deriveStudioContext,
+  primaryStudioHrefFromSpeciesFit,
+  studioLabelShort,
+  primarySpeciesFromFit,
+} from "@/lib/studio-context";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import { toast } from "sonner";
 import {
   scoreArticle,
@@ -86,6 +93,15 @@ export default function NewsBridgePage() {
         cbiId: response.match.cbiId,
         personaId: response.match.personaId as PersonaId,
       },
+    };
+  }, [response]);
+
+  const studioProduceHandoff = useMemo(() => {
+    if (!response) return null;
+    const species = primarySpeciesFromFit(response.match.speciesFit);
+    return {
+      href: primaryStudioHrefFromSpeciesFit(response.match.speciesFit),
+      speciesLabel: studioLabelShort(species),
     };
   }, [response]);
 
@@ -183,11 +199,10 @@ export default function NewsBridgePage() {
   };
 
   return (
+    <WorkspaceShell>
     <main className="min-h-screen bg-slate-50">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-adisseo-line bg-white px-6 py-4">
         <div className="flex items-center gap-4">
-          <Logo size="md" />
-          <div className="h-6 w-px bg-adisseo-line" />
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               The Bridge &middot; News &rarr; Strategy
@@ -230,6 +245,10 @@ export default function NewsBridgePage() {
           </Link>
         </div>
       </header>
+
+      <div className="mx-auto max-w-7xl px-6 pt-4 lg:pt-5">
+        <WorkflowRibbon />
+      </div>
 
       <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[1fr,1.2fr]">
         <section>
@@ -471,6 +490,38 @@ export default function NewsBridgePage() {
                   </ul>
                 </div>
 
+                {studioProduceHandoff && (
+                  <div className="rounded-xl border border-adisseo-cyan/50 bg-gradient-to-br from-adisseo-cyan/15 via-white to-white p-4 shadow-sm">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex gap-3">
+                        <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-adisseo-cyan/25 text-adisseo-cyan">
+                          <Clapperboard size={18} />
+                        </span>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-cyan">
+                            Produce · Studio prefill ready
+                          </p>
+                          <p className="mt-1 text-xs text-adisseo-muted">
+                            Topic line and locale hints from this match carry into{" "}
+                            <span className="font-semibold text-adisseo-ink-strong">
+                              {studioProduceHandoff.speciesLabel}
+                            </span>
+                            . Other species shortcuts stay below.
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => router.push(studioProduceHandoff.href)}
+                        className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-adisseo-cyan px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto"
+                      >
+                        Open {studioProduceHandoff.speciesLabel} studio
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Strategic-frame composer hand-off */}
                 <button
                   onClick={() => router.push("/strategic-frame")}
@@ -537,6 +588,7 @@ export default function NewsBridgePage() {
         </section>
       </div>
     </main>
+    </WorkspaceShell>
   );
 }
 

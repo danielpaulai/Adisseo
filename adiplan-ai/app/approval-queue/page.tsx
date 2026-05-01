@@ -12,9 +12,10 @@ import {
   XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Logo } from "@/components/Logo";
 import { useAdiPlanStore, type ApprovalRequest, type ApprovalStatus } from "@/lib/store";
 import { syncApprovalAfterLocalMutation } from "@/lib/approval-requests-supabase";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 
 const KIND_LABEL: Record<ApprovalRequest["kind"], string> = {
   "aqua-leaflet": "Aqua leaflet",
@@ -121,30 +122,8 @@ export default function ApprovalQueuePage() {
   };
 
   return (
-    <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Logo size="sm" />
-          <nav className="flex items-center gap-4 text-xs">
-            <Link href="/" className="text-adisseo-muted hover:text-adisseo-crimson">
-              Home
-            </Link>
-            <Link
-              href="/dashboard"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              War Room
-            </Link>
-            <Link
-              href="/engagement-tracker"
-              className="text-adisseo-muted hover:text-adisseo-crimson"
-            >
-              Engagement
-            </Link>
-          </nav>
-        </div>
-      </header>
-
+    <WorkspaceShell>
+      <main className="min-h-screen bg-adisseo-bg">
       <div className="mx-auto max-w-7xl px-6 py-10">
         {/* Hero */}
         <div className="mb-8 flex items-start gap-3">
@@ -199,6 +178,8 @@ export default function ApprovalQueuePage() {
             tone="ink"
           />
         </div>
+
+        <WorkflowRibbon />
 
         {/* Filters */}
         <div className="mb-4 flex items-center gap-2 text-xs">
@@ -405,6 +386,7 @@ export default function ApprovalQueuePage() {
         </div>
       </div>
     </main>
+    </WorkspaceShell>
   );
 }
 
