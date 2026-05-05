@@ -62,7 +62,7 @@ export default function DesignSystemPage() {
           </Link>
           <Logo size="sm" />
           <div className="text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
-            Phase 1 · Hérubel design system
+            Hérubel design system
           </div>
         </div>
       </header>

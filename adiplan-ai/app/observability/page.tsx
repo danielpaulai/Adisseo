@@ -149,7 +149,7 @@ export default function ObservabilityPage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Phase 3 · Langfuse-style observability
+              Langfuse-style observability
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               Every model call, in one trace ring

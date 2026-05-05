@@ -90,7 +90,7 @@ const HEADERS: Record<DecisionLayer, { kicker: string; title: string; explainer:
     kicker: "04 · Output",
     title: "Customised deliverable",
     explainer:
-      "Style, voice, language, and persona are tuned per branch. Inline editor (Phase 5) lets you tweak before render. Trust layer gates ship.",
+      "Style, voice, language, and persona are tuned per branch. Inline editor lets you tweak before render. Trust layer gates ship.",
   },
 };
 

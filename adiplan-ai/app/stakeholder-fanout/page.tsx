@@ -442,7 +442,7 @@ export default function StakeholderFanoutPage() {
             <li>
               <span className="font-bold text-adisseo-ink">3.</span> The variant
               opens in the matching studio with the article + region + language
-              already prefilled. Inline editor (Phase 5) lets you tweak before
+              already prefilled. Inline editor lets you tweak before
               the render-PDF button.
             </li>
             <li>

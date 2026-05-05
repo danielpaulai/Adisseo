@@ -288,7 +288,7 @@ export default function EngagementTrackerPage() {
               >
                 {overallTrust}/100
               </strong>
-              . Phase 1 rule: a deliverable can only be graded "above benchmark" if its trust score is ≥ 80. High engagement on slop-heavy copy stays at "at" — we don't promote it to a template.
+              . Trust rule: a deliverable can only be graded "above benchmark" if its trust score is ≥ 80. High engagement on slop-heavy copy stays at "at" — we don't promote it to a template.
             </span>
           </div>
         </section>

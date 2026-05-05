@@ -99,7 +99,7 @@ export default function DistributionPage() {
           <div className="flex items-start justify-between gap-6">
             <div>
               <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
-                <Share2 size={10} /> Phase 6 · Production-readiness
+                <Share2 size={10} /> Production-readiness
               </p>
               <h1 className="mt-3 text-3xl font-black text-adisseo-ink-strong">
                 Distribution rails

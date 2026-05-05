@@ -103,7 +103,7 @@ export default function VoiceFingerprintPage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Phase 3 · Brand-voice fingerprinting
+              Brand-voice fingerprinting
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               Per-manager voice profile

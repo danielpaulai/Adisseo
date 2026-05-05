@@ -107,7 +107,7 @@ export default function OgCardsPage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Phase 3 · OG-card generator (Vercel Satori)
+              OG-card generator (Vercel Satori)
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               Per-deliverable social cards

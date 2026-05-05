@@ -45,7 +45,7 @@ export default function TrustLayerPage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Trust layer · Phase 1
+              Trust layer
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               Prose-quality scorer + brand-voice gate

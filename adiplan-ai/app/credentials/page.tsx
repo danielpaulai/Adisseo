@@ -58,7 +58,7 @@ export default function CredentialsPage() {
       <div className="mx-auto max-w-6xl px-6 pt-10">
         <div className="rounded-3xl border border-adisseo-line bg-white p-8 shadow-sm">
           <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
-            <KeyRound size={10} /> Phase 6 · Production-readiness
+            <KeyRound size={10} /> Production-readiness
           </p>
           <h1 className="mt-3 text-3xl font-black text-adisseo-ink-strong">
             Channel credentials &amp; webhook inbox
