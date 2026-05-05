@@ -256,6 +256,12 @@ export default function ApprovalQueuePage() {
                           <span className="text-[10px] text-adisseo-muted">
                             {new Date(a.sentAt).toLocaleString()}
                           </span>
+                          <span
+                            className="ml-auto rounded bg-adisseo-bg px-1.5 py-0.5 font-mono text-[10px] text-adisseo-muted"
+                            title="Approval id"
+                          >
+                            {a.id}
+                          </span>
                         </div>
                         <p className="mt-1 text-sm font-semibold text-adisseo-ink-strong">
                           {a.title}
@@ -305,6 +311,9 @@ export default function ApprovalQueuePage() {
                   {active.title}
                 </h3>
                 <p className="mt-1 text-xs text-adisseo-muted">{active.summary}</p>
+                <p className="mt-1 font-mono text-[10px] text-adisseo-muted">
+                  Approval id · {active.id}
+                </p>
 
                 {active.payload && (
                   <dl className="mt-3 grid grid-cols-2 gap-2 rounded-lg bg-adisseo-bg p-2 text-[10px]">
