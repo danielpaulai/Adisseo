@@ -246,7 +246,7 @@ const MODULES = [
     href: "/trust-layer",
     icon: ShieldCheck,
     num: "17",
-    layer: "Phase 1 · Trust layer",
+    layer: "Trust layer",
     title: "Prose-quality scorer + brand-voice gate",
     blurb:
       "Four checks compose into one composite gate before anything reaches regional review: slop-detector (16 LLM-tic rule families, ported from slop-guard), brand-voice (Adisseo / DSM / Cargill / Kemin banned-terms + claim guardrails), citation depth (Vault-resolved references), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked from sending for review. Below 80 — cannot be graded above benchmark in the engagement tracker.",
@@ -306,7 +306,7 @@ const MODULES = [
     href: "/voice-fingerprint",
     icon: Fingerprint,
     num: "21",
-    layer: "Phase 3 · Voice fingerprint",
+    layer: "Voice fingerprint",
     title: "Per-manager voice profile",
     blurb:
       "DSPy-style fingerprint of how each species manager actually writes. Eight measurable axes — sentence length, variance, vocabulary richness, hedging rate, citation density, em-dash habits, first-person rate, punctuation rhythm — plus signature 3-grams and avoided-word lists. The trust layer adds a 'voice match' sub-score so a draft sounds like the human shipping it.",
@@ -321,7 +321,7 @@ const MODULES = [
     href: "/og-cards",
     icon: ImageIcon,
     num: "22",
-    layer: "Phase 3 · Distribution",
+    layer: "Distribution",
     title: "OG-card generator (Vercel Satori)",
     blurb:
       "Every shipped deliverable produces a 1200×630 LinkedIn card or 1200×1200 square — from URL params, no Photoshop. Trust score and citation count travel with the card so the quality signal is visible to the recipient before they click. Edge runtime, sub-second render.",
@@ -336,7 +336,7 @@ const MODULES = [
     href: "/observability",
     icon: Eye,
     num: "23",
-    layer: "Phase 3 · Trust",
+    layer: "Trust",
     title: "LLM observability (Langfuse-style)",
     blurb:
       "Every model call — score-prose, research-deep, match-article, render-* — pushes a span to an in-memory trace ring. Latency, cost, model id, deterministic-vs-LLM flag, trust score, payload preview. Built so Adisseo's IT and legal team can see exactly which model is being called with what data. Swap for Langfuse / Helicone in production.",
@@ -351,7 +351,7 @@ const MODULES = [
     href: "/tenants",
     icon: Building2,
     num: "24",
-    layer: "Phase 4 · Multi-tenant",
+    layer: "Tenant simulation",
     title: "Tenant directory (Adisseo / DSM / Cargill / Kemin)",
     blurb:
       "APAC runs four tenants out of the box. Adisseo is live; DSM-Firmenich, Cargill, and Kemin are blueprinted with their own brand voice, Vault scope, trust floor, approved channels, and reviewer label. Switching the tenant in the top-bar rescopes ProseQualityCard, Vault, Distribution, Approval queue, and Engagement.",
@@ -366,7 +366,7 @@ const MODULES = [
     href: "/distribution",
     icon: Radio,
     num: "25",
-    layer: "Phase 5 · Closed loop",
+    layer: "Closed loop",
     title: "Distribution rails — preview / ship / schedule / measure",
     blurb:
       "Each channel has a typed ChannelAdapter producing a channel-native preview (LinkedIn carousel + caption + hashtags + anchor footer, WeChat OA push card, WhatsApp message bubble with attachment chip, email with from/subject/preheader/body, trade-mag editorial submission). Ship now, queue for a scheduled time, or simulate the inbound engagement webhook. Every shipped deliverable auto-creates a DeliverableInstance and lights up the engagement tracker.",
@@ -383,10 +383,10 @@ const MODULES = [
     href: "/credentials",
     icon: KeyRound,
     num: "26",
-    layer: "Phase 6 · Production-readiness",
+    layer: "Production-readiness",
     title: "Channel credentials & HMAC-signed webhook inbox",
     blurb:
-      "The production shell that turns Phase 5's mocks into a real integration story. Every tenant + channel declares the env vars it needs (LinkedIn org URN + OAuth, WeChat OA AppID + AppSecret, WhatsApp business number + access token, email provider + key, trade-mag portal token). The dispatcher checks presence per-request and routes through the live HTTP shell (with retry + rate-limit) or the mock — partial roll-outs are safe. Inbound webhooks at /api/webhook/[tenant]/[channel] verify Stripe-style HMAC-SHA256 signatures with a 5-minute replay window.",
+      "The security and control shell that turns mocked sends into a real integration story. Every tenant + channel declares the env vars it needs (LinkedIn org URN + OAuth, WeChat OA AppID + AppSecret, WhatsApp business number + access token, email provider + key, trade-mag portal token). The dispatcher checks presence per-request and routes through the live HTTP shell (with retry + rate-limit) or the mock — partial roll-outs are safe. Inbound webhooks at /api/webhook/[tenant]/[channel] verify Stripe-style HMAC-SHA256 signatures with a 5-minute replay window.",
     moves: [
       "Per-tenant credential matrix on /credentials with env-var presence indicators",
       "Token-bucket rate-limiter per tenant + channel (e.g. LinkedIn 25/min, email 240/min)",
