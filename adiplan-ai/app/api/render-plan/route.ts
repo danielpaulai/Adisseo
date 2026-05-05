@@ -463,7 +463,7 @@ function PlanPdf({ data }: { data: PlanOnPageData }) {
                 {
                   species: "Cross",
                   deliverable:
-                    "Open News Bridge → Strategic Frame → species Studio to seed the next-moves list.",
+                    "Open Competitor Watch → Strategic Frame → species Studio to seed the next-moves list.",
                   status: "planned" as const,
                 },
               ]

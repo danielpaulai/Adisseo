@@ -3,7 +3,7 @@
  *
  * Source of truth = the 8 workshop posters Ricardo shared on 2026-04-30 along
  * with his voice memo. Encoded here so the rest of the app (campaign-fanout,
- * news-bridge, personas-matrix, engagement-tracker) can read the workshop
+ * competitor-watch, personas-matrix, engagement-tracker) can read the workshop
  * output without re-deriving it from PNG OCR each time.
  *
  * The poster mapping:

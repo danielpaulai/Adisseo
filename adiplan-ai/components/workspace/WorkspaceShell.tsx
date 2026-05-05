@@ -30,14 +30,14 @@ const GROUPS: { label: string; items: NavItem[] }[] = [
   {
     label: "Pipeline",
     items: [
-      { href: "/news-bridge", label: "Article matcher", icon: Newspaper },
+      { href: "/competitor-watch", label: "Competitor Watch", icon: Newspaper },
     ],
   },
   {
     label: "Operate",
     items: [
       { href: "/dashboard", label: "War room", icon: Activity },
-      { href: "/approval-queue", label: "HQ approvals", icon: ShieldCheck },
+      { href: "/approval-queue", label: "Regional approvals", icon: ShieldCheck },
       { href: "/distribution", label: "Distribution", icon: Share2 },
       { href: "/engagement-tracker", label: "Engagement", icon: Target },
     ],

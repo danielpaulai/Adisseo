@@ -1735,7 +1735,7 @@ function CoverPage({
       View,
       { style: s.coverTeaseBlock },
       T(data.coverTease, s.coverTeaseText),
-      T("ADIPLAN AI", { color: ORANGE, fontSize: 9, fontWeight: 700, letterSpacing: 1 })
+      T("APAC AI", { color: ORANGE, fontSize: 9, fontWeight: 700, letterSpacing: 1 })
     ),
 
     // === Footer: logo + caption ===

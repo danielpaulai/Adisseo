@@ -16,12 +16,13 @@ export const WORKFLOW_PRODUCE_ENTRY_HREF = "/studio/poultry" as const;
 
 const STEPS = [
   {
-    href: "/news-bridge",
-    title: "Match competitors",
-    description: "Turn feeds into CBIs, personas, and studio hints.",
+    href: "/competitor-watch",
+    title: "Competitor Watch",
+    description: "Scraped competitor news, filters, and CSF / CBI / persona roll-ups.",
     icon: Newspaper,
     accent: "border-adisseo-crimson/30 bg-adisseo-crimson/5",
   },
+
   {
     href: "/strategic-frame",
     title: "Compose strategy",
@@ -38,7 +39,7 @@ const STEPS = [
   },
   {
     href: "/approval-queue",
-    title: "HQ review",
+    title: "Regional review",
     description: "Brand guardrail queue before external ship.",
     icon: ShieldCheck,
     accent: "border-emerald-300/80 bg-emerald-50/80",
@@ -54,11 +55,12 @@ const STEPS = [
 
 export function inferWorkflowEmphasizedHref(pathname: string): string | undefined {
   if (pathname.startsWith("/studio")) return WORKFLOW_PRODUCE_ENTRY_HREF;
-  if (pathname === "/news-bridge") return "/news-bridge";
+  if (pathname === "/competitor-watch" || pathname === "/news-bridge")
+    return "/competitor-watch";
   if (pathname === "/strategic-frame") return "/strategic-frame";
   if (pathname === "/approval-queue") return "/approval-queue";
   if (pathname === "/distribution") return "/distribution";
-  if (pathname === "/engagement-tracker") return "/news-bridge";
+  if (pathname === "/engagement-tracker") return "/competitor-watch";
   return undefined;
 }
 

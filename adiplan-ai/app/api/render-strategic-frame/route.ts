@@ -554,7 +554,7 @@ export async function POST(req: NextRequest) {
     status: 200,
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="adiplan-strategic-frame.pdf"`,
+      "Content-Disposition": `inline; filename="apac-strategic-frame.pdf"`,
       "Cache-Control": "private, max-age=60",
     },
   });

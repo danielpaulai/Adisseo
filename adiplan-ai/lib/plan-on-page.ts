@@ -152,7 +152,7 @@ export function buildPlan(input: PlanOnPageInput): PlanOnPageData {
   const cbi = frame?.cbi ?? input.match?.cbi ?? "Procurement-cycle compression";
   const cbiRationale =
     input.match?.cbiRationale ??
-    "Selected from current session — update from News Bridge for a live anchor.";
+    "Selected from current session — update from Competitor Watch for a live anchor.";
   const persona =
     frame?.persona ?? input.match?.persona ?? "Integrator-tier procurement buyer";
   const oneLineSummary =
@@ -225,7 +225,7 @@ export function buildPlan(input: PlanOnPageInput): PlanOnPageData {
     {
       name: "Days from news → first deliverable",
       target: "\u2264 7",
-      source: "APAC AI demo path: News Bridge → Frame → Studio",
+      source: "Open Competitor Watch → Frame → Studio",
     },
   ];
 

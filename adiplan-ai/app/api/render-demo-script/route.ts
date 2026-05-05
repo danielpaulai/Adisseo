@@ -233,7 +233,7 @@ const SHOTS: Shot[] = [
   {
     cue: "03",
     time: "0:18–0:30",
-    onScreen: "/news-bridge → drag Mintec article → composes CBI + persona + 3 deliverables",
+    onScreen: "/competitor-watch → pick article → composes CBI + persona + suggested formats",
     vo: "A real Mintec article on Asian feed-additive prices. APAC picks the right CBI ladder, the right persona, and proposes three deliverables.",
   },
   {
@@ -246,7 +246,7 @@ const SHOTS: Shot[] = [
     cue: "05",
     time: "0:42–0:54",
     onScreen: "/approval-queue → reviewer (Claire) marks Approved → toast",
-    vo: "It then goes to brand review. Claire on the Adisseo HQ side approves with a comment — full audit trail, no Slack ping required.",
+    vo: "It then goes to brand review. Claire on the Adisseo side approves with a comment — full audit trail, no Slack ping required.",
   },
   {
     cue: "06",
@@ -382,7 +382,7 @@ function DemoScript() {
       React.createElement(
         Text,
         { style: s.footer },
-        "APAC AI · adisseo.com Vault corpus · 26 live modules · cost-of-running model on /tenants · live demo at adiplan.local"
+        "APAC AI · adisseo.com Vault corpus · live modules · cost model on /tenants · pilot workspace"
       )
     )
   );
@@ -397,7 +397,7 @@ export async function GET() {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition":
-          'inline; filename="adiplan-demo-script-90s.pdf"',
+          'inline; filename="apac-demo-script-90s.pdf"',
         "Cache-Control": "no-store",
       },
     });

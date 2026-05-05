@@ -24,10 +24,11 @@ import {
 import { SpeciesIcon } from "@/components/Logo";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
 import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
-import { SendToHQButton } from "@/components/SendToHQButton";
+import { SendForRegionalReviewButton } from "@/components/SendForRegionalReviewButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
 import { InlineSectionEditor } from "@/components/InlineSectionEditor";
+import { StudioDeliverableOptions } from "@/components/StudioDeliverableOptions";
 import { collectPoultryProse } from "@/lib/studio-prose";
 import { useAdiPlanStore } from "@/lib/store";
 
@@ -264,8 +265,8 @@ export default function PoultryStudioPage() {
             Swine Studio
           </Link>
           <span className="text-adisseo-muted-soft">·</span>
-          <Link href="/news-bridge" className="hover:text-adisseo-ink-strong">
-            News bridge
+          <Link href="/competitor-watch" className="hover:text-adisseo-ink-strong">
+            Competitor Watch
           </Link>
         </div>
       </header>
@@ -279,7 +280,7 @@ export default function PoultryStudioPage() {
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
-                From News Bridge
+                From Competitor Watch
               </p>
               {bridgeContext && (
                 <p className="mt-1 line-clamp-2 text-adisseo-ink-strong">
@@ -366,6 +367,36 @@ export default function PoultryStudioPage() {
             Generate pack (email + carousel)
           </button>
 
+          <StudioDeliverableOptions
+            options={[
+              {
+                label: "Email blast",
+                detail: "Live generator in this studio.",
+                active: true,
+              },
+              {
+                label: "LinkedIn carousel",
+                detail: "Live 5-slide PDF + editable PowerPoint export.",
+                active: true,
+              },
+              {
+                label: "Manga-style brochure",
+                detail: "Use the same CBI/persona frame in the ruminants format.",
+                href: "/studio/ruminants",
+              },
+              {
+                label: "Technical leaflet / article",
+                detail: "Use the aqua leaflet flow for magazine-ready copy.",
+                href: "/studio/aqua",
+              },
+              {
+                label: "Video script",
+                detail: "Use the swine short flow for storyboard + voiceover.",
+                href: "/studio/swine",
+              },
+            ]}
+          />
+
           {response && (
             <>
               <div className="space-y-2">
@@ -446,7 +477,7 @@ export default function PoultryStudioPage() {
                 compact
               />
 
-              <SendToHQButton
+              <SendForRegionalReviewButton
                 kind="poultry-pack"
                 title={`Poultry pack · ${response.pack.email.subject}`}
                 summary={`Audience ${response.pack.audienceId} · campaign ${response.pack.campaignId} · email + 5-slide carousel · trust ${gateScore}/100`}

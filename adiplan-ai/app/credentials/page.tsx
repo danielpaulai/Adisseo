@@ -119,8 +119,8 @@ export default function CredentialsPage() {
                   </h2>
                   <p className="text-xs text-adisseo-muted">
                     {liveCount} / {creds.length} channels live · trust floor{" "}
-                    {t.trustFloor} · {t.requiresHqApproval
-                      ? "HQ approval required"
+                    {t.trustFloor} · {t.requiresRegionalApproval
+                      ? "Regional approval required"
                       : "no approval gate"}
                   </p>
                 </div>
@@ -370,7 +370,7 @@ function sampleSignedCurl(tenantId: string, secret: string): string {
   );
   const sig = signWebhookPayload(body, secret);
   return [
-    `curl -X POST 'https://adiplan.example.com/api/webhook/${tenantId}/linkedin' \\`,
+    `curl -X POST 'https://apac-ai.example.com/api/webhook/${tenantId}/linkedin' \\`,
     `  -H 'content-type: application/json' \\`,
     `  -H 'x-apac-timestamp: ${sig.timestamp}' \\`,
     `  -H 'x-apac-signature: ${sig.signature}' \\`,

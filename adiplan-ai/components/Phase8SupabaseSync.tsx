@@ -6,7 +6,7 @@ import { pullApprovalRequestsIntoStore } from "@/lib/approval-requests-supabase"
 import { pullStakeholderMapsIntoStore } from "@/lib/stakeholder-map-supabase";
 
 /**
- * Phase 8 — merge cloud state (stakeholder maps + HQ approvals) after sign-in.
+ * Pilot persistence — merge cloud state (stakeholder maps + regional approvals) after sign-in.
  */
 export function Phase8SupabaseSync() {
   const pulling = useRef(false);

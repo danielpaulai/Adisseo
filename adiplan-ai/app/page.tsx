@@ -26,6 +26,8 @@ import {
   Share2,
   KeyRound,
   Bird,
+  Globe2,
+  LayoutDashboard,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -59,7 +61,7 @@ const CATEGORY_COPY: Record<
     subtitle:
       "Turn scraped competitor signals into structured inputs for positioning and creative.",
     whereInProduct:
-      "Use News Bridge or Digest first — matches and summaries flow into strategy screens and prefill species studios so nobody re-types context.",
+      "Start in Competitor Watch for the live feed, filters, and roll-ups — then use Digest and deep research from Market Watch when you need the broader market pulse.",
   },
   stakeholders: {
     title: "Stakeholder context",
@@ -80,14 +82,14 @@ const CATEGORY_COPY: Record<
     subtitle:
       "Channel-ready deliverables by vertical — poultry, aqua, swine, ruminants, plus voice intake.",
     whereInProduct:
-      "After Generate, each studio shows prose trust scoring on the quality card and Send to HQ when brand review is needed — that is where governance meets the species manager.",
+      "After Generate, each studio shows prose trust scoring on the quality card and a regional brand review hand-off when needed — that is where governance meets the species manager.",
   },
   operations: {
     title: "Brand-safe shipping & visibility",
     subtitle:
-      "Ground claims, pass gates, route HQ approvals, ship to channels, and see engagement — plus controls for multi-tenant rollout.",
+      "Ground claims, pass gates, route regional brand approvals, ship to channels, and see engagement — plus controls for multi-tenant rollout.",
     whereInProduct:
-      "Vault backs citations during drafting; trust checks run beside studio output; the approval queue receives HQ submissions; distribution and engagement pick up after send. Tenant directory, channel credentials, and model traces are mainly for IT when wiring live channels — they unlock the same path at scale.",
+      "Vault backs citations during drafting; trust checks run beside studio output; the approval queue receives regional submissions; distribution and engagement pick up after send. Tenant directory, channel credentials, and model traces are mainly for IT when wiring live channels — they unlock the same path at scale.",
   },
 };
 
@@ -101,13 +103,13 @@ const CATEGORY_ORDER: CategoryId[] = [
 
 const modules: Module[] = [
   {
-    href: "/news-bridge",
+    href: "/competitor-watch",
     icon: Newspaper,
     category: "intelligence",
-    title: "Competitor article matcher",
+    title: "Competitor Watch",
     blurb:
-      "Pick a scraped article. Get CBIs, target persona, and recommended studio outputs aligned to your playbook.",
-    cta: "Match an article",
+      "Filtered competitor news with CSF / CBI / persona word cloud and roll-ups — deep-match any headline to the APAC framework.",
+    cta: "Open Competitor Watch",
     ready: true,
     highlight: true,
   },
@@ -278,7 +280,7 @@ const modules: Module[] = [
     blurb:
       "Transcribe a short memo and route the text into the studio you choose.",
     cta: "Open voice memo",
-    ready: true,
+    ready: false,
   },
   {
     href: "/vault",
@@ -296,7 +298,7 @@ const modules: Module[] = [
     category: "operations",
     title: "Prose quality & brand gate",
     blurb:
-      "Automated checks on voice, citations, and grammar before HQ or external send.",
+      "Automated checks on voice, citations, and grammar before regional sign-off or external send.",
     cta: "Open trust layer",
     ready: true,
     highlight: true,
@@ -357,7 +359,7 @@ const modules: Module[] = [
     category: "operations",
     title: "Tenant directory",
     blurb:
-      "Switch brand voice, Vault scope, trust floor, and reviewer routing per customer organisation.",
+      "Workshop simulation for brand voice, Vault scope, trust floor, and reviewer routing.",
     cta: "Manage tenants",
     ready: true,
   },
@@ -452,8 +454,9 @@ export default function Home() {
             </Link>
             <Link
               href="/login"
-              className="rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+              className="inline-flex items-center gap-1.5 rounded-md border border-adisseo-crimson/35 bg-adisseo-warmth/50 px-3 py-1.5 text-xs font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:bg-white hover:text-adisseo-crimson"
             >
+              <KeyRound size={14} className="text-adisseo-crimson" aria-hidden />
               Sign in
             </Link>
             <TenantSwitcher compact />
@@ -468,19 +471,65 @@ export default function Home() {
             APAC · Adisseo
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-adisseo-ink-strong sm:text-5xl">
-            Competitor intelligence → studio deliverables
+            Competitor Watch, Market Watch, Adisseo marketing plan
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-adisseo-ink">
-            One surface from scraped competitor signals to governed, species-specific assets —
-            with Vault grounding, trust gates, and distribution rails built in.
+            Three entry points: scraped competitor narratives, market and stakeholder context, then
+            the matrices and ladders that tie signals to CSFs, CBIs, and corporate personas —
+            before species studios and channels (when you choose to go there).
           </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <Link
+              href="/competitor-watch"
+              className="group flex flex-col rounded-2xl border-2 border-adisseo-crimson/40 bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md"
+            >
+              <Newspaper size={22} className="text-adisseo-crimson" />
+              <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
+                Competitor Watch
+              </h2>
+              <p className="mt-2 flex-1 text-sm text-adisseo-ink">
+                Filters, word cloud, CBI / CSF / persona roll-ups, and deep article match.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
+                Open <ArrowRight size={14} />
+              </span>
+            </Link>
+            <Link
+              href="/market-watch"
+              className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md"
+            >
+              <Globe2 size={22} className="text-adisseo-crimson" />
+              <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">Market Watch</h2>
+              <p className="mt-2 flex-1 text-sm text-adisseo-ink">
+                Digest, We Wish We Knew, stakeholder map, Vault research — regional and customer lens.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
+                Open <ArrowRight size={14} />
+              </span>
+            </Link>
+            <Link
+              href="/marketing-plan"
+              className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md"
+            >
+              <LayoutDashboard size={22} className="text-adisseo-ink-strong" />
+              <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
+                Adisseo marketing plan
+              </h2>
+              <p className="mt-2 flex-1 text-sm text-adisseo-ink">
+                Persona × CSF matrix, CBI ladder, strategic frame, plan on a page, narrative deck.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
+                Open <ArrowRight size={14} />
+              </span>
+            </Link>
+          </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-4 sm:gap-4">
             {(
               [
-                { step: "1", title: "Monitor", detail: "Feeds & matcher" },
-                { step: "2", title: "Position", detail: "Maps, ladders, frames" },
-                { step: "3", title: "Produce", detail: "Species studios" },
-                { step: "4", title: "Ship", detail: "Approvals & channels" },
+                { step: "1", title: "Monitor", detail: "Competitor Watch" },
+                { step: "2", title: "Context", detail: "Market Watch" },
+                { step: "3", title: "Position", detail: "Matrices & frames" },
+                { step: "4", title: "Produce & ship", detail: "Studios · approvals" },
               ] as const
             ).map((s) => (
               <div
@@ -499,10 +548,10 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
-              href="/news-bridge"
+              href="/competitor-watch"
               className="group flex items-center gap-2 rounded-lg bg-adisseo-ink-strong px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
             >
-              Start from competitor feed
+              Open Competitor Watch
               <ArrowRight
                 size={14}
                 className="transition group-hover:translate-x-0.5"
@@ -514,6 +563,13 @@ export default function Home() {
             >
               <BookOpen size={14} />
               Product narrative deck
+            </Link>
+            <Link
+              href="/login"
+              className="flex items-center gap-2 rounded-lg border border-adisseo-crimson/40 bg-white px-4 py-2.5 text-sm font-semibold text-adisseo-ink-strong shadow-sm transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+            >
+              <KeyRound size={14} className="text-adisseo-crimson" />
+              Sign in to APAC
             </Link>
           </div>
         </div>
@@ -554,7 +610,7 @@ export default function Home() {
         <footer className="mt-16 flex flex-col gap-2 border-t border-adisseo-line pt-8 text-xs text-adisseo-muted sm:flex-row sm:items-center sm:justify-between">
           <span>APAC AI · Adisseo APAC</span>
           <span className="text-adisseo-muted-soft">
-            Competitor scraper on the left; species studios on the right — same product flow.
+            Competitor Watch on the left, marketing plan in the middle, delivery rails on the right — same pilot.
           </span>
         </footer>
       </div>

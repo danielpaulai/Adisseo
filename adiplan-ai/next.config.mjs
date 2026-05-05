@@ -1,24 +1,44 @@
+import os from "node:os";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+/**
+ * Next.js blocks cross-origin access to dev-only `/_next/*` assets unless the browser
+ * host is allowlisted. Visiting via http://LAN_IP:3000 counts as a non-localhost origin,
+ * so CSS/JS appears to "not load". We merge localhost + this machine's LAN IPv4s +
+ * optional `DEV_LAN_ALLOWED_ORIGINS` (comma-separated) so LAN phones/tablets work without
+ * hand-maintaining IPs after DHCP changes.
+ * @see https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ */
+function devAllowedOrigins() {
+  const fromEnv =
+    process.env.DEV_LAN_ALLOWED_ORIGINS?.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean) ?? [];
+
+  const fromInterfaces = [];
+  try {
+    for (const group of Object.values(os.networkInterfaces())) {
+      if (!group) continue;
+      for (const net of group) {
+        if (net.family !== "IPv4" || net.internal) continue;
+        fromInterfaces.push(net.address);
+      }
+    }
+  } catch {
+    // Sandboxed CI / hardened hosts may block uv_interface_addresses; env override still works.
+  }
+
+  return [...new Set(["localhost", "127.0.0.1", ...fromInterfaces, ...fromEnv])];
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Dev-only: when `allowedDevOrigins` is set in config, Next uses strict blocking
-  // for some `/_next/*` requests. Keeping it **unset by default** avoids rare cases
-  // where localhost styling breaks; enable only when you open the dev server via LAN IP.
-  // Example in `.env.local`:
-  //   DEV_LAN_ALLOWED_ORIGINS=192.168.8.143
-  // https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-  ...(process.env.NODE_ENV !== "production" &&
-  process.env.DEV_LAN_ALLOWED_ORIGINS?.trim()
-    ? {
-        allowedDevOrigins: process.env.DEV_LAN_ALLOWED_ORIGINS.split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-      }
+  ...(process.env.NODE_ENV !== "production"
+    ? { allowedDevOrigins: devAllowedOrigins() }
     : {}),
   // Pin the tracing root to this app. Without it, Next 15.5.x picks up an
   // unrelated lockfile elsewhere on the filesystem and mis-infers the

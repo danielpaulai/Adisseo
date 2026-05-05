@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { swineAccounts } from "@/lib/swine-accounts";
+import {
+  anthropicAgentModel,
+  getAnthropicAgentModelId,
+} from "@/lib/anthropic-agent-model";
 
 const sceneSchema = z.object({
   index: z.number(),
@@ -24,7 +27,7 @@ const shortSchema = z.object({
 
 function pickModel() {
   if (process.env.OPENAI_API_KEY) return openai("gpt-4o-mini");
-  if (process.env.ANTHROPIC_API_KEY) return anthropic("claude-3-5-haiku-latest");
+  if (process.env.ANTHROPIC_API_KEY) return anthropicAgentModel();
   return null;
 }
 
@@ -135,7 +138,9 @@ Hard rules:
 Return: hook line, scene list (each with shot description, on-screen text, voiceover, duration), CTA, hashtags, guardrail notes, totalDurationSec.`,
       });
       result = object;
-      usedModel = process.env.OPENAI_API_KEY ? "gpt-4o-mini" : "claude-3-5-haiku";
+      usedModel = process.env.OPENAI_API_KEY
+        ? "gpt-4o-mini"
+        : getAnthropicAgentModelId();
     } catch {
       result = deterministicFallback(topic ?? "swine biosecurity", account?.name);
     }

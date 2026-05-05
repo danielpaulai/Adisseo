@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { startTrace } from "@/lib/llm-trace";
+import { getAnthropicAgentModelId } from "@/lib/anthropic-agent-model";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -96,7 +97,7 @@ async function callAnthropic(body: SectionRewriteBody): Promise<string> {
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-3-5-sonnet-latest",
+      model: getAnthropicAgentModelId(),
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: buildUserPrompt(body) }],
@@ -131,7 +132,9 @@ export async function POST(req: Request) {
   const trace = startTrace({
     kind: "section-rewrite",
     title: `${body.mode} · ${body.sectionLabel}`,
-    model: process.env.ANTHROPIC_API_KEY ? "claude-3-5-sonnet" : "deterministic",
+    model: process.env.ANTHROPIC_API_KEY
+      ? getAnthropicAgentModelId()
+      : "deterministic",
     determined: !process.env.ANTHROPIC_API_KEY,
     payload: body.text.slice(0, 240),
     inputTokens: Math.ceil(body.text.length / 4),

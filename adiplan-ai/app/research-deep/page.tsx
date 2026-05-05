@@ -91,7 +91,7 @@ export default function ResearchDeepPage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Phase 2 · Deep research
+              Research depth
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               Research-to-anchor agent
@@ -301,7 +301,7 @@ export default function ResearchDeepPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/news-bridge" className="inline-flex items-center gap-1 hover:text-adisseo-crimson">
+                    <Link href="/competitor-watch" className="inline-flex items-center gap-1 hover:text-adisseo-crimson">
                       Match against today's competitor news <ArrowRight size={10} />
                     </Link>
                   </li>

@@ -132,7 +132,7 @@ export const seededArticles: ScrapedArticle[] = [
 
 /**
  * Source tag — surfaced in /api/articles so the UI can render a
- * "Live · N · X ago" or "Demo · 8 seeded" badge on the News Bridge.
+ * "Live · N · X ago" or "Demo · 8 seeded" badge on Competitor Watch.
  */
 export type ScraperSource = "live" | "live-cache" | "live-failed-fallback" | "demo";
 

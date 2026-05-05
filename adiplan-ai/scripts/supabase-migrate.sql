@@ -1,4 +1,4 @@
--- APAC plan — Phase 8
+-- APAC plan — Pilot persistence
 -- Supabase schema for Adisseo APAC pilot.
 -- Region: ap-southeast-1 (Singapore) — Ricardo's preferred default.
 --
@@ -205,7 +205,7 @@ create index if not exists vault_entries_tenant_idx
   on public.vault_entries (tenant_id);
 
 ------------------------------------------------------------------------------
--- approval_requests  (Phase 8 — HQ brand-guardrail queue, synced from client)
+-- approval_requests  (Pilot persistence — regional brand-guardrail queue, synced from client)
 ------------------------------------------------------------------------------
 create table if not exists public.approval_requests (
   id                  text primary key,
@@ -338,7 +338,8 @@ declare
 begin
   if lower(new.email) in (
     'ricardo@adisseo.com',
-    'ricardo.cardenas@adisseo.com'
+    'ricardo.cardenas@adisseo.com',
+    'ricardo.communod@adisseo.com'
   ) then
     v_role := 'ricardo-approver';
     v_name := 'Ricardo (APAC head)';

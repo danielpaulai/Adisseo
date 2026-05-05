@@ -20,11 +20,12 @@ import { swineAccounts } from "@/lib/swine-accounts";
 import { SpeciesIcon } from "@/components/Logo";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
 import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
-import { SendToHQButton } from "@/components/SendToHQButton";
+import { SendForRegionalReviewButton } from "@/components/SendForRegionalReviewButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectSwineProse } from "@/lib/studio-prose";
 import { InlineSectionEditor } from "@/components/InlineSectionEditor";
+import { StudioDeliverableOptions } from "@/components/StudioDeliverableOptions";
 
 type Scene = {
   index: number;
@@ -273,10 +274,10 @@ export default function SwineStudioPage() {
           </Link>
           <span className="text-adisseo-muted-soft">·</span>
           <Link
-            href="/news-bridge"
+            href="/competitor-watch"
             className="hover:text-adisseo-ink"
           >
-            &larr; News bridge
+            &larr; Competitor Watch
           </Link>
         </div>
       </header>
@@ -290,7 +291,7 @@ export default function SwineStudioPage() {
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
-                From News Bridge
+                From Competitor Watch
               </p>
               {bridgeContext && (
                 <p className="mt-1 line-clamp-2 text-adisseo-ink">
@@ -391,6 +392,36 @@ export default function SwineStudioPage() {
             Generate &lt;60s short
           </button>
 
+          <StudioDeliverableOptions
+            options={[
+              {
+                label: "Video script",
+                detail: "Live generator in this studio.",
+                active: true,
+              },
+              {
+                label: "Voiceover storyboard",
+                detail: "Scenes, on-screen text, VO, CTA, and hashtags.",
+                active: true,
+              },
+              {
+                label: "Email blast",
+                detail: "Switch to poultry pack for KAM follow-up.",
+                href: "/studio/poultry",
+              },
+              {
+                label: "Manga-style brochure",
+                detail: "Switch to ruminants for the narrative PDF format.",
+                href: "/studio/ruminants",
+              },
+              {
+                label: "Technical leaflet",
+                detail: "Switch to aqua for a magazine-ready article/leaflet.",
+                href: "/studio/aqua",
+              },
+            ]}
+          />
+
           {error && (
             <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-800">
               {error}
@@ -417,7 +448,7 @@ export default function SwineStudioPage() {
                 compact
               />
 
-              <SendToHQButton
+              <SendForRegionalReviewButton
                 kind="swine-short"
                 title={`Swine short · ${response.short.hook ?? studioTopic}`}
                 summary={`${studioLanguage.toUpperCase()} · ${studioAccount || "no account"} · trust ${gateScore}/100`}

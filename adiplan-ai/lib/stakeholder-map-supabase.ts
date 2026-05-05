@@ -1,5 +1,5 @@
 /**
- * Phase 8 — stakeholder_maps ↔ Zustand bridge.
+ * Pilot persistence — stakeholder_maps ↔ Zustand bridge.
  *
  * When Supabase env vars are set *and* the user has signed in with magic link,
  * saved maps merge from Postgres on auth changes and upsert after each local save.

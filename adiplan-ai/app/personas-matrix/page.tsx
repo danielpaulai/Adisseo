@@ -165,10 +165,10 @@ function PersonasMatrixPage() {
             <Layers size={12} /> CBI Ladder
           </Link>
           <Link
-            href="/news-bridge"
+            href="/competitor-watch"
             className="flex items-center gap-1 rounded-md border border-adisseo-line px-3 py-2 text-xs font-medium text-adisseo-ink hover:border-adisseo-crimson hover:text-adisseo-crimson"
           >
-            <Newspaper size={12} /> News Bridge
+            <Newspaper size={12} /> Competitor Watch
           </Link>
           <Link
             href="/strategic-frame"

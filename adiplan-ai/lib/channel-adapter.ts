@@ -188,9 +188,9 @@ function publicUrlFor(channel: DistributionChannel, ext: string): string {
     case "whatsapp":
       return `whatsapp://broadcast/${ext}`;
     case "email":
-      return `https://mail.adiplan.example/sent/${ext}`;
+      return `https://mail.apac-ai.example/sent/${ext}`;
     case "trade-mag":
-      return `https://editorial.adiplan.example/submission/${ext}`;
+      return `https://editorial.apac-ai.example/submission/${ext}`;
   }
 }
 
@@ -336,7 +336,7 @@ const email: ChannelAdapter = {
       : tenant.name;
     const fromAddress = `${(input.manager ?? tenant.name)
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, ".")}@${tenant.id}.adiplan.example`;
+      .replace(/[^a-z0-9]+/g, ".")}@${tenant.id}.apac-ai.example`;
     const subject = input.subject ?? input.deliverable;
     const preheader = clipBody(input.body, 100);
     const lines = clipBody(input.body, 1200)

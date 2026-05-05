@@ -120,7 +120,7 @@ export default function VaultPage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Phase 2 · Research depth
+              Research depth
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               {tenant.name} Vault

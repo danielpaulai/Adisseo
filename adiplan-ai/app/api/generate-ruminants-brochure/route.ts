@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import {
   deterministicBrochure,
@@ -9,6 +8,10 @@ import {
   ruminantsCampaigns,
   type RuminantsLanguage,
 } from "@/lib/ruminants-brochure";
+import {
+  anthropicAgentModel,
+  getAnthropicAgentModelId,
+} from "@/lib/anthropic-agent-model";
 
 const brochureSchema = z.object({
   coverTitle: z.string(),
@@ -45,7 +48,7 @@ const brochureSchema = z.object({
 
 function pickModel() {
   if (process.env.OPENAI_API_KEY) return openai("gpt-4o-mini");
-  if (process.env.ANTHROPIC_API_KEY) return anthropic("claude-3-5-haiku-latest");
+  if (process.env.ANTHROPIC_API_KEY) return anthropicAgentModel();
   return null;
 }
 
@@ -126,7 +129,9 @@ Hard rules:
 - guardrailNotes: 4-6 brand-compliance bullets in ${langName[language]}.`,
       });
       brochure = object;
-      usedModel = process.env.OPENAI_API_KEY ? "gpt-4o-mini" : "claude-3-5-haiku";
+      usedModel = process.env.OPENAI_API_KEY
+        ? "gpt-4o-mini"
+        : getAnthropicAgentModelId();
     } catch {
       // silent fall-through to deterministic
     }

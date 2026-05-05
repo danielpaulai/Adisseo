@@ -34,7 +34,7 @@ const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
     title: "Matched: Cargill SE-Asia ASF webinar Q3 2025",
     detail:
       "Cargill · → Disease-resilience nutrition / Integrator vet desk",
-    href: "/news-bridge",
+    href: "/competitor-watch",
     tone: "ink",
     at: new Date(Date.now() - 12 * 60_000).toISOString(),
   },
@@ -59,7 +59,7 @@ const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
     kind: "match",
     title: "Matched: Kemin AGP-Free webinar Jan 2026",
     detail: "Kemin · → Regulatory shift / Integrator nutrition manager",
-    href: "/news-bridge",
+    href: "/competitor-watch",
     tone: "ink",
     at: new Date(Date.now() - 7 * 60_000).toISOString(),
   },
@@ -85,7 +85,7 @@ const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
     title: "Matched: Hokkaido Dairy Times · summer-yield issue",
     detail:
       "Hokkaido Dairy Times · → Heat stress / Hokkaido dairy R&D buyer",
-    href: "/news-bridge",
+    href: "/competitor-watch",
     tone: "ink",
     at: new Date(Date.now() - 3 * 60_000).toISOString(),
   },
@@ -214,7 +214,7 @@ export default function DashboardPage() {
             n={counts.match}
             label="Articles matched"
             icon={Newspaper}
-            href="/news-bridge"
+            href="/competitor-watch"
           />
           <Stat
             n={counts.frame}
@@ -439,7 +439,7 @@ function EmptyState({
           Pre-load demo activity <ArrowRight size={11} />
         </button>
         <Link
-          href="/news-bridge"
+          href="/competitor-watch"
           className="flex items-center gap-1 rounded-md bg-adisseo-crimson px-3 py-2 font-semibold text-white hover:opacity-90"
         >
           1 · Match an article <ArrowRight size={11} />

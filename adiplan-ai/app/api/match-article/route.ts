@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { fetchArticleById } from "@/lib/scraper-api";
 import { adiplanCBIs, adiplanPersonas, adiplanFormats } from "@/lib/adiplan";
 import { startTrace } from "@/lib/llm-trace";
+import {
+  anthropicAgentModel,
+  getAnthropicAgentModelId,
+} from "@/lib/anthropic-agent-model";
 
 const matchSchema = z.object({
   cbiId: z.string(),
@@ -18,7 +21,7 @@ const matchSchema = z.object({
 
 function pickModel() {
   if (process.env.OPENAI_API_KEY) return openai("gpt-4o-mini");
-  if (process.env.ANTHROPIC_API_KEY) return anthropic("claude-3-5-haiku-latest");
+  if (process.env.ANTHROPIC_API_KEY) return anthropicAgentModel();
   return null;
 }
 
@@ -91,7 +94,7 @@ export async function POST(req: NextRequest) {
     model: model
       ? process.env.OPENAI_API_KEY
         ? "gpt-4o-mini"
-        : "claude-3-5-haiku"
+        : getAnthropicAgentModelId()
       : "deterministic",
     determined: !model,
     payload: `${article.competitor} · ${article.tags.join(", ")}`,
@@ -131,7 +134,9 @@ ${adiplanFormats.map((f) => `- ${f.id}: ${f.label} (best for ${f.bestFor.join("/
 Be terse. Rationales should be 1-2 sentences each.`,
       });
       result = object;
-      usedModel = process.env.OPENAI_API_KEY ? "gpt-4o-mini" : "claude-3-5-haiku";
+      usedModel = process.env.OPENAI_API_KEY
+        ? "gpt-4o-mini"
+        : getAnthropicAgentModelId();
     } catch {
       result = deterministicMatch(article.tags, article.species);
     }

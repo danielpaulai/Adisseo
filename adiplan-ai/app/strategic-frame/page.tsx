@@ -93,7 +93,7 @@ export default function StrategicFramePage() {
   const compose = useCallback(async () => {
     if (!match || !article) {
       setError(
-        "No matched article in state. Open the News Bridge, match an article, then come back."
+        "No matched article in state. Open the Competitor Watch, match an article, then come back."
       );
       return;
     }
@@ -208,7 +208,7 @@ export default function StrategicFramePage() {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
-      a.download = `adiplan-strategic-frame-${slug || "brief"}.pdf`;
+      a.download = `apac-strategic-frame-${slug || "brief"}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -241,10 +241,10 @@ export default function StrategicFramePage() {
             </span>
           )}
           <Link
-            href="/news-bridge"
+            href="/competitor-watch"
             className="hover:text-adisseo-ink-strong"
           >
-            &larr; News bridge
+            &larr; Competitor Watch
           </Link>
         </div>
       </header>
@@ -278,14 +278,14 @@ export default function StrategicFramePage() {
         {!match && !loading && (
           <div className="rounded-2xl border border-adisseo-line bg-white p-10 text-center text-adisseo-muted">
             <p className="mb-4 text-sm">
-              No matched article in state. Open the News Bridge and match one
+              No matched article in state. Open the Competitor Watch and match one
               first.
             </p>
             <Link
-              href="/news-bridge"
+              href="/competitor-watch"
               className="inline-flex items-center gap-2 rounded-md bg-adisseo-crimson px-4 py-2 text-sm font-semibold text-white"
             >
-              Open News Bridge <ArrowRight size={14} />
+              Open Competitor Watch <ArrowRight size={14} />
             </Link>
           </div>
         )}

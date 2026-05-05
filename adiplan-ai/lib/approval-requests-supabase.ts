@@ -1,5 +1,5 @@
 /**
- * Phase 8 — approval_requests ↔ Zustand (HQ queue).
+ * Pilot persistence — approval_requests ↔ Zustand (regional approval queue).
  */
 
 import type { ApprovalKind, ApprovalRequest } from "@/lib/store";

@@ -26,7 +26,7 @@ export interface ProseQualityResponse {
   text: string;
   /** 0–100 composite quality score. */
   composite: number;
-  /** True if the deliverable is allowed to proceed to "Send to HQ". */
+  /** True if the deliverable is allowed to proceed to regional brand review. */
   passesGate: boolean;
   /** Summary explanation (one line). */
   summary: string;
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 
   let summary: string;
   if (brand.hasClaimBreach) {
-    summary = "Hard fail: regulatory claim-language breach — fix before HQ review.";
+    summary = "Hard fail: regulatory claim-language breach — fix before regional review.";
   } else if (composite < voice.slopFloor) {
     summary = `${composite}/100 — below ${voice.name} floor of ${voice.slopFloor}. Fix highest-weight slop hits first.`;
   } else if (citations.score < 40 && text.split(/\s+/).filter(Boolean).length >= 60) {

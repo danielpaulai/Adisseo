@@ -136,7 +136,7 @@ function BillboardPdf({ pack, format }: Props) {
                 color: CRIMSON,
               },
             },
-            "Adisseo \u00b7 AdiPlan billboard"
+            "Adisseo \u00b7 APAC billboard test"
           )
         ),
         React.createElement(
@@ -578,7 +578,7 @@ function BillboardPdf({ pack, format }: Props) {
               fontWeight: 700,
             },
           },
-          "AdiPlan AI \u00b7 APAC pilot"
+          "APAC AI workspace \u00b7 pilot"
         )
       )
     )

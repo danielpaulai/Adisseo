@@ -279,7 +279,7 @@ export function deterministicPoultryPack(
       { metric: "Cost per kg LW (relative)", control: "100", treatment: "98.2", delta: "−1.8%" },
     ],
     ctaLabel: "Request the cycle data",
-    ctaHref: "mailto:adiplan.poultry@adisseo.com?subject=AGP-Free%20Asia%20cycle%20data%20request",
+    ctaHref: "mailto:poultry.apac@adisseo.com?subject=AGP-Free%20Asia%20cycle%20data%20request",
     signOff: "Best,",
     signature: "Vish Iyer · Adisseo Poultry APAC",
     footnote:
@@ -327,7 +327,7 @@ export function deterministicPoultryPack(
       kind: "cta",
       eyebrow: "Want the protocol?",
       headline: "We'll send the raw cycle data to any technical team that wants to validate.",
-      body: "adiplan.poultry@adisseo.com — Reply, we'll route to Vish's desk in 24h.",
+      body: "poultry.apac@adisseo.com — Reply, we'll route to Vish's desk in 24h.",
       attribution: "Adisseo APAC · Poultry · 2026 cycle data",
     },
   ];
@@ -396,7 +396,7 @@ function composeTfipStakeholderPack(audienceId: string): PoultryDeliverablePack 
   const subject = ladder.emailHook;
   const intro = `${ladder.personalValue} The TFIP framework — Reveal · Formulate · Capture — gives you a deterministic path: PNE on raw materials, ADICT on the matrix, FDC on the cycle, and SustainWay on the scope-3 column.`;
 
-  const ctaHref = `mailto:adiplan.poultry@adisseo.com?subject=TFIP%20${encodeURIComponent(stakeholderId)}%20follow-up`;
+  const ctaHref = `mailto:poultry.apac@adisseo.com?subject=TFIP%20${encodeURIComponent(stakeholderId)}%20follow-up`;
 
   const email: PoultryEmailDeliverable = {
     subject,

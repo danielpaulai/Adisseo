@@ -37,14 +37,14 @@ export interface TenantConfig {
   brandVoice: BrandVoiceId;
   /** Tenant-specific home region focus. */
   homeRegions: string[];
-  /** Trust composite floor below which Send-to-HQ is blocked. */
+  /** Trust composite floor below which regional hand-off is blocked. */
   trustFloor: number;
   /** Trust composite floor below which engagement-tracker grading is demoted. */
   warningFloor: number;
   /** Approved distribution channels (anything else is blocked at API). */
   approvedChannels: DistributionChannel[];
-  /** If true, deliverables MUST clear HQ approval before distribution. */
-  requiresHqApproval: boolean;
+  /** If true, deliverables MUST clear regional brand approval before distribution. */
+  requiresRegionalApproval: boolean;
   /** Reviewer label shown on the approval queue. */
   reviewerLabel: string;
   /** Vault tenancy mode — "owned" reads tenant-only, "shared" includes cross-tenant. */
@@ -77,7 +77,7 @@ export const TENANTS: Record<TenantId, TenantConfig> = {
     trustFloor: 60,
     warningFloor: 80,
     approvedChannels: ["linkedin", "wechat", "trade-mag", "email"],
-    requiresHqApproval: true,
+    requiresRegionalApproval: true,
     reviewerLabel: "Ricardo (APAC lead)",
     vaultMode: "owned",
     species: ["aqua", "poultry", "ruminants", "swine", "cross"],
@@ -95,7 +95,7 @@ export const TENANTS: Record<TenantId, TenantConfig> = {
     trustFloor: 70,
     warningFloor: 85,
     approvedChannels: ["linkedin", "trade-mag", "email"],
-    requiresHqApproval: true,
+    requiresRegionalApproval: true,
     reviewerLabel: "Zurich brand desk",
     vaultMode: "owned",
     species: ["aqua", "poultry", "ruminants", "swine"],
@@ -113,7 +113,7 @@ export const TENANTS: Record<TenantId, TenantConfig> = {
     trustFloor: 65,
     warningFloor: 80,
     approvedChannels: ["linkedin", "wechat", "whatsapp", "email"],
-    requiresHqApproval: true,
+    requiresRegionalApproval: true,
     reviewerLabel: "Minneapolis brand desk",
     vaultMode: "owned",
     species: ["aqua", "poultry", "ruminants", "swine"],
@@ -131,7 +131,7 @@ export const TENANTS: Record<TenantId, TenantConfig> = {
     trustFloor: 65,
     warningFloor: 80,
     approvedChannels: ["linkedin", "trade-mag"],
-    requiresHqApproval: true,
+    requiresRegionalApproval: true,
     reviewerLabel: "Des Moines brand desk",
     vaultMode: "owned",
     species: ["aqua", "poultry", "ruminants", "swine"],

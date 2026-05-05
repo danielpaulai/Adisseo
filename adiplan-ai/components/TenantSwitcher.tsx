@@ -22,6 +22,9 @@ export function TenantSwitcher({ compact = false }: { compact?: boolean }) {
   return (
     <div className="relative">
       <button
+        type="button"
+        title="Workshop tenant simulation — rescopes brand voice, Vault slice, trust floor, and channels (not production customer tenants)."
+        aria-label="Choose active workshop tenant"
         onClick={() => setOpen((o) => !o)}
         className="inline-flex items-center gap-1.5 rounded-md border border-adisseo-line bg-white px-2.5 py-1.5 text-[11px] font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson"
       >
@@ -37,7 +40,7 @@ export function TenantSwitcher({ compact = false }: { compact?: boolean }) {
       {open && (
         <div className="absolute right-0 top-full z-30 mt-1 w-72 rounded-2xl border border-adisseo-line bg-white p-2 shadow-xl">
           <p className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
-            Active tenant
+            Active tenant (workshop simulation)
           </p>
           {TENANT_LIST.map((t) => {
             const active = t.id === activeTenantId;

@@ -23,11 +23,12 @@ import {
 import { SpeciesIcon } from "@/components/Logo";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
 import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
-import { SendToHQButton } from "@/components/SendToHQButton";
+import { SendForRegionalReviewButton } from "@/components/SendForRegionalReviewButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectRuminantsProse } from "@/lib/studio-prose";
 import { InlineSectionEditor } from "@/components/InlineSectionEditor";
+import { StudioDeliverableOptions } from "@/components/StudioDeliverableOptions";
 
 type BrochureResponse = {
   brochure: RuminantsBrochureData;
@@ -180,8 +181,8 @@ export default function RuminantsStudioPage() {
             Swine Studio
           </Link>
           <span className="text-adisseo-muted-soft">·</span>
-          <Link href="/news-bridge" className="hover:text-adisseo-ink-strong">
-            News bridge
+          <Link href="/competitor-watch" className="hover:text-adisseo-ink-strong">
+            Competitor Watch
           </Link>
         </div>
       </header>
@@ -195,7 +196,7 @@ export default function RuminantsStudioPage() {
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
-                From News Bridge
+                From Competitor Watch
               </p>
               {bridgeContext && (
                 <p className="mt-1 line-clamp-2 text-adisseo-ink-strong">
@@ -326,6 +327,36 @@ export default function RuminantsStudioPage() {
             Generate manga brochure
           </button>
 
+          <StudioDeliverableOptions
+            options={[
+              {
+                label: "Manga-style brochure",
+                detail: "Live generator in this studio.",
+                active: true,
+              },
+              {
+                label: "Technical article",
+                detail: "Same proof stack, magazine-ready prose.",
+                active: true,
+              },
+              {
+                label: "Email blast",
+                detail: "Switch to poultry pack for sales enablement email.",
+                href: "/studio/poultry",
+              },
+              {
+                label: "Infographic / carousel",
+                detail: "Switch to poultry for the 5-slide visual path.",
+                href: "/studio/poultry",
+              },
+              {
+                label: "Video script",
+                detail: "Switch to swine short for storyboard + voiceover.",
+                href: "/studio/swine",
+              },
+            ]}
+          />
+
           {response && (
             <button
               onClick={downloadPdf}
@@ -374,7 +405,7 @@ export default function RuminantsStudioPage() {
           )}
 
           {response && (
-            <SendToHQButton
+            <SendForRegionalReviewButton
               kind="ruminants-brochure"
               title={`Ruminants manga · ${response.brochure.topic ?? "Hokkaido"}`}
               summary={`${(response.brochure.language ?? "ja").toUpperCase()} · manga 2-page brochure · trust ${gateScore}/100`}

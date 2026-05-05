@@ -32,7 +32,7 @@ export default function TrustLayerPage() {
               Engagement tracker
             </Link>
             <Link href="/approval-queue" className="text-adisseo-muted hover:text-adisseo-crimson">
-              HQ queue
+              Approval queue
             </Link>
           </nav>
         </div>
@@ -157,7 +157,7 @@ export default function TrustLayerPage() {
                 </li>
                 <li>
                   <strong className="text-adisseo-ink-strong">Composite:</strong>{" "}
-                  50% slop · 30% brand · 20% grammar. Floor for "Send to HQ" is 60.
+                  50% slop · 30% brand · 20% grammar. Floor for sending to regional review is 60.
                   Above-benchmark grading in the engagement tracker requires ≥ 80.
                 </li>
               </ul>

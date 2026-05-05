@@ -109,9 +109,9 @@ export type ActivityEntry = {
 /* ============================================================================
  * Brand-guardrail approval workflow.
  *
- * Vish's #1 blocker on the Apr 28 call: HQ brand-guardrail compliance gates
+ * Vish's #1 blocker on the Apr 28 call: regional brand-guardrail compliance gates
  * every poultry carousel and emailer. Every deliverable can be sent to the
- * approval queue, reviewed by HQ (Ricardo), approved or rejected with a
+ * approval queue, reviewed by regional marketing (Ricardo), approved or rejected with a
  * comment, and audited.
  * ========================================================================== */
 
@@ -139,7 +139,7 @@ export type ApprovalRequest = {
   payload?: Record<string, string | number | boolean | undefined>;
   status: ApprovalStatus;
   sentAt: string;
-  /** When HQ responded. */
+  /** When regional marketing responded. */
   reviewedAt?: string;
   /** Reviewer comment (free text). */
   reviewerComment?: string;
@@ -174,7 +174,7 @@ export type MatchedArticle = {
 };
 
 export type StudioPrefill = {
-  /** Original article that triggered this prefill — for the "From News Bridge" banner. */
+  /** Original article that triggered this prefill — for the "From Competitor Watch" banner. */
   articleTitle: string;
   competitor: string;
   publishedAt: string;

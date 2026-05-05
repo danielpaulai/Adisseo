@@ -271,11 +271,11 @@ function composeBriefing(
   // Closing  recommendation
   if (cites.length >= 3) {
     lines.push(
-      `Recommended frame: lead with the trial number, anchor it to ${cites[0].verified ? "a verified Vault entry" : "an external source"}, support with the regulatory context, and finish on the integrator quote. Three sources is the floor for a Send-to-HQ-eligible deliverable.`
+      `Recommended frame: lead with the trial number, anchor it to ${cites[0].verified ? "a verified Vault entry" : "an external source"}, support with the regulatory context, and finish on the integrator quote. Three sources is the floor for a regionally-reviewable deliverable.`
     );
   } else {
     lines.push(
-      `Source count is below the 3-citation floor for HQ-eligible deliverables. Either widen the question or commission additional research.`
+      `Source count is below the 3-citation floor for regionally-reviewable deliverables. Either widen the question or commission additional research.`
     );
   }
 

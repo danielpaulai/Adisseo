@@ -15,7 +15,7 @@
  *   • explains what's happening on hover so a non-technical viewer can
  *     follow.
  *
- * Drop it into /news-bridge (after the user matches an article) and into
+ * Drop it into /competitor-watch (after the user matches an article) and into
  * /strategic-frame (after they compose a frame) — both pages already
  * carry all the context this component renders.
  */

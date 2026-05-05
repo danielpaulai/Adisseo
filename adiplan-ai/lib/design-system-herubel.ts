@@ -239,7 +239,7 @@ export function fitToSlot(
 
 /**
  * Brand pairing — combine Hérubel grammar with a tenant brand. We ship
- * Adisseo by default; multi-tenant override is a Phase 8 concern.
+ * Adisseo by default; multi-tenant override is a Pilot persistence concern.
  */
 export const herubelBrand = {
   wordmark: "APAC",

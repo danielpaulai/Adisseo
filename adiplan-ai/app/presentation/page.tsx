@@ -11,14 +11,9 @@ import {
   Clapperboard,
   BookOpen,
   Quote,
-  Sparkles,
-  CheckCircle2,
-  Circle,
-  AlertTriangle,
   Compass,
   Globe2,
   Database,
-  Cpu,
   ShieldCheck,
   Languages,
   Radio,
@@ -34,9 +29,6 @@ import {
   Eye,
   Building2,
   KeyRound,
-  CalendarClock,
-  Milestone,
-  TrendingUp,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PipelineVisual } from "@/components/PipelineVisual";
@@ -52,10 +44,7 @@ import { PipelineVisual } from "@/components/PipelineVisual";
  *   04. What APAC AI ships today (9 live modules)
  *   05. The pipeline visual (reused from landing)
  *   06. By the numbers
- *   07. What's still missing (honest WIP list)
- *   08. How it could be better (roadmap)
- *   09. Phase 8 + Lane B horizons (pilot backbone → 12-month program)
- *   10. Open it live (full module grid)
+ *   07. Open it live (full module grid)
  * ============================================================================= */
 
 const TOC = [
@@ -65,10 +54,7 @@ const TOC = [
   { id: "shipped", num: "04", title: "What ships today" },
   { id: "pipeline", num: "05", title: "The pipeline" },
   { id: "numbers", num: "06", title: "By the numbers" },
-  { id: "missing", num: "07", title: "What's still missing" },
-  { id: "roadmap", num: "08", title: "How it could be better" },
-  { id: "phase8-laneb", num: "09", title: "Phase 8 & Lane B" },
-  { id: "live", num: "10", title: "Open it live" },
+  { id: "live", num: "07", title: "Open it live" },
 ];
 
 const MODULES = [
@@ -93,7 +79,7 @@ const MODULES = [
     moves: ["8 APAC CBIs encoded", "5 personas", "Per-stakeholder ladder"],
   },
   {
-    href: "/news-bridge",
+    href: "/competitor-watch",
     icon: Newspaper,
     num: "03",
     layer: "The Bridge",
@@ -250,11 +236,11 @@ const MODULES = [
     href: "/approval-queue",
     icon: ShieldCheck,
     num: "16",
-    layer: "HQ desk · Brand-guardrail",
+    layer: "Regional desk · Brand guardrail",
     title: "Approval queue",
     blurb:
-      "Every species deliverable can be sent to Ricardo for brand review. Pending / approved / rejected with a comment, audited, and logged back into the war room. Closes Vish's #1 blocker.",
-    moves: ["Send-to-HQ button on every studio", "Quick-comment templates", "Decisions → activity log"],
+      "Every species deliverable can be sent for regional brand review. Pending / approved / rejected with a comment, audited, and logged back into the war room.",
+    moves: ["Regional review button on every studio", "Quick-comment templates", "Decisions → activity log"],
   },
   {
     href: "/trust-layer",
@@ -263,7 +249,7 @@ const MODULES = [
     layer: "Phase 1 · Trust layer",
     title: "Prose-quality scorer + brand-voice gate",
     blurb:
-      "Four checks compose into one composite gate before anything reaches HQ: slop-detector (16 LLM-tic rule families, ported from slop-guard), brand-voice (Adisseo / DSM / Cargill / Kemin banned-terms + claim guardrails), citation depth (Vault-resolved references), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked from Send-to-HQ. Below 80 — cannot be graded above benchmark in the engagement tracker.",
+      "Four checks compose into one composite gate before anything reaches regional review: slop-detector (16 LLM-tic rule families, ported from slop-guard), brand-voice (Adisseo / DSM / Cargill / Kemin banned-terms + claim guardrails), citation depth (Vault-resolved references), and LanguageTool grammar in EN / ZH / VI / TH / JA / ID. Below 60 — blocked from sending for review. Below 80 — cannot be graded above benchmark in the engagement tracker.",
     moves: [
       "16 slop rules, 0–100 score, instant client-side",
       "Per-tenant brand-voice configs (4 customers seeded)",
@@ -275,7 +261,7 @@ const MODULES = [
     href: "/vault",
     icon: Database,
     num: "18",
-    layer: "Phase 2 · Research depth",
+    layer: "Knowledge · Vault",
     title: "Adisseo Vault",
     blurb:
       "The customer knowledge base every studio anchors against. ~20 seeded entries spanning controlled trials, field observations, regulatory references, integrator quotes, peer-reviewed publications and product specs across all 4 species and 9 APAC regions. Studios pull a citation with one click; the trust layer scores how well each deliverable is anchored.",
@@ -290,7 +276,7 @@ const MODULES = [
     href: "/research-deep",
     icon: Telescope,
     num: "19",
-    layer: "Phase 2 · Research depth",
+    layer: "Knowledge · Deep research",
     title: "Deep-research agent",
     blurb:
       "gpt-researcher-style multi-step retrieval. Decomposes a question into 6 sub-queries (numbers, regulation, competitor, integrator-voice, mechanism, timing), runs each against the Vault, and composes a footnoted briefing with confidence scoring. Studios call this before drafting so claims start anchored.",
@@ -305,7 +291,7 @@ const MODULES = [
     href: "/digest",
     icon: Coffee,
     num: "20",
-    layer: "Phase 2 · Distribution",
+    layer: "Intelligence · Digest",
     title: "04:00 species-manager digest",
     blurb:
       "gpt-newspaper-style overnight competitor briefing. Per species manager: 3 stories pulled from APAC competitors, each pre-paired with the Vault entry that backs the response, plus the recommended deliverable kind for today. In production, a 04:00 cron lands this in their inbox.",
@@ -313,7 +299,7 @@ const MODULES = [
       "Per-manager filtered to species + region overlap",
       "Each story Vault-anchored automatically",
       "Today's-play recommendation per story",
-      "Hand-off to News Bridge / Research Deep / Studio",
+      "Hand-off to Competitor Watch / Research Deep / Studio",
     ],
   },
   {
@@ -412,157 +398,6 @@ const MODULES = [
   },
 ];
 
-const ROADMAP = [
-  {
-    title: "Phase 1 · Trust layer (LIVE)",
-    body: "Slop-detector + brand-voice + LanguageTool grammar compose into a composite gate. Every studio output runs the gate before Send-to-HQ. Engagement tracker only grades 'above benchmark' if trust ≥ 80. The full pipeline runs at /trust-layer.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Phase 2 · Research depth + Vault (LIVE)",
-    body: "Vault, deep-research agent, citation-depth sub-score and the 04:00 digest all shipped. Studios now call /api/research-deep before drafting; every deliverable gets scored on how well it's anchored to a Vault entry. Production work-list: pgvector + BM25 hybrid retriever, Mistral OCR ingest of internal Adisseo PDFs, real cron for the 04:00 digest.",
-    icon: Telescope,
-  },
-  {
-    title: "Phase 3 · UI / UX upgrade + brand-voice fingerprinting (LIVE)",
-    body: "Per-manager voice profiles with 8 measurable axes shipped at /voice-fingerprint, voice-match sub-score is live in the trust layer, Vercel Satori OG-card generator at /og-cards turns trust telemetry into a 1200×630 social asset, and a Langfuse-style observability ring at /observability captures every LLM and deterministic call. Production work-list: real DSPy training on actual writing samples, Magic UI polish across studios.",
-    icon: Fingerprint,
-  },
-  {
-    title: "Phase 4 · Multi-tenant + distribution rails (LIVE)",
-    body: "Four tenants modelled (Adisseo live; DSM-Firmenich, Cargill, Kemin blueprinted). Tenant id flows through ProseQualityCard, Vault, Approval queue, and Distribution. Five distribution channels (LinkedIn / WeChat / WhatsApp / email / trade-mag) gated on tenant approval, trust floor, HQ approval, and species scope. Every dispatch logs to the distribution audit table + the observability ring.",
-    icon: Radio,
-  },
-  {
-    title: "Phase 5 · Closed-loop dispatch + measurement (LIVE)",
-    body: "Per-channel ChannelAdapter pattern lets us swap mocks for live LinkedIn / WeChat / WhatsApp / email / trade-mag without touching the gate. Each adapter produces a channel-native preview (real-feeling LinkedIn carousel, WeChat push card, WhatsApp bubble, email, editorial submission). Scheduled-send queue with operator override. /api/distribution-callback simulates the inbound engagement webhook → patches the dispatch row + the engagement tracker (auto-created DeliverableInstance) so the demo's funnel grades a deliverable end-to-end in one click.",
-    icon: Radio,
-  },
-  {
-    title: "Phase 6 · Production-readiness shell (LIVE)",
-    body: "The credential matrix, HMAC-signed webhooks, retry + rate-limit, and per-tenant webhook secrets are all in place. /credentials renders the env-var presence per tenant + channel; the dispatcher reads at request time and falls back to mock cleanly when anything's missing. /api/webhook/[tenant]/[channel] verifies Stripe-style HMAC-SHA256 signatures (5-minute replay window) and stores accepted events in the inbox. Going live for any tenant + channel is now an env-var change.",
-    icon: KeyRound,
-  },
-  {
-    title: "Live measurement plumbing",
-    body: "The engagement tracker is shipped with seed data. Next: hook real PDF-viewer scroll-depth, Swine-short watch-time, and LinkedIn-carousel scroll-depth APIs into the funnel — no more seed numbers.",
-    icon: Database,
-  },
-  {
-    title: "Live Adisseo scraper integration",
-    body: "Plumbing is in (env-driven SCRAPER_API_URL with normaliser, cache, safe fallback). Set the env var → the 8 seeded articles get replaced by real APAC competitor news.",
-    icon: Globe2,
-  },
-  {
-    title: "Mistral OCR 3 ingestion",
-    body: "Pull internal Adisseo trial PDFs through Mistral OCR 3 into the RAG layer so studios can cite real lab data, not deterministic stubs. Stays inside Microsoft Copilot for governance compliance.",
-    icon: Cpu,
-  },
-  {
-    title: "LangGraph long-running orchestration",
-    body: "Daily competitor digest agent: scrape → match → compose frames overnight → ship a morning briefing email to each species manager with the day's top 3 plays.",
-    icon: Sparkles,
-  },
-  {
-    title: "Auto-distribute to LinkedIn / WeChat / WhatsApp",
-    body: "Once HQ approves a deliverable in the queue, push it directly to the right channel — LinkedIn carousel API, WeChat OA push, WhatsApp distributor list. Right now the manager still copies the file out manually.",
-    icon: Radio,
-  },
-];
-
-const MISSING: { label: string; status: "wired" | "deferred" | "in-progress" }[] = [
-  {
-    label: "Phase 1 · Trust layer (slop-guard + vale-style + LanguageTool)",
-    status: "wired",
-  },
-  {
-    label: "Phase 2 · Vault + deep-research agent + citation depth + 04:00 digest",
-    status: "wired",
-  },
-  {
-    label: "Live competitor scraper feed (env-driven, awaiting SCRAPER_API_URL)",
-    status: "wired",
-  },
-  {
-    label: "Workshop multi-player presence (env-driven, awaiting Liveblocks key)",
-    status: "wired",
-  },
-  {
-    label: "Voice synthesis on Swine shorts (env-driven, awaiting ElevenLabs key)",
-    status: "wired",
-  },
-  {
-    label: "Live engagement measurement (real watch-time / scroll-depth APIs)",
-    status: "in-progress",
-  },
-  {
-    label: "Phase 2 · GPT-Researcher / GPT-Newspaper research-to-script agents",
-    status: "deferred",
-  },
-  {
-    label: "Phase 3 · DSPy brand-voice fingerprinting per species manager",
-    status: "wired",
-  },
-  {
-    label: "Phase 3 · Vercel Satori OG-card generator + LLM observability ring",
-    status: "wired",
-  },
-  {
-    label: "Phase 4 · Multi-tenant + distribution rails",
-    status: "wired",
-  },
-  {
-    label: "Phase 5 · Closed-loop dispatch + measurement",
-    status: "wired",
-  },
-  {
-    label: "Phase 6 · Production-readiness (credentials, HMAC webhooks, retry + rate-limit)",
-    status: "wired",
-  },
-  {
-    label: "Phase 7 · Swap dispatcher live-shells for actual LinkedIn UGC / WeChat OA / WhatsApp Cloud / Mailgun / editorial-portal HTTP calls",
-    status: "deferred",
-  },
-  {
-    label:
-      "Phase 8 · Supabase persistence (maps, approvals, logs) + magic-link RBAC + Singapore-region pilot deploy",
-    status: "in-progress",
-  },
-];
-
-/** Ricardo masterplan backlog — explicit horizons so Phase 8 vs Lane B is not ambiguous. */
-const PHASE8_LANE_B = [
-  {
-    title: "Phase 8 · Pilot backbone (now)",
-    body:
-      "Code today: Supabase client, SQL migration (RLS + tenant-scoped tables), /login with magic-link allowlist + demo fallback. Stakeholder maps + HQ approval queue: auto-merge from Postgres on sign-in; upsert after each save / approve / reject (stakeholder_maps + approval_requests). Definition of done: run scripts/supabase-migrate.sql on a Singapore project; wire env on Vercel; extend the same pattern to distribution audit rows + engagement; Ricardo + species managers sign in without shared demo passwords; rotate any key that lived in a public repo window.",
-    icon: Database,
-  },
-  {
-    title: "Lane B · ~90 days",
-    body:
-      "Four-species real corpora (poultry TFIP seeded — extend Aqua, Ruminants, Swine with the same citation discipline). Marketing calendar integration (CoSchedule-class OAuth or pragmatic ICS export first). APAC RBAC rollout beyond email allowlist: roles surfaced in UI, reviewer vs species-manager vs viewer. Optional: pgvector hybrid retrieval on the Vault.",
-    icon: CalendarClock,
-  },
-  {
-    title: "Lane B · ~6 months",
-    body:
-      "Self-serve tenant onboarding paths for blueprint customers (DSM-Firmenich, Cargill, Kemin): provisioning checklist, isolated Vault slice, pricing narrative packaged for procurement. SOC 2 Type 1 readiness — controls mapping and audit trail on LLM calls / exports — not a marketing claim until an auditor signs.",
-    icon: Building2,
-  },
-  {
-    title: "Lane B · ~9 month checkpoint",
-    body:
-      "Mid-horizon proof: second design-partner tier live on the rails, TFIP-class campaigns reproducible without Danny in the loop, Hérubel-style infographic outputs running on production templates with legal-approved asset locks. Leading indicators: shipped campaigns per quarter per species manager, vault citation coverage %.",
-    icon: Milestone,
-  },
-  {
-    title: "Lane B · ~12 months",
-    body:
-      "Productize the Hérubel infographic engine as its own SKU. Partner-facing read-only API (approved frames + deliverables + engagement aggregates) with SLA. Instrument revenue attribution toward a credible $1–2M ARR narrative — tied to tenant seat count + workflow automation savings, not vanity AI demos.",
-    icon: TrendingUp,
-  },
-];
 
 export default function PresentationPage() {
   return (
@@ -585,7 +420,7 @@ export default function PresentationPage() {
               Home
             </Link>
             <Link
-              href="/news-bridge"
+              href="/competitor-watch"
               className="text-xs font-medium text-adisseo-muted hover:text-adisseo-crimson"
             >
               Live demo
@@ -720,7 +555,7 @@ export default function PresentationPage() {
               <PersonaCard
                 name="Vish"
                 species="Poultry"
-                want="Campaign emailers (AGP-Free worked). LinkedIn carousels under HQ guardrails."
+                want="Campaign emailers (AGP-Free worked). LinkedIn carousels under regional guardrails."
                 quirk="Doesn&apos;t want to reach customers directly — wants to enable sales."
               />
               <PersonaCard
@@ -792,7 +627,7 @@ export default function PresentationPage() {
       <Section id="architecture" num="03" title="The architecture" subtitle="Five layers — with the AI governance seam between Layer 1 and Layer 2">
         <div className="space-y-3">
           <ArchLayer num="5" name="Activation" body="Account-Adaptation Engine · Sales Weekly Dashboard · Engagement Tracker (Malaysia-ASF model) · Publishing rails" />
-          <ArchLayer num="4" name="Content Studio (per persona × country × language)" body="Aqua leaflets · Poultry emailers · Ruminants manga · Swine <60s shorts · explainer videos · podcast scripts. Brand-guardrail pack enforces HQ-approved style." />
+          <ArchLayer num="4" name="Content Studio (per persona × country × language)" body="Aqua leaflets · Poultry emailers · Ruminants manga · Swine <60s shorts · explainer videos · podcast scripts. Brand-guardrail pack enforces regionally approved style." />
           <ArchLayer num="3" name="Strategic Frame (the APAC engine)" body="Stakeholder Map · CBI / CSF Ladder · Personas · Total Value Solution" highlight />
           <ArchLayer num="2" name="Synthesis / RAG" body="Match scraped news ↔ strategy ↔ persona ↔ CBI" />
           <ArchLayer
@@ -829,7 +664,7 @@ export default function PresentationPage() {
           <PipelineVisual />
         </div>
         <p className="mt-6 max-w-3xl text-sm leading-relaxed text-adisseo-muted">
-          The competitor scraper feeds the News Bridge. The Bridge calls an LLM
+          The competitor scraper feeds the Competitor Watch. The Bridge calls an LLM
           to pin the article to a CBI + persona + 3 deliverable formats. That
           match seeds the Strategic Frame (Pain × Promise × Proof
           × Proposition), and the Frame&apos;s Activations row hands off
@@ -852,112 +687,10 @@ export default function PresentationPage() {
         </div>
       </Section>
 
-      {/* ============================== 07 · MISSING ============================== */}
-      <Section id="missing" num="07" title="What's still missing" subtitle="Honest WIP list — wired, in progress, or deferred">
-        <ul className="space-y-2">
-          {MISSING.map((m) => (
-            <li
-              key={m.label}
-              className="flex items-start gap-3 rounded-xl border border-adisseo-line bg-white p-4"
-            >
-              {m.status === "wired" ? (
-                <CheckCircle2
-                  size={18}
-                  className="mt-0.5 shrink-0 text-emerald-600"
-                />
-              ) : m.status === "in-progress" ? (
-                <Circle
-                  size={18}
-                  className="mt-0.5 shrink-0 text-adisseo-crimson"
-                />
-              ) : (
-                <AlertTriangle
-                  size={18}
-                  className="mt-0.5 shrink-0 text-adisseo-orange"
-                />
-              )}
-              <div className="flex-1">
-                <p className="text-sm font-medium text-adisseo-ink-strong">
-                  {m.label}
-                </p>
-              </div>
-              <span
-                className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest ${
-                  m.status === "wired"
-                    ? "bg-emerald-50 text-emerald-700"
-                    : m.status === "in-progress"
-                      ? "bg-adisseo-crimson/10 text-adisseo-crimson"
-                      : "bg-orange-50 text-adisseo-orange"
-                }`}
-              >
-                {m.status === "wired"
-                  ? "wired"
-                  : m.status === "in-progress"
-                    ? "in progress"
-                    : "deferred"}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 text-xs leading-relaxed text-adisseo-muted">
-          <strong>Wired</strong> = the integration code is in, it&apos;s
-          waiting on a credential or URL.{" "}
-          <strong>In progress</strong> = next on the build queue.{" "}
-          <strong>Deferred</strong> = explicitly v2.
-        </p>
-      </Section>
-
-      {/* ============================== 08 · ROADMAP ============================== */}
-      <Section
-        id="roadmap"
-        num="08"
-        title="How it could be better"
-        subtitle="Eight roadmap moves, ranked by demo impact for the global rollout"
-      >
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {ROADMAP.map((r, i) => (
-            <RoadmapCard key={r.title} idx={i + 1} {...r} />
-          ))}
-        </div>
-      </Section>
-
-      {/* ============================== 09 · PHASE 8 + LANE B ============================== */}
-      <Section
-        id="phase8-laneb"
-        num="09"
-        title="Phase 8 & Lane B horizons"
-        subtitle="What “missing” meant on the masterplan: pilot backbone first, then commercialisation milestones — not one undifferentiated backlog"
-      >
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {PHASE8_LANE_B.map((r, i) => (
-            <RoadmapCard key={r.title} idx={i + 1} {...r} />
-          ))}
-        </div>
-        <p className="mt-8 rounded-2xl border border-adisseo-line bg-adisseo-bg px-5 py-4 text-xs leading-relaxed text-adisseo-muted">
-          <strong className="text-adisseo-ink-strong">How to read this.</strong> Phase 8 is
-          engineering closure on persistence and identity for the pilot. Lane B is a{" "}
-          <em>program</em>: content, integrations, compliance, pricing, and partnerships —
-          ship it as vertical slices (one species corpus, one calendar spike) rather than as a
-          single mega-release. Capabilities already live under{" "}
-          <Link href="/login" className="font-semibold text-adisseo-crimson hover:underline">
-            /login
-          </Link>
-          ,{" "}
-          <code className="rounded bg-white px-1 py-0.5 font-mono text-[11px]">
-            scripts/supabase-migrate.sql
-          </code>
-          , and{" "}
-          <Link href="/credentials" className="font-semibold text-adisseo-crimson hover:underline">
-            /credentials
-          </Link>{" "}
-          continue to carry the integration surface while Postgres catches up.
-        </p>
-      </Section>
-
-      {/* ============================== 10 · LIVE ============================== */}
+      {/* ============================== 07 · LIVE ============================== */}
       <Section
         id="live"
-        num="10"
+        num="07"
         title="Open it live"
         subtitle="Every module is one click away — no setup, no auth, no hand-waving"
       >
@@ -995,21 +728,21 @@ export default function PresentationPage() {
             One last thing
           </p>
           <h3 className="mt-3 font-serif text-3xl font-bold leading-tight md:text-4xl">
-            The fastest demo path: open <span className="text-adisseo-orange">News Bridge</span>,
+            The fastest demo path: open <span className="text-adisseo-orange">Competitor Watch</span>,
             click any seeded article, follow the buttons all the way to a
             downloadable PDF.
           </h3>
           <p className="mt-4 max-w-2xl text-sm text-white/80 md:text-base">
-            Two minutes, four clicks: News Bridge → Strategic Frame →
+            Two minutes, four clicks: Competitor Watch → Strategic Frame →
             Species Studio → Download. Everything in this deck is reachable
             from that one path.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/news-bridge"
+              href="/competitor-watch"
               className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-5 py-3 text-sm font-semibold text-white hover:opacity-90"
             >
-              Open News Bridge <ArrowRight size={14} />
+              Open Competitor Watch <ArrowRight size={14} />
             </Link>
             <Link
               href="/"

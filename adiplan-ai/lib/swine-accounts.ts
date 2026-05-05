@@ -76,7 +76,7 @@ export const swineAccounts: SwineAccount[] = [
     name: "Charoen Pokphand Foods (CPF)",
     country: "TH",
     type: "Integrator",
-    notes: "Regional giant; multi-country buying; HQ-level decisions.",
+    notes: "Regional giant; multi-country buying; regional decision team.",
     distributorPortfolio: ["Direct"],
   },
   {

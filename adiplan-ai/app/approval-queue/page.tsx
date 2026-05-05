@@ -132,7 +132,7 @@ export default function ApprovalQueuePage() {
           </span>
           <div className="flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
-              HQ desk · brand-guardrail review
+              Regional desk · brand guardrails
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               Approval queue
@@ -140,7 +140,7 @@ export default function ApprovalQueuePage() {
             <p className="text-sm text-adisseo-muted">
               Every species deliverable lands here before it leaves. The
               approval log auto-feeds the engagement tracker, so we know which
-              assets shipped under HQ guardrails.
+              assets shipped under regional guardrails.
             </p>
           </div>
           <button
@@ -220,8 +220,8 @@ export default function ApprovalQueuePage() {
                   Nothing in the {filter === "all" ? "queue" : filter}.
                 </p>
                 <p className="text-xs text-adisseo-muted">
-                  Generate something in a studio and click "Send to HQ for
-                  brand review", or seed the demo queue above.
+                  Generate something in a studio and click &quot;Send for regional brand
+                  review&quot;, or seed the demo queue above.
                 </p>
               </div>
             ) : (
@@ -297,7 +297,7 @@ export default function ApprovalQueuePage() {
           {/* Review pane */}
           <div className="rounded-2xl border border-adisseo-line bg-white p-4">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
-              HQ review
+              Regional review
             </p>
             {active ? (
               <>

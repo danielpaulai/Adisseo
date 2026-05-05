@@ -10,7 +10,7 @@
  * `seedFullDemo()` solves that. One click pre-loads:
  *   - Stakeholder selections + ladders (so /stakeholder-map is already
  *     interesting on hover)
- *   - A selected article + composed match (so /news-bridge has state)
+ *   - A selected article + composed match (so /competitor-watch has state)
  *   - A composed strategic frame (so /strategic-frame has the "this is
  *     the tension now" panel filled in)
  *   - 12 activity entries (so /dashboard isn't empty)
@@ -256,7 +256,7 @@ const SEEDED_ACTIVITY: Array<Omit<ActivityEntry, "id">> = [
     kind: "match",
     title: "Matched · Kemin AGP-free move (Indonesia)",
     detail: "→ CBI regulatory-shift × poultry × Indonesia",
-    href: "/news-bridge",
+    href: "/competitor-watch",
     tone: "crimson",
     at: hoursAgo(20),
   },
@@ -288,7 +288,7 @@ const SEEDED_ACTIVITY: Array<Omit<ActivityEntry, "id">> = [
     kind: "match",
     title: "Matched · DSM PRRS resilience paper",
     detail: "→ CBI animal-disease × swine × CN+TH",
-    href: "/news-bridge",
+    href: "/competitor-watch",
     tone: "cyan",
     at: hoursAgo(8),
   },
@@ -312,7 +312,7 @@ const SEEDED_ACTIVITY: Array<Omit<ActivityEntry, "id">> = [
     kind: "match",
     title: "Matched · BASF NZ Lutavit Vita-mix",
     detail: "→ CBI heat-stress × ruminants × Oceania",
-    href: "/news-bridge",
+    href: "/competitor-watch",
     tone: "cyan",
     at: hoursAgo(4),
   },
@@ -364,7 +364,7 @@ const SEEDED_APPROVALS: SeedApproval[] = [
       kind: "poultry-pack",
       title: "Indonesia AGP-removal · 5-slide LinkedIn carousel",
       summary:
-        "Carousel + caption + hashtags. Trust 87, citations 4. Body anchored on Indonesia 2025 broiler trial. Vish requesting HQ greenlight.",
+        "Carousel + caption + hashtags. Trust 87, citations 4. Body anchored on Indonesia 2025 broiler trial. Vish requesting regional sign-off.",
       sender: "Vish (APAC poultry)",
       href: "/studio/poultry",
       payload: { language: "id", trustScore: 87, citationCount: 4 },
@@ -381,7 +381,7 @@ const SEEDED_APPROVALS: SeedApproval[] = [
       kind: "ruminants-brochure",
       title: "Hokkaido dairy heat-stress · 2-page manga (JA)",
       summary:
-        "Manga-style brochure. Trust 84, citations 3. Antoine flagged the proof-page graph caption — wants HQ to bless before May 7.",
+        "Manga-style brochure. Trust 84, citations 3. Antoine flagged the proof-page graph caption — wants regional review before May 7.",
       sender: "Antoine (APAC ruminants)",
       href: "/studio/ruminants",
       payload: { language: "ja", trustScore: 84, citationCount: 3 },
@@ -393,7 +393,7 @@ const SEEDED_APPROVALS: SeedApproval[] = [
       kind: "swine-short",
       title: "Vietnam ASF biosecurity · 45s WeChat short",
       summary:
-        "Vertical short, voiceover script + storyboard. Trust 79, citations 2. Claire flagging that the proof line is light — HQ to confirm.",
+        "Vertical short, voiceover script + storyboard. Trust 79, citations 2. Claire flagging that the proof line is light — regional reviewer to confirm.",
       sender: "Claire (APAC swine)",
       href: "/studio/swine",
       payload: { language: "vi", trustScore: 79, citationCount: 2 },
@@ -410,7 +410,7 @@ const SEEDED_APPROVALS: SeedApproval[] = [
       kind: "aqua-leaflet",
       title: "Vietnam mycotoxin gate · 1-page leaflet",
       summary:
-        "Aqua leaflet, EN. Trust 84, citations 4. Aileen routing through HQ for trade-mag co-submission.",
+        "Aqua leaflet, EN. Trust 84, citations 4. Aileen routing through regional review for trade-mag co-submission.",
       sender: "Aileen (APAC aqua)",
       href: "/studio/aqua",
       payload: { language: "en", trustScore: 84, citationCount: 4 },
@@ -460,7 +460,7 @@ const SEEDED_DISTRIBUTION: Array<
     status: "shipped",
     audience: "Targeted distributor list",
     audienceCount: 12,
-    publicUrl: "https://email-tracking.adiplan.example/sent/vish-id-blast",
+    publicUrl: "https://email-tracking.apac-ai.example/sent/vish-id-blast",
     externalId: "email-shipped-vish-id-blast",
     dispatchMode: "mock",
     shippedAt: hoursAgo(17),
@@ -499,7 +499,7 @@ const SEEDED_DISTRIBUTION: Array<
     trustScore: 79,
     status: "blocked",
     blockReason:
-      "DSM-Firmenich requires HQ approval — current status: rejected",
+      "DSM-Firmenich requires regional approval — current status: rejected",
     audience: "n/a",
     shippedAt: hoursAgo(5),
   },

@@ -48,7 +48,7 @@ export interface DeliverableInstance {
   anchorSignal?: string;
   /**
    * Trust-layer composite (0–100) at the moment the deliverable was sent
-   * to HQ. New deliverables carry this; legacy seed entries default to 90 so
+   * for regional review. New deliverables carry this; legacy seed entries default to 90 so
    * the historical benchmark math doesn't break.
    */
   trustScore?: number;

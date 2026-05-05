@@ -1,14 +1,14 @@
 /**
  * Distribution rails — Phase 4 of APAC.
  *
- * Once a deliverable clears the trust gate AND HQ approval, it can be
+ * Once a deliverable clears the trust gate AND regional brand approval, it can be
  * distributed to a channel. This module centralises the gating logic
  * so every channel goes through the same checks.
  *
  * Gating rules (all must pass):
  *   1. Tenant approves this channel (`tenant.approvedChannels`).
  *   2. Trust composite ≥ tenant.trustFloor.
- *   3. If tenant.requiresHqApproval: approval status must be "approved".
+ *   3. If `tenant.requiresRegionalApproval`: approval status must be "approved" (regional queue).
  *   4. Deliverable's species is allowed for this tenant.
  *
  * Mock distribution latency is simulated by the API. In production this
@@ -33,7 +33,7 @@ export interface DistributionRequest {
   deliverable: string;
   /** Trust composite, 0–100. */
   trustScore: number;
-  /** Approval id if requiresHqApproval is true. */
+  /** Approval id if requiresRegionalApproval is true. */
   approvalId?: string;
   /** "approved" | "pending" | "rejected" | undefined. */
   approvalStatus?: "approved" | "pending" | "rejected";
@@ -99,12 +99,12 @@ export function evaluateDistribution(req: DistributionRequest): DistributionResu
     };
   }
 
-  // 3. HQ approval?
-  if (tenant.requiresHqApproval) {
+  // 3. Regional brand approval?
+  if (tenant.requiresRegionalApproval) {
     if (req.approvalStatus !== "approved") {
       return {
         status: "blocked",
-        reason: `${tenant.name} requires HQ approval — current status: ${req.approvalStatus ?? "missing"}`,
+        reason: `${tenant.name} requires regional approval — current status: ${req.approvalStatus ?? "missing"}`,
         channelMeta,
         mockLatencyMs: 0,
         audience: channelMeta.audience,

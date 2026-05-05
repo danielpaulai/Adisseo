@@ -148,7 +148,7 @@ export const adiplanFormats: DeliverableFormat[] = [
   {
     id: "fmt-emailer",
     label: "Campaign Emailer (AGP-Free style)",
-    description: "Vish-style: HQ-guardrail compliant, sales-enablement attachment.",
+    description: "Vish-style: brand-guardrail compliant, sales-enablement attachment.",
     bestFor: ["poultry", "swine"],
     channel: "Sales-led email sequence",
     estTimeMinutes: 20,
@@ -171,8 +171,8 @@ export const adiplanFormats: DeliverableFormat[] = [
   },
   {
     id: "fmt-linkedin-carousel",
-    label: "LinkedIn Carousel (HQ-guardrail)",
-    description: "Vish-style: 6-8 slides, repostable from HQ.",
+    label: "LinkedIn Carousel (regional guardrail)",
+    description: "Vish-style: 6-8 slides, repostable after regional sign-off.",
     bestFor: ["poultry", "ruminants"],
     channel: "LinkedIn",
     estTimeMinutes: 25,

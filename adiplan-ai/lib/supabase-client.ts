@@ -1,5 +1,5 @@
 /**
- * APAC plan — Phase 8
+ * APAC plan — Pilot persistence
  *
  * Supabase client (Singapore region by default).
  *
@@ -108,6 +108,11 @@ const ROLE_ALLOWLIST: Record<string, { role: ApacRole; tenantId: string; fullNam
     fullName: "Ricardo (APAC head)",
   },
   "ricardo.cardenas@adisseo.com": {
+    role: "ricardo-approver",
+    tenantId: "adisseo",
+    fullName: "Ricardo (APAC head)",
+  },
+  "ricardo.communod@adisseo.com": {
     role: "ricardo-approver",
     tenantId: "adisseo",
     fullName: "Ricardo (APAC head)",

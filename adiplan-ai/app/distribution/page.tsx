@@ -106,7 +106,7 @@ export default function DistributionPage() {
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-adisseo-muted">
                 Preview-only by design. Approved deliverables render the
-                channel-native card here so HQ can sanity-check the layout
+                channel-native card here so regional marketing can sanity-check the layout
                 before pushing into Coschedule. We do not auto-distribute —
                 the team owns the publish step in the tool they already pay
                 for. Inbound engagement webhooks still flow into the audit log
@@ -129,7 +129,7 @@ export default function DistributionPage() {
               <p className="mt-1 text-[11px] text-adisseo-muted">
                 Trust ≥ {tenant.trustFloor} · {tenant.approvedChannels.length}{" "}
                 channels ·{" "}
-                {tenant.requiresHqApproval ? "HQ approval required" : "no approval gate"}
+                {tenant.requiresRegionalApproval ? "Regional approval required" : "no approval gate"}
               </p>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default function DistributionPage() {
             {tenantDeliverables.map((d) => {
               const trustOk = d.trustScore >= tenant.trustFloor;
               const approvalOk =
-                !tenant.requiresHqApproval || d.approvalStatus === "approved";
+                !tenant.requiresRegionalApproval || d.approvalStatus === "approved";
               const eligible = trustOk && approvalOk;
               return (
                 <article
@@ -266,7 +266,7 @@ export default function DistributionPage() {
                     </span>
                     {!approvalOk && (
                       <span className="rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
-                        HQ approval required
+                        Regional approval required
                       </span>
                     )}
                     <span className="rounded-full bg-stone-100 px-2 py-0.5 font-semibold text-stone-700">

@@ -346,7 +346,7 @@ export function deterministicBrochure(
         preset.ctaBody ??
         "貴農場のデータを共有いただければ、想定改善幅と試験設計をフィードバックします。",
       contactLine:
-        "adiplan.ruminants@adisseo.com · Adisseo APAC ルミナンツデスク · 東京 · シンガポール",
+        "ruminants.apac@adisseo.com · Adisseo APAC ルミナンツデスク · 東京 · シンガポール",
       citationLine:
         "Adisseo APAC 内部試験要約 2024-25。詳細データは担当者までお問い合わせください。",
       guardrailNotes: [
@@ -406,7 +406,7 @@ export function deterministicBrochure(
     ctaBody:
       "30-day protocol design, data-reuse rights, and trial governance — handled end-to-end by your regional manager.",
     contactLine:
-      "adiplan.ruminants@adisseo.com · Adisseo APAC Ruminants Desk · Tokyo · Singapore",
+      "ruminants.apac@adisseo.com · Adisseo APAC Ruminants Desk · Tokyo · Singapore",
     citationLine:
       "Adisseo APAC internal trial summary 2024-25. Full data on request via your representative.",
     guardrailNotes: [

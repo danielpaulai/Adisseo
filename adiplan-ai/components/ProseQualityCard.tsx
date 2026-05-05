@@ -42,7 +42,7 @@ interface Props {
    */
   brandVoice?: BrandVoiceId;
   language?: LtLanguage;
-  /** Called whenever the gate flips so studios can disable Send-to-HQ. */
+  /** Called whenever the gate flips so studios can disable regional review. */
   onGateChange?: (passes: boolean, composite: number) => void;
   /** Compact mode for tight aside columns. */
   compact?: boolean;
@@ -58,7 +58,7 @@ interface Props {
  *
  * The card always shows the slop + brand verdict instantly. The grammar
  * row updates when LT comes back. The composite gate is computed locally
- * so we don't wait on the server to disable the Send-to-HQ button.
+ * so we don't wait on the server to disable the regional-review button.
  */
 export function ProseQualityCard({
   text,
@@ -359,7 +359,7 @@ export function ProseQualityCard({
           }`}
         >
           {passesGate
-            ? "Cleared brand-guardrail gate — ready to send to HQ"
+            ? "Cleared brand-guardrail gate — ready for regional review"
             : "Below brand-guardrail gate — fix highest-weight rows first"}
         </p>
       </div>
@@ -401,6 +401,6 @@ function localSummary(
   if (score < 60) return `${score}/100 — below brand floor; iterate.`;
   if (longEnough && citeScore < 40)
     return `${score}/100 — prose passes but unanchored. Pull a Vault entry.`;
-  if (score < 75) return `${score}/100 — passes the gate but expect HQ comments.`;
+  if (score < 75) return `${score}/100 — passes the gate but expect regional reviewer comments.`;
   return `${score}/100 — brand-clean. Ship it.`;
 }

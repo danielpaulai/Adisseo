@@ -25,9 +25,9 @@ const STEPS = [
   {
     n: "01",
     title: "Match a competitor article",
-    body: "Open News Bridge. Pick any seeded article (Mintec, Kemin, Cargill\u2026). Click Match. The LLM returns the CBI it surfaces, the persona to target, and three deliverable formats grounded in the APAC vocabulary.",
-    href: "/news-bridge",
-    cta: "Open News Bridge",
+    body: "Open Competitor Watch. Pick any seeded article (Mintec, Kemin, Cargill\u2026). Click Match. The LLM returns the CBI it surfaces, the persona to target, and three deliverable formats grounded in the APAC vocabulary.",
+    href: "/competitor-watch",
+    cta: "Open Competitor Watch",
     icon: Newspaper,
     estTime: "~30s",
   },
@@ -82,7 +82,7 @@ const SHORTCUTS = [
   {
     icon: Sparkles,
     title: "Matrix → Frame",
-    body: "Skip News Bridge entirely. Open the Personas × CSF matrix, click any diagonal-win cell, get back a synthesised Strategic Frame in one hop.",
+    body: "Skip Competitor Watch entirely. Open the Personas × CSF matrix, click any diagonal-win cell, get back a synthesised Strategic Frame in one hop.",
     href: "/personas-matrix",
   },
   {

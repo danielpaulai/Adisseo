@@ -85,9 +85,9 @@ const s = StyleSheet.create({
   brand: {
     flexDirection: "row",
     alignItems: "baseline",
+    flexWrap: "wrap",
   },
-  brandAdi: { fontSize: 18, fontWeight: 700, color: CRIMSON },
-  brandPlan: { fontSize: 18, fontWeight: 700, color: INK },
+  brandLockup: { fontSize: 18, fontWeight: 700, color: CRIMSON },
   brandTag: {
     fontSize: 7,
     fontWeight: 700,
@@ -96,6 +96,7 @@ const s = StyleSheet.create({
     letterSpacing: 1.4,
     marginLeft: 6,
     marginBottom: 2,
+    alignSelf: "flex-end",
   },
   ribbonRight: { alignItems: "flex-end" },
   ribbonStamp: {
@@ -360,12 +361,15 @@ function OnePager({ data }: { data: OnePagerData }) {
           React.createElement(
             View,
             { style: s.brand },
-            React.createElement(Text, { style: s.brandAdi }, "Adi"),
-            React.createElement(Text, { style: s.brandPlan }, "Plan"),
+            React.createElement(
+              Text,
+              { style: s.brandLockup },
+              "APAC AI workspace"
+            ),
             React.createElement(
               Text,
               { style: s.brandTag },
-              "AI \u00b7 APAC marketing rail"
+              "Adisseo \u00b7 regional marketing pilot"
             )
           ),
           React.createElement(
@@ -515,7 +519,7 @@ function OnePager({ data }: { data: OnePagerData }) {
           React.createElement(
             Text,
             { style: s.baBullet },
-            "\u2022  HQ brand-guardrail review = email thread, no audit trail"
+            "\u2022  Regional brand review = email thread, no audit trail"
           ),
           React.createElement(
             Text,
@@ -554,7 +558,7 @@ function OnePager({ data }: { data: OnePagerData }) {
           React.createElement(
             Text,
             { style: s.baBullet },
-            "\u2022  HQ approval queue with reviewer comments + audit log"
+            "\u2022  Regional approval queue with reviewer comments + audit log"
           ),
           React.createElement(
             Text,
@@ -583,7 +587,7 @@ function OnePager({ data }: { data: OnePagerData }) {
           ...[
             "Stakeholder influence map (region + species filters)",
             "CBI \u00d7 CSF ladder + Personas \u00d7 CSF diagonal matrix",
-            "News bridge \u2192 LLM match \u2192 strategic frame composer",
+            "Competitor Watch \u2192 LLM match \u2192 strategic frame composer",
             "Per-species studios: Aqua leaflet, Poultry email + carousel",
             "Ruminants manga (JA/EN), Swine vertical short, voice memo",
             "Voice-memo studio with Whisper transcription",
@@ -647,7 +651,7 @@ function OnePager({ data }: { data: OnePagerData }) {
           React.createElement(
             Text,
             { style: s.footerUrl },
-            "adiplan.adisseo.example/demo"
+            "apac-demo.adisseo.example/workspace"
           )
         )
       )

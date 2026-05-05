@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import {
   aquaMagazines,
   deterministicLeaflet,
   type AquaLanguage,
 } from "@/lib/aqua-leaflet";
+import {
+  anthropicAgentModel,
+  getAnthropicAgentModelId,
+} from "@/lib/anthropic-agent-model";
 
 const leafletSchema = z.object({
   eyebrow: z.string(),
@@ -37,7 +40,7 @@ const leafletSchema = z.object({
 
 function pickModel() {
   if (process.env.OPENAI_API_KEY) return openai("gpt-4o-mini");
-  if (process.env.ANTHROPIC_API_KEY) return anthropic("claude-3-5-haiku-latest");
+  if (process.env.ANTHROPIC_API_KEY) return anthropicAgentModel();
   return null;
 }
 
@@ -93,7 +96,9 @@ Return: eyebrow line, title, subtitle, heroClaim, heroEvidence (2-3 sentence sup
 citationLine, guardrailNotes (3-5 brand-guardrail compliance bullets).`,
       });
       leaflet = object;
-      usedModel = process.env.OPENAI_API_KEY ? "gpt-4o-mini" : "claude-3-5-haiku";
+      usedModel = process.env.OPENAI_API_KEY
+        ? "gpt-4o-mini"
+        : getAnthropicAgentModelId();
     } catch {
       // fall back silently
     }

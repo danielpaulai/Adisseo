@@ -185,9 +185,9 @@ function livePublicUrl(channel: DistributionChannel, ext: string): string {
     case "whatsapp":
       return `https://business.whatsapp.com/broadcast/${ext}`;
     case "email":
-      return `https://email-tracking.adiplan.example/sent/${ext}`;
+      return `https://email-tracking.apac-ai.example/sent/${ext}`;
     case "trade-mag":
-      return `https://editorial.adiplan.example/submission/${ext}`;
+      return `https://editorial.apac-ai.example/submission/${ext}`;
   }
 }
 

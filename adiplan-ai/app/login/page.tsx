@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * APAC plan — Phase 8
+ * APAC plan — Pilot persistence
  *
  * Magic-link login for the demo. Two paths:
  *   • Supabase configured → real magic link, real session
@@ -35,7 +35,7 @@ import {
 
 export default function LoginPage() {
   const [live, setLive] = useState(false);
-  const [email, setEmail] = useState("ricardo@adisseo.com");
+  const [email, setEmail] = useState("ricardo.communod@adisseo.com");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,7 +127,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ricardo@adisseo.com"
+                placeholder="you@adisseo.com"
                 required
                 className="flex-1 bg-transparent text-sm outline-none"
               />

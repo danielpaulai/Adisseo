@@ -3,7 +3,7 @@
 /**
  * Cross-module hand-off helpers.
  *
- * Once an article has been matched in the News Bridge, we want the chosen
+ * Once an article has been matched in Competitor Watch, we want the chosen
  * Studio (Aqua / Poultry / Ruminants / Swine) to *open with everything
  * pre-filled* — the topic, the campaign, the audience, the language. That's
  * the demo's killer move: News → Strategy → Deliverable in three clicks.

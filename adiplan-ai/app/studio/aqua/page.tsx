@@ -18,11 +18,12 @@ import { aquaMagazines, type AquaLanguage } from "@/lib/aqua-leaflet";
 import { SpeciesIcon } from "@/components/Logo";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
 import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
-import { SendToHQButton } from "@/components/SendToHQButton";
+import { SendForRegionalReviewButton } from "@/components/SendForRegionalReviewButton";
 import { ProseQualityCard } from "@/components/ProseQualityCard";
 import { AnchorInVault } from "@/components/AnchorInVault";
 import { collectAquaProse } from "@/lib/studio-prose";
 import { InlineSectionEditor } from "@/components/InlineSectionEditor";
+import { StudioDeliverableOptions } from "@/components/StudioDeliverableOptions";
 
 type LeafletResponse = {
   leaflet: {
@@ -84,7 +85,7 @@ export default function AquaStudioPage() {
     publishedAt: string;
   } | null>(null);
 
-  // Consume prefill from News Bridge on mount.
+  // Consume prefill from Competitor Watch on mount.
   useEffect(() => {
     const p = consumeStudioPrefill();
     if (!p) return;
@@ -238,10 +239,10 @@ export default function AquaStudioPage() {
           </Link>
           <span className="text-adisseo-muted-soft">·</span>
           <Link
-            href="/news-bridge"
+            href="/competitor-watch"
             className="hover:text-adisseo-ink-strong"
           >
-            News bridge
+            Competitor Watch
           </Link>
         </div>
       </header>
@@ -255,7 +256,7 @@ export default function AquaStudioPage() {
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
-                From News Bridge
+                From Competitor Watch
               </p>
               {bridgeContext && (
                 <p className="mt-1 line-clamp-2 text-adisseo-ink-strong">
@@ -354,6 +355,36 @@ export default function AquaStudioPage() {
             Generate leaflet
           </button>
 
+          <StudioDeliverableOptions
+            options={[
+              {
+                label: "Technical leaflet",
+                detail: "Live generator in this studio.",
+                active: true,
+              },
+              {
+                label: "Magazine article",
+                detail: "Same evidence stack, longer editorial angle.",
+                active: true,
+              },
+              {
+                label: "LinkedIn carousel",
+                detail: "Switch to poultry pack for the carousel format.",
+                href: "/studio/poultry",
+              },
+              {
+                label: "Manga-style brochure",
+                detail: "Switch to ruminants for the narrative brochure layout.",
+                href: "/studio/ruminants",
+              },
+              {
+                label: "Video script",
+                detail: "Switch to swine short for storyboard + voiceover.",
+                href: "/studio/swine",
+              },
+            ]}
+          />
+
           {response && (
             <button
               onClick={downloadPdf}
@@ -385,7 +416,7 @@ export default function AquaStudioPage() {
           )}
 
           {response && (
-            <SendToHQButton
+            <SendForRegionalReviewButton
               kind="aqua-leaflet"
               title={`Aqua leaflet · ${response.leaflet.title}`}
               summary={`${response.leaflet.language.toUpperCase()} · ${aquaMagazines.find((m) => m.id === magazineId)?.name ?? magazineId} · trust ${gateScore}/100`}

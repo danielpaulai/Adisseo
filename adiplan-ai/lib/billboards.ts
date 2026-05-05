@@ -1,7 +1,7 @@
 /**
- * Billboard Campaign — Layer 3 · Creating · the AdiPlan "billboard test".
+ * Billboard Campaign — Layer 3 · Creating · the APAC "billboard test".
  *
- * From the AdiPlan March-workshop template: every campaign must pass the
+ * From the March-workshop template: every campaign must pass the
  * billboard test — Headline + Adisseo Differentiation + Reason to Believe +
  * Visual, judged on Unique / Important / Believable.
  *
@@ -49,7 +49,7 @@ export const BILLBOARD_FORMATS: BillboardFormatSpec[] = [
     label: "Square — LinkedIn key visual",
     width: 1080,
     height: 1080,
-    body: "1080 × 1080 px. The same billboard repurposed as a HQ-defensible LinkedIn key visual.",
+    body: "1080 × 1080 px. The same billboard repurposed as a brand-defensible LinkedIn key visual.",
     use: "LinkedIn + WeChat",
   },
 ];

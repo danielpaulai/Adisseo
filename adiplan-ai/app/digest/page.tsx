@@ -133,7 +133,7 @@ function pickPlay(article: ScrapedArticle, manager: ManagerProfile): string {
   const t = article.tags.join(" ").toLowerCase();
   if (manager.species === "swine") {
     if (t.includes("asf") || t.includes("recovery"))
-      return `Vertical video (<60s): "${article.competitor} says X — here's our APAC trial" → Send to HQ today.`;
+      return `Vertical video (<60s): "${article.competitor} says X — here's our APAC trial" → send for regional review today.`;
     return `Short + email digest, anchor on the Cargill / PRRS trial number.`;
   }
   if (manager.species === "poultry") {
@@ -191,8 +191,8 @@ export default function DigestPage() {
             <Link href="/research-deep" className="text-adisseo-muted hover:text-adisseo-crimson">
               Deep research
             </Link>
-            <Link href="/news-bridge" className="text-adisseo-muted hover:text-adisseo-crimson">
-              News bridge
+            <Link href="/competitor-watch" className="text-adisseo-muted hover:text-adisseo-crimson">
+              Competitor Watch
             </Link>
           </nav>
         </div>
@@ -205,7 +205,7 @@ export default function DigestPage() {
           </span>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
-              Phase 2 · Overnight digest
+              Overnight digest
             </p>
             <h1 className="text-2xl font-bold text-adisseo-ink-strong">
               The 04:00 species-manager briefing
@@ -259,7 +259,7 @@ export default function DigestPage() {
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <div>
               <p className="text-[10px] uppercase tracking-widest text-adisseo-muted">
-                <Mail size={11} className="inline" /> From: APAC AI · digest@adiplan.ai
+                <Mail size={11} className="inline" /> From: APAC AI · regional briefing digest
               </p>
               <p className="mt-1 text-[10px] uppercase tracking-widest text-adisseo-muted">
                 To: {activeManager.name} ({activeManager.speciesLabel} · APAC)
@@ -369,10 +369,10 @@ export default function DigestPage() {
 
                 <div className="mt-3 flex flex-wrap gap-2 text-[10px]">
                   <Link
-                    href={`/news-bridge?article=${it.article.id}`}
+                    href={`/competitor-watch?article=${it.article.id}`}
                     className="inline-flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2 py-1 font-semibold text-adisseo-ink-strong hover:border-adisseo-crimson"
                   >
-                    Open in News Bridge <ArrowRight size={10} />
+                    Open in Competitor Watch <ArrowRight size={10} />
                   </Link>
                   <Link
                     href={`/research-deep?q=${encodeURIComponent(it.article.title)}`}
@@ -401,7 +401,7 @@ export default function DigestPage() {
         )}
 
         <p className="mt-6 text-[10px] text-adisseo-muted">
-          Phase 2 spec · 04:00 cron pending in production. Today's run uses
+          04:00 cron pending in production. Today's run uses
           the seeded competitor articles + the seeded Vault. Once
           SCRAPER_API_URL is wired, this becomes a live morning briefing.
         </p>

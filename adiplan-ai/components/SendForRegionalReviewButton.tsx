@@ -41,7 +41,7 @@ const SENDER_BY_KIND: Record<ApprovalKind, string> = {
   "strategic-frame": "Strategy desk",
 };
 
-export function SendToHQButton({
+export function SendForRegionalReviewButton({
   kind,
   title,
   summary,
@@ -78,7 +78,7 @@ export function SendToHQButton({
       });
     });
     setJustSent(id);
-    toast.success("Sent to HQ for brand review", {
+    toast.success("Sent for regional brand review", {
       description: "Track status and reviewer notes in the approval queue.",
       duration: 10000,
       action: {
@@ -92,7 +92,7 @@ export function SendToHQButton({
     return (
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs">
         <CheckCircle2 size={14} className="text-emerald-600" />
-        <span className="font-semibold text-emerald-700">Approved by HQ</span>
+        <span className="font-semibold text-emerald-700">Approved (regional)</span>
         {existing?.reviewerComment && (
           <span className="text-emerald-700/80">"{existing.reviewerComment}"</span>
         )}
@@ -110,7 +110,7 @@ export function SendToHQButton({
     return (
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-xs">
         <XCircle size={14} className="text-rose-600" />
-        <span className="font-semibold text-rose-700">Rejected by HQ</span>
+        <span className="font-semibold text-rose-700">Rejected (regional)</span>
         {existing?.reviewerComment && (
           <span className="text-rose-700/80">"{existing.reviewerComment}"</span>
         )}
@@ -128,7 +128,7 @@ export function SendToHQButton({
     return (
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs">
         <Clock size={14} className="text-amber-700" />
-        <span className="font-semibold text-amber-800">In HQ review</span>
+        <span className="font-semibold text-amber-800">In regional review</span>
         <span className="text-amber-800/80">
           Sent {new Date(existing?.sentAt ?? Date.now()).toLocaleTimeString()}
         </span>
@@ -159,7 +159,7 @@ export function SendToHQButton({
       className="inline-flex items-center gap-2 rounded-lg border border-adisseo-cyan/40 bg-adisseo-cyan/5 px-3 py-2 text-xs font-semibold text-adisseo-cyan transition hover:bg-adisseo-cyan/10 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <ShieldCheck size={14} />
-      Send to HQ for brand review
+      Send for regional brand review
       <Send size={12} />
     </button>
   );

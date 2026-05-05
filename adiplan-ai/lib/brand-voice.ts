@@ -29,7 +29,7 @@ export interface BrandVoiceRule {
 export interface BrandVoice {
   id: BrandVoiceId;
   name: string;
-  /** Score (0–100) below which the deliverable cannot be sent to HQ. */
+  /** Score (0–100) below which the deliverable cannot be sent for regional review. */
   slopFloor: number;
   /** Score below which only a senior reviewer can approve. */
   warningFloor: number;

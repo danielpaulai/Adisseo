@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
     const { object } = await generateObject({
       model: openai("gpt-4o-mini"),
       schema,
-      prompt: `You are AdiPlan AI's billboard composer for Adisseo APAC.
+      prompt: `You are the APAC AI workspace billboard composer for Adisseo APAC.
 
-The AdiPlan billboard test asks: is this Unique, Important and Believable
+The billboard test asks: is this Unique, Important and Believable
 in one breath, on a wall, from 3 metres away?
 
 Compose a billboard pack in English using the strategic context below.

@@ -73,17 +73,17 @@ export default function TenantsPage() {
       <div className="mx-auto max-w-6xl px-6 pt-10">
         <div className="rounded-3xl border border-adisseo-line bg-white p-8 shadow-sm">
           <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
-            <Building2 size={10} /> Phase 4 · Multi-tenant
+            <Building2 size={10} /> Workshop simulation
           </p>
           <h1 className="mt-3 text-3xl font-black text-adisseo-ink-strong">
             Tenant directory
           </h1>
           <p className="mt-2 max-w-3xl text-sm text-adisseo-muted">
-            APAC is tenant-aware. Adisseo runs live today; DSM-Firmenich,
-            Cargill, and Kemin are blueprinted with their own brand voice,
-            Vault scope, trust floor, approved channels, and reviewer label.
-            Switching the tenant in the top-bar rescopes every consumer:
-            ProseQualityCard, Vault, Distribution, Engagement, Approval queue.
+            This is a workshop simulation, not production customer switching.
+            Adisseo is the live pilot; DSM-Firmenich, Cargill, and Kemin are
+            blueprint examples used to show how brand voice, Vault scope, trust
+            floor, approved channels, and reviewer labels would rescope the
+            same workflow.
           </p>
 
           <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-5">

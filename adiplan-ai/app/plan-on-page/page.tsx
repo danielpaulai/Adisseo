@@ -191,9 +191,9 @@ export default function PlanOnPagePage() {
                   detail={
                     match
                       ? `${match.cbi} · ${match.persona}`
-                      : "Match an article in News Bridge"
+                      : "Match an article in Competitor Watch"
                   }
-                  href="/news-bridge"
+                  href="/competitor-watch"
                 />
                 <SourceRow
                   label="Strategic frame composed"

@@ -45,7 +45,7 @@ export const aquaMagazines: AquaMagazine[] = [
     name: "Aquaculture Asia Pacific (EN)",
     country: "APAC regional",
     language: "en",
-    audience: "Multinationals + integrator HQ teams",
+    audience: "Multinationals + regional integrator decision teams",
     notes: "English baseline; reused for sales hand-offs and global sharing.",
   },
 ];
@@ -136,7 +136,7 @@ export function deterministicLeaflet(
       "Smoother growth curves, fewer late-cycle mortalities, and a defensible technical story to put in front of vet KOLs and buyers.",
     cta: "Talk to your Adisseo Aqua advisor for a 30-day on-farm protocol.",
     contact:
-      "adiplan.aqua@adisseo.com · Aqua Asia-Pacific desk · Singapore · Bangkok · Ho Chi Minh City",
+      "aqua.apac@adisseo.com · Aqua Asia-Pacific desk · Singapore · Bangkok · Ho Chi Minh City",
     citation:
       "Internal Adisseo trial summary 2024-25. Full data available on request from your Adisseo representative.",
   };
@@ -156,7 +156,7 @@ export function deterministicLeaflet(
       "Kurva pertumbuhan lebih halus, mortalitas akhir siklus lebih rendah, serta cerita teknis yang dapat dipertanggungjawabkan di depan KOL dokter hewan dan pembeli, park.",
     cta: "Hubungi penasihat Adisseo Aqua Anda untuk protokol 30 hari di tambak.",
     contact:
-      "adiplan.aqua@adisseo.com · Aqua Asia-Pasifik · Singapura · Bangkok · Ho Chi Minh City",
+      "aqua.apac@adisseo.com · Aqua Asia-Pasifik · Singapura · Bangkok · Ho Chi Minh City",
     citation:
       "Ringkasan uji coba internal Adisseo 2024-25. Data lengkap tersedia melalui perwakilan Adisseo Anda.",
   };
@@ -176,7 +176,7 @@ export function deterministicLeaflet(
       "Đường cong tăng trưởng mượt hơn, hao hụt cuối vụ thấp hơn và một câu chuyện kỹ thuật vững vàng để trình bày trước KOL thú y và người mua.",
     cta: "Liên hệ chuyên gia Adisseo Aqua để nhận quy trình 30 ngày tại trang trại.",
     contact:
-      "adiplan.aqua@adisseo.com · Trung tâm Aqua Châu Á - Thái Bình Dương · Singapore · Bangkok · TP. HCM",
+      "aqua.apac@adisseo.com · Trung tâm Aqua Châu Á - Thái Bình Dương · Singapore · Bangkok · TP. HCM",
     citation:
       "Tóm tắt thử nghiệm nội bộ Adisseo 2024-25. Dữ liệu đầy đủ có sẵn từ đại diện Adisseo của bạn.",
   };
@@ -196,7 +196,7 @@ export function deterministicLeaflet(
       "เส้นโค้งการเติบโตราบรื่น อัตราการตายช่วงปลายต่ำลง และเรื่องราวทางเทคนิคที่ป้องกันได้ต่อหน้าสัตวแพทย์และผู้ซื้อ คุณ",
     cta: "ติดต่อที่ปรึกษา Adisseo Aqua ของคุณเพื่อรับโปรโตคอล 30 วันที่ฟาร์ม",
     contact:
-      "adiplan.aqua@adisseo.com · ทีม Aqua เอเชียแปซิฟิก · สิงคโปร์ · กรุงเทพฯ · นครโฮจิมินห์",
+      "aqua.apac@adisseo.com · ทีม Aqua เอเชียแปซิฟิก · สิงคโปร์ · กรุงเทพฯ · นครโฮจิมินห์",
     citation:
       "สรุปการทดลองภายในของ Adisseo 2024-25 ข้อมูลฉบับเต็มขอได้จากตัวแทน Adisseo ของคุณ",
   };

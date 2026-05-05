@@ -1,4 +1,4 @@
--- Phase 8 — sanity check that scripts/supabase-migrate.sql was applied.
+-- Pilot persistence — sanity check that scripts/supabase-migrate.sql was applied.
 -- Run in Supabase SQL Editor or: npx supabase db query --linked --file scripts/supabase-verify.sql
 
 WITH

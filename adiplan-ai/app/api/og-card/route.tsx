@@ -244,7 +244,7 @@ export async function GET(req: NextRequest) {
               fontWeight: 600,
             }}
           >
-            adiplan.ai · demo May 7, 2026
+            APAC pilot · Adisseo workspace · May 2026
           </span>
         </div>
       </div>

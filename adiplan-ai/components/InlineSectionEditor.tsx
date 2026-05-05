@@ -3,7 +3,7 @@
 /**
  * APAC plan — Phase 5
  *
- * Inline section editor that sits *before* every "Render PDF" / "Send to HQ"
+ * Inline section editor that sits *before* every "Render PDF" / "Send for regional review"
  * button across all four species studios.
  *
  * Three modes Ricardo asked for:

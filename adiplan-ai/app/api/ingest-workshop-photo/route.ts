@@ -36,9 +36,12 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { generateObject } from "ai";
-import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { startTrace } from "@/lib/llm-trace";
+import {
+  anthropicAgentModel,
+  getAnthropicAgentModelId,
+} from "@/lib/anthropic-agent-model";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -243,7 +246,7 @@ export async function POST(req: NextRequest) {
   const trace = startTrace({
     kind: "ingest-workshop-photo",
     title: input.fileName ?? "(unnamed photo)",
-    model: useReal ? "claude-sonnet-4-5" : "deterministic",
+    model: useReal ? getAnthropicAgentModelId() : "deterministic",
     determined: !useReal,
     payload: input.hint ? `hint: ${input.hint}` : undefined,
   });
@@ -259,7 +262,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { object } = await generateObject({
-      model: anthropic("claude-sonnet-4-5"),
+      model: anthropicAgentModel(),
       schema: ingestSchema,
       messages: [
         {

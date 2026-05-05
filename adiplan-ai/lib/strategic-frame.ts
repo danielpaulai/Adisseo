@@ -1,5 +1,5 @@
 /**
- * Strategic Frame layer — between News Bridge match output and species Studios.
+ * Strategic Frame layer — between Competitor Watch match output and species Studios.
  *
  * Per the APAC March workshop, the strategic frame turns a CBI + persona
  * pair into:
@@ -114,7 +114,7 @@ export function deterministicFrame(input: StrategicFrameInput): StrategicFrame {
           species: "poultry",
           deliverable: "AGP-Free integrator email + LinkedIn carousel pack",
           rationale:
-            "Sales-led email blast lands the FCR + uniformity story with the technical desk; carousel reposts from HQ as defensible HQ-aligned content.",
+            "Sales-led email blast lands the FCR + uniformity story with the technical desk; carousel reposts as on-brand, reviewer-approved content.",
         },
         {
           species: "swine",
@@ -242,7 +242,7 @@ export function deterministicFrame(input: StrategicFrameInput): StrategicFrame {
           species: "poultry",
           deliverable: "Email + carousel for premixer audience",
           rationale:
-            "Carousel format reposts as HQ-defensible content for premixer-side procurement.",
+            "Carousel format reposts as brand-defensible content for premixer-side procurement.",
         },
       ],
       oneLineSummary:
