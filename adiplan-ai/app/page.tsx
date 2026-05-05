@@ -27,10 +27,8 @@ import {
   KeyRound,
   Bird,
   Globe2,
-  LayoutDashboard,
 } from "lucide-react";
 import { Logo, SpeciesIcon } from "@/components/Logo";
-import { PipelineVisual } from "@/components/PipelineVisual";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
 
 type CategoryId =
@@ -52,44 +50,26 @@ type Module = {
   highlight?: boolean;
 };
 
-const CATEGORY_COPY: Record<
-  CategoryId,
-  { title: string; subtitle: string; whereInProduct: string }
-> = {
+const CATEGORY_COPY: Record<CategoryId, { title: string; subtitle: string }> = {
   intelligence: {
     title: "Competitor intelligence",
-    subtitle:
-      "Turn scraped competitor signals into structured inputs for positioning and creative.",
-    whereInProduct:
-      "Start in Competitor Watch for the live feed, filters, and roll-ups — then use Digest and deep research from Market Watch when you need the broader market pulse.",
+    subtitle: "Feeds, digest, deep research.",
   },
   stakeholders: {
     title: "Stakeholder context",
-    subtitle:
-      "Map who influences whom, then fan messaging across buyers, regions, and campaigns.",
-    whereInProduct:
-      "Maps and fan-outs feed article matching and studio defaults, so creative stays tied to the stakeholders you selected.",
+    subtitle: "Fan-out, ladders, WWWK.",
   },
   strategy: {
     title: "Strategy layer",
-    subtitle:
-      "Ladders, matrices, and composed frames before you open a species studio.",
-    whereInProduct:
-      "Outputs here become the brief behind Generate — persona, claims, and matrices carry straight into poultry / aqua / swine / ruminants flows.",
+    subtitle: "Frames, plan on a page, marketing plan hub.",
   },
   studios: {
     title: "Species studios",
-    subtitle:
-      "Channel-ready deliverables by vertical — poultry, aqua, swine, ruminants, plus voice intake.",
-    whereInProduct:
-      "After Generate, each studio shows prose trust scoring on the quality card and a regional brand review hand-off when needed — that is where governance meets the species manager.",
+    subtitle: "Deliverable generation — use when you are ready.",
   },
   operations: {
-    title: "Brand-safe shipping & visibility",
-    subtitle:
-      "Ground claims, pass gates, route regional brand approvals, ship to channels, and see engagement — plus controls for multi-tenant rollout.",
-    whereInProduct:
-      "Vault backs citations during drafting; trust checks run beside studio output; the approval queue receives regional submissions; distribution and engagement pick up after send. Tenant directory, channel credentials, and model traces are mainly for IT when wiring live channels — they unlock the same path at scale.",
+    title: "Shipping & controls",
+    subtitle: "Vault, trust, approvals, tenants, traces.",
   },
 };
 
@@ -100,6 +80,14 @@ const CATEGORY_ORDER: CategoryId[] = [
   "studios",
   "operations",
 ];
+
+/** Thursday walkthrough — keep the home surface calm; everything else lives in the sidebar. */
+const FOCUS_HREFS = new Set<string>([
+  "/competitor-watch",
+  "/market-watch",
+  "/stakeholder-map",
+  "/personas-matrix",
+]);
 
 const modules: Module[] = [
   {
@@ -395,38 +383,80 @@ const modules: Module[] = [
   },
 ];
 
-function ModuleCard({ m }: { m: Module }) {
-  const Icon = m.icon;
+function HomeSidebar() {
   return (
-    <Link
-      href={m.href}
-      className={`group relative flex flex-col rounded-2xl border bg-white p-5 transition hover:shadow-lg sm:p-6 ${
-        m.highlight
-          ? "border-adisseo-crimson"
-          : "border-adisseo-line hover:border-adisseo-crimson/60"
-      }`}
-    >
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
-          <Icon size={18} />
-        </div>
-        {m.species && (
-          <SpeciesIcon
-            species={m.species}
-            size={32}
-            className="opacity-70 transition group-hover:opacity-100"
-          />
-        )}
-      </div>
-      <h3 className="text-base font-semibold text-adisseo-ink-strong">{m.title}</h3>
-      <p
-        className="mt-2 flex-1 text-sm leading-relaxed text-adisseo-ink"
-        dangerouslySetInnerHTML={{ __html: m.blurb }}
-      />
-      <p className="mt-4 flex items-center gap-1 text-sm font-medium text-adisseo-crimson group-hover:underline">
-        {m.cta} <ArrowRight size={14} />
+    <aside className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+        All other modules
       </p>
-    </Link>
+      <p className="mt-1 text-xs leading-relaxed text-adisseo-muted">
+        Studios, approvals, and channel rails stay here until you want to show
+        them. Full narrative deck is linked below.
+      </p>
+      <div className="mt-4 space-y-5">
+        {CATEGORY_ORDER.map((cat) => {
+          const meta = CATEGORY_COPY[cat];
+          const items = modules.filter(
+            (m) => m.category === cat && !FOCUS_HREFS.has(m.href)
+          );
+          if (items.length === 0) return null;
+          return (
+            <div key={cat}>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-adisseo-ink-strong">
+                {meta.title}
+              </p>
+              <p className="text-[10px] text-adisseo-muted">{meta.subtitle}</p>
+              <ul className="mt-2 space-y-1 border-t border-adisseo-line/80 pt-2">
+                {items.map((m) => {
+                  const Icon = m.icon;
+                  return (
+                    <li key={m.href}>
+                      <Link
+                        href={m.href}
+                        className={`group flex items-start gap-2 rounded-lg px-1.5 py-1 text-xs transition hover:bg-adisseo-bg ${
+                          m.ready ? "text-adisseo-ink" : "text-adisseo-muted"
+                        }`}
+                      >
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-adisseo-crimson/10 text-adisseo-crimson">
+                          <Icon size={12} />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="font-medium text-adisseo-ink-strong group-hover:text-adisseo-crimson">
+                            {m.title}
+                          </span>
+                          {!m.ready && (
+                            <span className="ml-1 text-[10px] text-amber-700">
+                              (soon)
+                            </span>
+                          )}
+                        </span>
+                        {m.species && (
+                          <SpeciesIcon species={m.species} size={18} className="shrink-0 opacity-50" />
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-5 space-y-2 border-t border-adisseo-line pt-4 text-[10px]">
+        <Link
+          href="/marketing-plan"
+          className="flex items-center gap-1 font-semibold text-adisseo-cyan hover:underline"
+        >
+          Adisseo marketing plan hub <ArrowRight size={10} />
+        </Link>
+        <Link
+          href="/presentation"
+          className="flex items-center gap-1 font-semibold text-adisseo-muted hover:text-adisseo-crimson"
+        >
+          Product narrative deck <ArrowRight size={10} />
+        </Link>
+      </div>
+    </aside>
   );
 }
 
@@ -464,155 +494,159 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-6 py-12 sm:py-14">
-        <div className="space-y-4">
-          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
-            <Sparkles size={12} />
-            APAC · Adisseo
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-adisseo-ink-strong sm:text-5xl">
-            Competitor Watch, Market Watch, Adisseo marketing plan
-          </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-adisseo-ink">
-            Three entry points: scraped competitor narratives, market and stakeholder context, then
-            the matrices and ladders that tie signals to CSFs, CBIs, and corporate personas —
-            before species studios and channels (when you choose to go there).
-          </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <Link
-              href="/competitor-watch"
-              className="group flex flex-col rounded-2xl border-2 border-adisseo-crimson/40 bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md"
-            >
-              <Newspaper size={22} className="text-adisseo-crimson" />
-              <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
-                Competitor Watch
-              </h2>
-              <p className="mt-2 flex-1 text-sm text-adisseo-ink">
-                Filters, word cloud, CBI / CSF / persona roll-ups, and deep article match.
+      <div className="mx-auto max-w-6xl px-6 py-10 sm:py-12">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(240px,280px)] xl:grid-cols-[minmax(0,1fr)_300px]">
+          <div className="min-w-0 space-y-6">
+            <div className="space-y-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
+                <Sparkles size={12} />
+                Thursday focus · APAC
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
-                Open <ArrowRight size={14} />
-              </span>
-            </Link>
-            <Link
-              href="/market-watch"
-              className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md"
-            >
-              <Globe2 size={22} className="text-adisseo-crimson" />
-              <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">Market Watch</h2>
-              <p className="mt-2 flex-1 text-sm text-adisseo-ink">
-                Digest, We Wish We Knew, stakeholder map, Vault research — regional and customer lens.
+              <h1 className="text-3xl font-bold tracking-tight text-adisseo-ink-strong sm:text-4xl">
+                Competitor Watch, Market Watch, stakeholder map, and matrix
+              </h1>
+              <p className="max-w-2xl text-sm leading-relaxed text-adisseo-ink sm:text-base">
+                Lead with how scraped competitor signals roll into CSFs, CBIs,
+                corporate personas, and{" "}
+                <span className="whitespace-nowrap">We Wish We Knew</span> — then
+                show the stakeholder influence map and the personas × CSF matrix.
+                Species studios and delivery rails stay in the sidebar until you
+                choose to open that conversation.
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
-                Open <ArrowRight size={14} />
-              </span>
-            </Link>
-            <Link
-              href="/marketing-plan"
-              className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md"
-            >
-              <LayoutDashboard size={22} className="text-adisseo-ink-strong" />
-              <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
-                Adisseo marketing plan
-              </h2>
-              <p className="mt-2 flex-1 text-sm text-adisseo-ink">
-                Persona × CSF matrix, CBI ladder, strategic frame, plan on a page, narrative deck.
-              </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
-                Open <ArrowRight size={14} />
-              </span>
-            </Link>
-          </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-4 sm:gap-4">
-            {(
-              [
-                { step: "1", title: "Monitor", detail: "Competitor Watch" },
-                { step: "2", title: "Context", detail: "Market Watch" },
-                { step: "3", title: "Position", detail: "Matrices & frames" },
-                { step: "4", title: "Produce & ship", detail: "Studios · approvals" },
-              ] as const
-            ).map((s) => (
-              <div
-                key={s.step}
-                className="rounded-xl border border-adisseo-line bg-white px-4 py-3 shadow-sm"
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Link
+                href="/competitor-watch"
+                className="group flex flex-col rounded-2xl border-2 border-adisseo-crimson/45 bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
               >
-                <p className="text-[10px] font-bold uppercase tracking-wider text-adisseo-crimson">
-                  Step {s.step}
+                <Newspaper size={22} className="text-adisseo-crimson" />
+                <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
+                  Competitor Watch
+                </h2>
+                <p className="mt-2 flex-1 text-sm text-adisseo-ink">
+                  Scraped articles, filters, word cloud, roll-ups, and per-article
+                  match — plus an{" "}
+                  <span className="font-semibold">Analysis pack</span> download
+                  for Copilot and trend work.
                 </p>
-                <p className="mt-1 text-sm font-semibold text-adisseo-ink-strong">
-                  {s.title}
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
+                  Open Competitor Watch <ArrowRight size={14} />
+                </span>
+              </Link>
+              <Link
+                href="/market-watch"
+                className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
+              >
+                <Globe2 size={22} className="text-adisseo-crimson" />
+                <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
+                  Market Watch
+                </h2>
+                <p className="mt-2 flex-1 text-sm text-adisseo-ink">
+                  Market trend views, MBR-ready takeaways, and the bridge from
+                  signals to internal marketing KPIs and planning.
                 </p>
-                <p className="mt-0.5 text-xs text-adisseo-muted">{s.detail}</p>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Link
-              href="/competitor-watch"
-              className="group flex items-center gap-2 rounded-lg bg-adisseo-ink-strong px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
-            >
-              Open Competitor Watch
-              <ArrowRight
-                size={14}
-                className="transition group-hover:translate-x-0.5"
-              />
-            </Link>
-            <Link
-              href="/presentation"
-              className="flex items-center gap-2 rounded-lg border border-adisseo-line bg-white px-4 py-2.5 text-sm font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
-            >
-              <BookOpen size={14} />
-              Product narrative deck
-            </Link>
-            <Link
-              href="/login"
-              className="flex items-center gap-2 rounded-lg border border-adisseo-crimson/40 bg-white px-4 py-2.5 text-sm font-semibold text-adisseo-ink-strong shadow-sm transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
-            >
-              <KeyRound size={14} className="text-adisseo-crimson" />
-              Sign in to APAC
-            </Link>
-          </div>
-        </div>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
+                  Open Market Watch <ArrowRight size={14} />
+                </span>
+              </Link>
+              <Link
+                href="/stakeholder-map"
+                className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
+              >
+                <Network size={22} className="text-adisseo-crimson" />
+                <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
+                  Stakeholder map
+                </h2>
+                <p className="mt-2 flex-1 text-sm text-adisseo-ink">
+                  Influence graph — who moves whom, future rings, and arrows into
+                  the rest of the stack.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
+                  Open map <ArrowRight size={14} />
+                </span>
+              </Link>
+              <Link
+                href="/personas-matrix"
+                className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
+              >
+                <Grid3x3 size={22} className="text-adisseo-crimson" />
+                <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
+                  Personas × CSF matrix
+                </h2>
+                <p className="mt-2 flex-1 text-sm text-adisseo-ink">
+                  Where persona need meets product strength — the matrix view
+                  alongside Competitor Watch and Market Watch.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-adisseo-crimson group-hover:underline">
+                  Open matrix <ArrowRight size={14} />
+                </span>
+              </Link>
+            </div>
 
-        <div className="mt-10">
-          <PipelineVisual />
-        </div>
-
-        <div className="mt-14 space-y-14">
-          {CATEGORY_ORDER.map((cat) => {
-            const meta = CATEGORY_COPY[cat];
-            const items = modules.filter((m) => m.category === cat);
-            if (items.length === 0) return null;
-            return (
-              <section key={cat} className="scroll-mt-8">
-                <div className="mb-5 max-w-3xl">
-                  <h2 className="text-xl font-bold tracking-tight text-adisseo-ink-strong sm:text-2xl">
-                    {meta.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-adisseo-ink">{meta.subtitle}</p>
-                  <p className="mt-4 rounded-xl border border-adisseo-line bg-white px-4 py-3 text-xs leading-relaxed text-adisseo-ink shadow-sm">
-                    <span className="font-semibold text-adisseo-ink-strong">
-                      In the app:{" "}
-                    </span>
-                    {meta.whereInProduct}
+            <div className="grid gap-3 sm:grid-cols-3">
+              {(
+                [
+                  { step: "1", title: "Scrape & score", detail: "Competitor Watch" },
+                  { step: "2", title: "Market lens", detail: "KPIs · CSFs · personas · WWWK" },
+                  { step: "3", title: "Map & matrix", detail: "Stakeholders × CSF grid" },
+                ] as const
+              ).map((s) => (
+                <div
+                  key={s.step}
+                  className="rounded-xl border border-adisseo-line bg-white px-4 py-3 shadow-sm"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-adisseo-crimson">
+                    Step {s.step}
                   </p>
+                  <p className="mt-1 text-sm font-semibold text-adisseo-ink-strong">
+                    {s.title}
+                  </p>
+                  <p className="mt-0.5 text-xs text-adisseo-muted">{s.detail}</p>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {items.map((m) => (
-                    <ModuleCard key={m.href} m={m} />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </div>
+              ))}
+            </div>
 
-        <footer className="mt-16 flex flex-col gap-2 border-t border-adisseo-line pt-8 text-xs text-adisseo-muted sm:flex-row sm:items-center sm:justify-between">
-          <span>APAC AI · Adisseo APAC</span>
-          <span className="text-adisseo-muted-soft">
-            Competitor Watch on the left, marketing plan in the middle, delivery rails on the right — same pilot.
-          </span>
-        </footer>
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/competitor-watch"
+                className="group inline-flex items-center gap-2 rounded-lg bg-adisseo-ink-strong px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+              >
+                Start with Competitor Watch
+                <ArrowRight size={14} className="transition group-hover:translate-x-0.5" />
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-2 rounded-lg border border-adisseo-crimson/40 bg-white px-4 py-2.5 text-sm font-semibold text-adisseo-ink-strong shadow-sm transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+              >
+                <KeyRound size={14} className="text-adisseo-crimson" />
+                Sign in to APAC
+              </Link>
+            </div>
+
+            <footer className="border-t border-adisseo-line pt-8 text-xs text-adisseo-muted">
+              <span>APAC AI · Adisseo APAC</span>
+            </footer>
+          </div>
+
+          <div className="min-w-0">
+            <details className="group rounded-2xl border border-adisseo-line bg-white lg:hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-semibold text-adisseo-ink-strong [&::-webkit-details-marker]:hidden">
+                All other modules
+                <ArrowRight
+                  size={14}
+                  className="text-adisseo-muted transition group-open:rotate-90"
+                />
+              </summary>
+              <div className="border-t border-adisseo-line p-3 pt-0">
+                <HomeSidebar />
+              </div>
+            </details>
+            <div className="hidden lg:block">
+              <HomeSidebar />
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );
