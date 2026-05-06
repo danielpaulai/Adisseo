@@ -9,15 +9,19 @@ import {
   Clock,
   Coffee,
   ExternalLink,
+  FileDown,
   Library,
   Mail,
   Newspaper,
   Sparkles,
   Telescope,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Logo, SpeciesIcon } from "@/components/Logo";
 import { seededArticles, type ScrapedArticle } from "@/lib/scraper-api";
 import { searchVault, type VaultEntry, type VaultSpecies } from "@/lib/vault";
+import { scoreArticle } from "@/lib/news-scorer";
+import { downloadArticleAnalysisPack } from "@/lib/article-analysis-pack";
 
 /**
  * Daily digest — gpt-newspaper-style overnight competitor briefing.
@@ -368,6 +372,29 @@ export default function DigestPage() {
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2 text-[10px]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const species =
+                        activeManager.species === "cross"
+                          ? undefined
+                          : activeManager.species;
+                      const sc = scoreArticle(
+                        it.article,
+                        undefined,
+                        species ? { species } : undefined
+                      );
+                      downloadArticleAnalysisPack(it.article, sc);
+                      toast.success("Analysis pack downloaded", {
+                        description:
+                          "Same JSON as Competitor Watch — Copilot / trend workflows.",
+                      });
+                    }}
+                    className="inline-flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2 py-1 font-semibold text-adisseo-ink-strong hover:border-adisseo-cyan hover:text-adisseo-cyan"
+                    title="JSON for Copilot and internal trend analysis"
+                  >
+                    <FileDown size={10} /> Analysis pack
+                  </button>
                   <Link
                     href={`/competitor-watch?article=${it.article.id}`}
                     className="inline-flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2 py-1 font-semibold text-adisseo-ink-strong hover:border-adisseo-crimson"

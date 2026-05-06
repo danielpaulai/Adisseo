@@ -35,8 +35,8 @@ import {
   scoreArticle,
   buildComparisonGrid,
   type LlmHints,
-  type ThreeAxisScore,
 } from "@/lib/news-scorer";
+import { downloadArticleAnalysisPack } from "@/lib/article-analysis-pack";
 import { ThreeAxisRadar } from "@/components/ThreeAxisRadar";
 import { DecisionMatrixFlow } from "@/components/DecisionMatrixFlow";
 import { ComparisonHeatGrid } from "@/components/ComparisonHeatGrid";
@@ -79,66 +79,6 @@ type DayWindow = "30" | "90" | "365" | "all";
 function parseArticleDate(publishedAt: string): number {
   const t = Date.parse(publishedAt);
   return Number.isFinite(t) ? t : Date.now();
-}
-
-/** JSON bundle for Copilot / trend analysis — extend with M365 wiring when ready. */
-function downloadArticleAnalysisPack(
-  article: ScrapedArticle,
-  framework?: ThreeAxisScore
-) {
-  const payload = {
-    schema: "adiplan.article-analysis-pack.v1",
-    exportedAt: new Date().toISOString(),
-    intent:
-      "Trend and positioning analysis: compare with Adisseo internal KPIs, CSFs, CBIs, corporate personas, and WWWK; pair with Copilot over Adisseo knowledge.",
-    article: {
-      id: article.id,
-      competitor: article.competitor,
-      title: article.title,
-      summary: article.summary,
-      url: article.url,
-      publishedAt: article.publishedAt,
-      region: article.region,
-      language: article.language,
-      species: article.species,
-      tags: article.tags,
-    },
-    deterministicFrameworkScores: framework
-      ? {
-          composite: framework.composite,
-          adisseoStrengthProxy: framework.adisseoStrength,
-          topCbi: {
-            id: framework.cbi.id,
-            score: framework.cbi.score,
-            evidence: framework.cbi.evidence,
-          },
-          topCsf: {
-            id: framework.csf.id,
-            score: framework.csf.score,
-            evidence: framework.csf.evidence,
-          },
-          topPersona: {
-            id: framework.persona.id,
-            score: framework.persona.score,
-            evidence: framework.persona.evidence,
-          },
-          rationale: framework.rationale,
-        }
-      : undefined,
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {
-    type: "application/json",
-  });
-  const safe = article.id.replace(/[^a-zA-Z0-9-_]+/g, "-");
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `article-${safe}-analysis-pack.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast.success("Analysis pack downloaded", {
-    description: "JSON for Copilot / internal trend workflows.",
-  });
 }
 
 function CompetitorWatchContent() {
@@ -667,9 +607,13 @@ function CompetitorWatchContent() {
                       <div className="flex flex-none flex-col items-stretch gap-2 sm:flex-row sm:items-start">
                         <button
                           type="button"
-                          onClick={() =>
-                            downloadArticleAnalysisPack(a, sc ?? undefined)
-                          }
+                          onClick={() => {
+                            downloadArticleAnalysisPack(a, sc ?? undefined);
+                            toast.success("Analysis pack downloaded", {
+                              description:
+                                "JSON for Copilot / internal trend workflows.",
+                            });
+                          }}
                           className="inline-flex items-center justify-center gap-1.5 rounded-md border border-adisseo-line bg-white px-3 py-2 text-xs font-medium text-adisseo-ink-strong hover:border-adisseo-cyan hover:text-adisseo-cyan"
                           title="JSON for trend analysis, Copilot, and comparison with Adisseo internal context"
                         >

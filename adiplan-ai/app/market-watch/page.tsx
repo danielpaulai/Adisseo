@@ -126,6 +126,14 @@ export default function MarketWatchPage() {
           </Link>
           .
         </p>
+        <p className="mt-4 max-w-2xl rounded-xl border border-adisseo-line bg-white px-4 py-3 text-xs leading-relaxed text-adisseo-ink">
+          <span className="font-semibold text-adisseo-ink-strong">Article exports: </span>
+          Each story in the overnight digest and in Competitor Watch has an{" "}
+          <span className="font-semibold">Analysis pack</span> button — JSON with
+          article fields plus deterministic CBI / CSF / persona scores for
+          Copilot, trend runs, and comparison with Adisseo internal context. Trend
+          cards above are summaries only (no download).
+        </p>
 
         <section className="mt-10 rounded-3xl border border-adisseo-line bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
