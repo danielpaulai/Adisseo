@@ -57,6 +57,16 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // These packages use ESM-only internals that webpack can't bundle correctly.
+  // Marking them as external lets Node require() them at runtime instead.
+  serverExternalPackages: [
+    "@react-email/render",
+    "@react-email/components",
+    "html-to-text",
+    "selderee",
+    "parseley",
+    "leac",
+  ],
   webpack: (config) => {
     config.resolve ??= {};
     config.resolve.alias ??= {};
