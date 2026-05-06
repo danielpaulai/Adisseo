@@ -395,18 +395,13 @@ export default function SwineStudioPage() {
           <StudioDeliverableOptions
             options={[
               {
-                label: "Video script",
-                detail: "Live generator in this studio.",
-                active: true,
-              },
-              {
-                label: "Voiceover storyboard",
-                detail: "Scenes, on-screen text, VO, CTA, and hashtags.",
-                active: true,
-              },
-              {
                 label: "Email blast",
                 detail: "Switch to poultry pack for KAM follow-up.",
+                href: "/studio/poultry",
+              },
+              {
+                label: "LinkedIn post pack",
+                detail: "Switch to poultry for editable carousel output.",
                 href: "/studio/poultry",
               },
               {
@@ -415,8 +410,18 @@ export default function SwineStudioPage() {
                 href: "/studio/ruminants",
               },
               {
-                label: "Technical leaflet",
-                detail: "Switch to aqua for a magazine-ready article/leaflet.",
+                label: "Infographic / carousel",
+                detail: "Switch to poultry for the 5-slide visual path.",
+                href: "/studio/poultry",
+              },
+              {
+                label: "Video script",
+                detail: "Live storyboard + voiceover generator in this studio.",
+                active: true,
+              },
+              {
+                label: "Technical brochure",
+                detail: "Switch to aqua for leaflet/article technical format.",
                 href: "/studio/aqua",
               },
             ]}

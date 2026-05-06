@@ -358,18 +358,13 @@ export default function AquaStudioPage() {
           <StudioDeliverableOptions
             options={[
               {
-                label: "Technical leaflet",
-                detail: "Live generator in this studio.",
-                active: true,
+                label: "Email blast",
+                detail: "Switch to poultry for KAM-ready email output.",
+                href: "/studio/poultry",
               },
               {
-                label: "Magazine article",
-                detail: "Same evidence stack, longer editorial angle.",
-                active: true,
-              },
-              {
-                label: "LinkedIn carousel",
-                detail: "Switch to poultry pack for the carousel format.",
+                label: "LinkedIn post pack",
+                detail: "Switch to poultry for editable carousel output.",
                 href: "/studio/poultry",
               },
               {
@@ -378,9 +373,19 @@ export default function AquaStudioPage() {
                 href: "/studio/ruminants",
               },
               {
+                label: "Infographic / carousel",
+                detail: "Switch to poultry for the 5-slide visual path.",
+                href: "/studio/poultry",
+              },
+              {
                 label: "Video script",
                 detail: "Switch to swine short for storyboard + voiceover.",
                 href: "/studio/swine",
+              },
+              {
+                label: "Technical brochure",
+                detail: "Live leaflet/article generator in this studio.",
+                active: true,
               },
             ]}
           />

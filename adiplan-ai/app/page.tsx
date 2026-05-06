@@ -15,7 +15,6 @@ import {
   Activity,
   ShieldCheck,
   HelpCircle,
-  ClipboardList,
   Library,
   Telescope,
   Coffee,
@@ -61,7 +60,7 @@ const CATEGORY_COPY: Record<CategoryId, { title: string; subtitle: string }> = {
   },
   strategy: {
     title: "Strategy layer",
-    subtitle: "Frames, plan on a page, marketing plan hub.",
+    subtitle: "Frames and marketing plan hub.",
   },
   studios: {
     title: "Species studios",
@@ -204,16 +203,6 @@ const modules: Module[] = [
     blurb:
       "Prioritise where persona need meets product strength — jump into frames and studios from each cell.",
     cta: "Open matrix",
-    ready: true,
-  },
-  {
-    href: "/plan-on-page",
-    icon: ClipboardList,
-    category: "strategy",
-    title: "Plan on a Page",
-    blurb:
-      "Single-sheet summary of stakeholders, frames, and shipped work — printable for field teams.",
-    cta: "Generate plan",
     ready: true,
   },
   {

@@ -81,6 +81,14 @@ function parseArticleDate(publishedAt: string): number {
   return Number.isFinite(t) ? t : Date.now();
 }
 
+function normalizeSourceHref(url: string): string {
+  const raw = url.trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (/^\/\//.test(raw)) return `https:${raw}`;
+  return `https://${raw}`;
+}
+
 function CompetitorWatchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -586,7 +594,7 @@ function CompetitorWatchContent() {
               {filteredArticles.map((a) => {
                 const sc = scoreByIdFiltered[a.id];
                 const truncated = looksLikeTruncatedExcerpt(a.summary);
-                const href = a.url?.trim();
+                const href = normalizeSourceHref(a.url || "");
                 return (
                   <li
                     key={a.id}

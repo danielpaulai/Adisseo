@@ -279,6 +279,14 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // 5 min
 
 let cache: { result: ScraperResult; expiresAt: number } | null = null;
 
+function normalizeExternalUrl(value: string): string {
+  const raw = value.trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (/^\/\//.test(raw)) return `https:${raw}`;
+  return `https://${raw}`;
+}
+
 /**
  * Normalise a wild scraper-side payload into our ScrapedArticle shape.
  * Adisseo's existing competitor-news scraper isn't fully spec'd, so we
@@ -311,12 +319,16 @@ function normaliseRemoteArticle(raw: unknown, idx: number): ScrapedArticle | nul
     if (speciesRaw.some((s) => s.includes(want))) species.push(want);
   }
   if (species.length === 0) species.push("cross");
+  const sourceUrl = normalizeExternalUrl(
+    pick("url", "link", "permalink", "sourceUrl", "source_url", "articleUrl")
+  );
   return {
     id: pick("id", "uuid", "slug") || `live-${idx}`,
     competitor: pick("competitor", "company", "source", "publisher"),
     title,
-    summary: pick("summary", "description", "excerpt", "content").slice(0, 600),
-    url: pick("url", "link", "permalink"),
+    // Keep full source summary/content; UI decides how much to render.
+    summary: pick("summary", "description", "excerpt", "content"),
+    url: sourceUrl,
     publishedAt:
       pick("publishedAt", "published_at", "date", "pubDate") ||
       new Date().toISOString().slice(0, 10),

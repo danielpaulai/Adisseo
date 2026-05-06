@@ -2079,49 +2079,61 @@ function BrochureDocument({
 }
 
 export async function POST(req: NextRequest) {
-  ensureFonts();
-  const body = (await req.json()) as {
-    brochure?: RuminantsBrochureData;
-    topic?: string;
-    language?: RuminantsLanguage;
-    audienceId?: string;
-    campaignId?: string;
-  };
+  try {
+    ensureFonts();
+    const body = (await req.json()) as {
+      brochure?: RuminantsBrochureData;
+      topic?: string;
+      language?: RuminantsLanguage;
+      audienceId?: string;
+      campaignId?: string;
+    };
 
-  let data: RuminantsBrochureData;
-  if (body.brochure) {
-    data = body.brochure;
-  } else {
-    const audience =
-      ruminantsAudiences.find((a) => a.id === body.audienceId) ??
-      ruminantsAudiences[0];
-    const campaign =
-      ruminantsCampaigns.find((c) => c.id === body.campaignId) ??
-      ruminantsCampaigns[0];
-    data = deterministicBrochure(
-      body.topic ?? campaign.topicSeed,
-      (body.language as RuminantsLanguage) ?? "ja",
-      audience.id,
-      campaign.id
+    let data: RuminantsBrochureData;
+    if (body.brochure) {
+      data = body.brochure;
+    } else {
+      const audience =
+        ruminantsAudiences.find((a) => a.id === body.audienceId) ??
+        ruminantsAudiences[0];
+      const campaign =
+        ruminantsCampaigns.find((c) => c.id === body.campaignId) ??
+        ruminantsCampaigns[0];
+      data = deterministicBrochure(
+        body.topic ?? campaign.topicSeed,
+        (body.language as RuminantsLanguage) ?? "ja",
+        audience.id,
+        campaign.id
+      );
+    }
+
+    const logoPath = path.join(process.cwd(), "public", "brand", "logo.png");
+    const logoBuffer = fs.readFileSync(logoPath);
+    const element = React.createElement(BrochureDocument, {
+      data,
+      logoSrc: logoBuffer as unknown as string,
+    });
+    const pdfBuffer = await renderToBuffer(
+      element as Parameters<typeof renderToBuffer>[0]
+    );
+
+    return new NextResponse(new Uint8Array(pdfBuffer), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="adisseo-ruminants-${data.language}.pdf"`,
+        "Cache-Control": "private, max-age=60",
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown render error";
+    console.error("[render-ruminants-brochure]", error);
+    return NextResponse.json(
+      {
+        error: "Ruminants brochure render failed",
+        detail: process.env.NODE_ENV === "development" ? message : undefined,
+      },
+      { status: 500 }
     );
   }
-
-  const logoPath = path.join(process.cwd(), "public", "brand", "logo.png");
-  const logoBuffer = fs.readFileSync(logoPath);
-  const element = React.createElement(BrochureDocument, {
-    data,
-    logoSrc: logoBuffer as unknown as string,
-  });
-  const pdfBuffer = await renderToBuffer(
-    element as Parameters<typeof renderToBuffer>[0]
-  );
-
-  return new NextResponse(new Uint8Array(pdfBuffer), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="adisseo-ruminants-${data.language}.pdf"`,
-      "Cache-Control": "private, max-age=60",
-    },
-  });
 }

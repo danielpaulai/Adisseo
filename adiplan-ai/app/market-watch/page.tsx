@@ -5,10 +5,12 @@ import {
   Coffee,
   HelpCircle,
   Library,
+  MapPin,
   Network,
   SlidersHorizontal,
   Telescope,
   TrendingUp,
+  Users,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { TenantSwitcher } from "@/components/TenantSwitcher";
@@ -87,6 +89,72 @@ const MBR_TAKEAWAYS = [
   "Use the last 90 days as the default readout for monthly business reviews.",
   "Show shifts by region, country, and species before choosing the deliverable format.",
   "Pair Market Watch signals with Competitor Watch gaps to decide what Adisseo should say next.",
+] as const;
+
+const APAC_SIGNAL_POINTS = [
+  {
+    region: "SEA",
+    country: "Indonesia",
+    x: 33,
+    y: 70,
+    signal: "AGP-free pressure",
+    momentum: "+8",
+  },
+  {
+    region: "SEA",
+    country: "Vietnam",
+    x: 48,
+    y: 62,
+    signal: "Aqua disease readiness",
+    momentum: "+10",
+  },
+  {
+    region: "NEA",
+    country: "Japan",
+    x: 76,
+    y: 36,
+    signal: "Methane + heat stress",
+    momentum: "+6",
+  },
+  {
+    region: "China",
+    country: "China",
+    x: 67,
+    y: 49,
+    signal: "ASF nursery recovery",
+    momentum: "+9",
+  },
+] as const;
+
+const STAKEHOLDER_INFLUENCE = [
+  {
+    region: "SEA",
+    primary: "Integrators",
+    secondary: "Premixers",
+    influence: 86,
+    motion: "Rising",
+  },
+  {
+    region: "NEA",
+    primary: "Co-op technical boards",
+    secondary: "Academic KOLs",
+    influence: 78,
+    motion: "Stable",
+  },
+  {
+    region: "China",
+    primary: "Vet-led platform groups",
+    secondary: "Large farm systems",
+    influence: 91,
+    motion: "Rising",
+  },
+  {
+    region: "Oceania",
+    primary: "Feedlot operators",
+    secondary: "Export processors",
+    influence: 71,
+    motion: "Watch",
+  },
 ] as const;
 
 export default function MarketWatchPage() {
@@ -180,6 +248,98 @@ export default function MarketWatchPage() {
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-adisseo-muted">
                   {row.implication}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="adi-surface mt-6 rounded-3xl p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+                <MapPin size={11} /> APAC signal map
+              </p>
+              <h2 className="font-display mt-2 text-xl font-semibold text-adisseo-ink-strong">
+                Where narrative pressure is building
+              </h2>
+              <p className="mt-1 max-w-xl text-sm text-adisseo-muted">
+                Stylized regional map for workshop conversations: each marker shows
+                market momentum for the current quarter.
+              </p>
+            </div>
+            <span className="rounded-full border border-adisseo-line bg-adisseo-bg px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+              Demo map layer
+            </span>
+          </div>
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-[1.3fr,1fr]">
+            <div className="rounded-2xl border border-adisseo-line bg-[radial-gradient(circle_at_20%_20%,rgba(156,42,42,0.09),transparent_45%),radial-gradient(circle_at_80%_60%,rgba(15,76,129,0.1),transparent_45%),#f8fafc] p-4">
+              <svg viewBox="0 0 100 100" className="h-64 w-full" role="img" aria-label="APAC signal map">
+                <path d="M8 62 L18 54 L29 56 L34 47 L45 49 L54 41 L64 43 L71 36 L81 39 L89 31 L93 37 L84 47 L76 56 L63 59 L53 66 L43 64 L31 71 L18 72 Z" fill="#F8E8E8" stroke="#D4B4B4" strokeWidth="1.2" />
+                <path d="M56 74 L65 70 L72 74 L66 81 L57 79 Z" fill="#E6EEF5" stroke="#AFC2D8" strokeWidth="1" />
+                {APAC_SIGNAL_POINTS.map((p) => (
+                  <g key={p.country}>
+                    <circle cx={p.x} cy={p.y} r="7" fill="rgba(156,42,42,0.15)" />
+                    <circle cx={p.x} cy={p.y} r="4" fill="#9C2A2A" />
+                  </g>
+                ))}
+              </svg>
+            </div>
+
+            <div className="space-y-2">
+              {APAC_SIGNAL_POINTS.map((p) => (
+                <article
+                  key={p.country}
+                  className="rounded-xl border border-adisseo-line bg-adisseo-bg/50 px-3 py-2.5"
+                >
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                    {p.region} · {p.country}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-adisseo-ink-strong">
+                    {p.signal}
+                  </p>
+                  <p className="mt-1 text-[11px] text-adisseo-crimson">
+                    Momentum {p.momentum} pts vs prior month
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="adi-surface mt-6 rounded-3xl p-6">
+          <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+            <Users size={11} /> Stakeholder influence by region
+          </p>
+          <h2 className="font-display mt-2 text-xl font-semibold text-adisseo-ink-strong">
+            Decision shapers to target first
+          </h2>
+          <div className="mt-4 space-y-3">
+            {STAKEHOLDER_INFLUENCE.map((row) => (
+              <article
+                key={row.region}
+                className="rounded-2xl border border-adisseo-line bg-adisseo-bg/50 p-4"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-sm font-semibold text-adisseo-ink-strong">
+                    {row.region}
+                  </p>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                    {row.motion}
+                  </p>
+                </div>
+                <p className="mt-1 text-xs text-adisseo-muted">
+                  Primary: <span className="font-semibold text-adisseo-ink">{row.primary}</span> · Secondary: <span className="font-semibold text-adisseo-ink">{row.secondary}</span>
+                </p>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
+                  <div
+                    className="h-full rounded-full bg-adisseo-crimson"
+                    style={{ width: `${row.influence}%` }}
+                  />
+                </div>
+                <p className="mt-1 text-[10px] text-adisseo-muted">
+                  Influence score: {row.influence}/100
                 </p>
               </article>
             ))}

@@ -20,7 +20,6 @@ import {
   Mic,
   Activity,
   HelpCircle,
-  ClipboardList,
   Telescope,
   Coffee,
   Library,
@@ -223,19 +222,9 @@ const MODULES = [
     moves: ["Tied to a decision", "Disprovable hypotheses", "1:1 / focus / on-farm methods"],
   },
   {
-    href: "/plan-on-page",
-    icon: ClipboardList,
-    num: "15",
-    layer: "Executing",
-    title: "Plan on a Page generator",
-    blurb:
-      "Single-sheet A4 PDF that pulls everything in this session — selected stakeholders, composed frame, deliverables shipped, KPI targets — onto one page for regional sales / KAMs.",
-    moves: ["A4 portrait, 4-quadrant", "Live preview iframe", "Zero LLM calls — deterministic"],
-  },
-  {
     href: "/approval-queue",
     icon: ShieldCheck,
-    num: "16",
+    num: "15",
     layer: "Regional desk · Brand guardrail",
     title: "Approval queue",
     blurb:
@@ -245,7 +234,7 @@ const MODULES = [
   {
     href: "/trust-layer",
     icon: ShieldCheck,
-    num: "17",
+    num: "16",
     layer: "Trust layer",
     title: "Prose-quality scorer + brand-voice gate",
     blurb:
@@ -260,7 +249,7 @@ const MODULES = [
   {
     href: "/vault",
     icon: Database,
-    num: "18",
+    num: "17",
     layer: "Knowledge · Vault",
     title: "Adisseo Vault",
     blurb:
@@ -275,7 +264,7 @@ const MODULES = [
   {
     href: "/research-deep",
     icon: Telescope,
-    num: "19",
+    num: "18",
     layer: "Knowledge · Deep research",
     title: "Deep-research agent",
     blurb:
@@ -290,7 +279,7 @@ const MODULES = [
   {
     href: "/digest",
     icon: Coffee,
-    num: "20",
+    num: "19",
     layer: "Intelligence · Digest",
     title: "04:00 species-manager digest",
     blurb:
@@ -305,7 +294,7 @@ const MODULES = [
   {
     href: "/voice-fingerprint",
     icon: Fingerprint,
-    num: "21",
+    num: "20",
     layer: "Voice fingerprint",
     title: "Per-manager voice profile",
     blurb:
@@ -320,7 +309,7 @@ const MODULES = [
   {
     href: "/og-cards",
     icon: ImageIcon,
-    num: "22",
+    num: "21",
     layer: "Distribution",
     title: "OG-card generator (Vercel Satori)",
     blurb:
@@ -335,7 +324,7 @@ const MODULES = [
   {
     href: "/observability",
     icon: Eye,
-    num: "23",
+    num: "22",
     layer: "Trust",
     title: "LLM observability (Langfuse-style)",
     blurb:
@@ -350,7 +339,7 @@ const MODULES = [
   {
     href: "/tenants",
     icon: Building2,
-    num: "24",
+    num: "23",
     layer: "Tenant simulation",
     title: "Tenant directory (Adisseo / DSM / Cargill / Kemin)",
     blurb:
@@ -365,7 +354,7 @@ const MODULES = [
   {
     href: "/distribution",
     icon: Radio,
-    num: "25",
+    num: "24",
     layer: "Closed loop",
     title: "Distribution rails — preview / ship / schedule / measure",
     blurb:
@@ -382,7 +371,7 @@ const MODULES = [
   {
     href: "/credentials",
     icon: KeyRound,
-    num: "26",
+    num: "25",
     layer: "Production-readiness",
     title: "Channel credentials & HMAC-signed webhook inbox",
     blurb:

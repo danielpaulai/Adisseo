@@ -786,12 +786,6 @@ export default function StakeholderMap() {
               >
                 Personas matrix
               </Link>
-              <Link
-                href="/plan-on-page"
-                className="rounded-md border border-adisseo-line px-2 py-1 text-center text-[10px] font-bold uppercase tracking-widest text-adisseo-ink-strong hover:border-adisseo-crimson hover:text-adisseo-crimson"
-              >
-                Plan on a Page
-              </Link>
             </div>
           </aside>
         )}

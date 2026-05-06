@@ -375,24 +375,29 @@ export default function PoultryStudioPage() {
                 active: true,
               },
               {
-                label: "LinkedIn carousel",
+                label: "LinkedIn post pack",
                 detail: "Live 5-slide PDF + editable PowerPoint export.",
                 active: true,
               },
               {
                 label: "Manga-style brochure",
-                detail: "Use the same CBI/persona frame in the ruminants format.",
+                detail: "Switch to ruminants for the narrative brochure format.",
                 href: "/studio/ruminants",
               },
               {
-                label: "Technical leaflet / article",
-                detail: "Use the aqua leaflet flow for magazine-ready copy.",
-                href: "/studio/aqua",
+                label: "Infographic / carousel",
+                detail: "Live visual path in this studio (same CBI/proof stack).",
+                active: true,
               },
               {
                 label: "Video script",
                 detail: "Use the swine short flow for storyboard + voiceover.",
                 href: "/studio/swine",
+              },
+              {
+                label: "Technical brochure",
+                detail: "Switch to aqua for leaflet/article technical format.",
+                href: "/studio/aqua",
               },
             ]}
           />

@@ -330,19 +330,19 @@ export default function RuminantsStudioPage() {
           <StudioDeliverableOptions
             options={[
               {
-                label: "Manga-style brochure",
-                detail: "Live generator in this studio.",
-                active: true,
-              },
-              {
-                label: "Technical article",
-                detail: "Same proof stack, magazine-ready prose.",
-                active: true,
-              },
-              {
                 label: "Email blast",
                 detail: "Switch to poultry pack for sales enablement email.",
                 href: "/studio/poultry",
+              },
+              {
+                label: "LinkedIn post pack",
+                detail: "Switch to poultry for editable carousel output.",
+                href: "/studio/poultry",
+              },
+              {
+                label: "Manga-style brochure",
+                detail: "Live generator in this studio.",
+                active: true,
               },
               {
                 label: "Infographic / carousel",
@@ -353,6 +353,11 @@ export default function RuminantsStudioPage() {
                 label: "Video script",
                 detail: "Switch to swine short for storyboard + voiceover.",
                 href: "/studio/swine",
+              },
+              {
+                label: "Technical brochure",
+                detail: "Switch to aqua for leaflet/article technical format.",
+                href: "/studio/aqua",
               },
             ]}
           />

@@ -45,13 +45,30 @@ export function ArticleWordCloud({ words, className = "" }: Props) {
           <span
             key={`${w.text}-${i}`}
             className="inline-block leading-tight transition hover:opacity-80"
-            style={{ fontSize, color, fontWeight: t > 0.65 ? 700 : 500 }}
+            style={{
+              fontSize,
+              color,
+              fontWeight: t > 0.65 ? 700 : 500,
+              animation: `wordCloudPop 360ms ease ${Math.min(i * 26, 520)}ms both`,
+            }}
             title={`${w.text}: ${w.value} mentions`}
           >
             {w.text}
           </span>
         );
       })}
+      <style jsx>{`
+        @keyframes wordCloudPop {
+          from {
+            opacity: 0;
+            transform: translateY(4px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 }

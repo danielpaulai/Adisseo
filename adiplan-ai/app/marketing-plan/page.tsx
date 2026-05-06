@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
-  ClipboardList,
   Grid3x3,
   Layers,
   Newspaper,
@@ -35,13 +34,6 @@ const CARDS = [
     blurb:
       "Pain × promise × proof × proposition — exportable brief before creative execution.",
     icon: Target,
-  },
-  {
-    href: "/plan-on-page",
-    title: "Plan on a Page",
-    blurb:
-      "Single-sheet summary for the field: stakeholders, frames, and shipped work.",
-    icon: ClipboardList,
   },
   {
     href: "/presentation",
