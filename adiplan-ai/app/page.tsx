@@ -385,7 +385,7 @@ const modules: Module[] = [
 
 function HomeSidebar() {
   return (
-    <aside className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
+    <aside className="adi-surface p-4 lg:sticky lg:top-6 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
       <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
         All other modules
       </p>
@@ -462,8 +462,8 @@ function HomeSidebar() {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
+    <main className="min-h-screen">
+      <header className="border-b border-adisseo-line/80 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4">
           <Logo size="md" />
           <div className="flex flex-wrap items-center justify-end gap-2">
@@ -502,7 +502,7 @@ export default function Home() {
                 <Sparkles size={12} />
                 Thursday focus · APAC
               </p>
-              <h1 className="text-3xl font-bold tracking-tight text-adisseo-ink-strong sm:text-4xl">
+              <h1 className="font-display text-3xl font-semibold tracking-tight text-adisseo-ink-strong sm:text-[2.35rem] sm:leading-tight">
                 Competitor Watch, Market Watch, stakeholder map, and matrix
               </h1>
               <p className="max-w-2xl text-sm leading-relaxed text-adisseo-ink sm:text-base">
@@ -536,7 +536,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/market-watch"
-                className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
+                className="group flex flex-col rounded-2xl border border-adisseo-line/90 bg-white p-5 shadow-adi-card transition hover:border-adisseo-crimson hover:shadow-adi-card-hover sm:p-6"
               >
                 <Globe2 size={22} className="text-adisseo-crimson" />
                 <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
@@ -552,7 +552,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/stakeholder-map"
-                className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
+                className="group flex flex-col rounded-2xl border border-adisseo-line/90 bg-white p-5 shadow-adi-card transition hover:border-adisseo-crimson hover:shadow-adi-card-hover sm:p-6"
               >
                 <Network size={22} className="text-adisseo-crimson" />
                 <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
@@ -568,7 +568,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/personas-matrix"
-                className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
+                className="group flex flex-col rounded-2xl border border-adisseo-line/90 bg-white p-5 shadow-adi-card transition hover:border-adisseo-crimson hover:shadow-adi-card-hover sm:p-6"
               >
                 <Grid3x3 size={22} className="text-adisseo-crimson" />
                 <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
@@ -630,7 +630,7 @@ export default function Home() {
           </div>
 
           <div className="min-w-0">
-            <details className="group rounded-2xl border border-adisseo-line bg-white lg:hidden">
+            <details className="group adi-surface lg:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-semibold text-adisseo-ink-strong [&::-webkit-details-marker]:hidden">
                 All other modules
                 <ArrowRight

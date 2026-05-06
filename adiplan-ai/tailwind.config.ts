@@ -38,26 +38,39 @@ const config: Config = {
           "muted-soft": "#C7BFCD",
           line: "#DEDEDE",
           "line-soft": "#EEECEC",
-          bg: "#FBF9F9",
+          /** Page wash — cool neutral (replaces warm-only canvas). */
+          bg: "#eef1f6",
+          /** Slightly deeper canvas for layered UIs. */
+          canvas: "#e4e8f0",
           tint: "#F3F5F7",
+          /** Soft rose-white panels (accent backgrounds). */
+          warmth: "#FBF7F8",
+          /** App chrome — left rail, command surfaces. */
+          sidebar: "#0f1218",
+          "sidebar-border": "#1e2530",
+          "sidebar-muted": "#8b95a8",
+          "sidebar-fg": "#e9ecf1",
         },
       },
       fontFamily: {
-        sans: [
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
-          "sans-serif",
-        ],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
+      },
+      boxShadow: {
+        "adi-card":
+          "0 1px 2px rgba(15,18,24,0.04), 0 4px 16px rgba(15,18,24,0.06)",
+        "adi-card-hover":
+          "0 2px 4px rgba(15,18,24,0.05), 0 12px 28px rgba(15,18,24,0.08)",
+        "adi-sidebar": "4px 0 24px rgba(0,0,0,0.12)",
       },
       backgroundImage: {
         "adisseo-gradient":
           "linear-gradient(135deg, #A70A2D 0%, #C9395A 60%, #D97641 100%)",
         "adisseo-gradient-soft":
           "linear-gradient(135deg, rgba(167,10,45,0.08) 0%, rgba(0,163,196,0.06) 100%)",
+        /** Subtle mesh for SaaS canvas — used on body. */
+        "adi-mesh":
+          "radial-gradient(1200px 600px at 10% -10%, rgba(167,10,45,0.06), transparent 55%), radial-gradient(900px 500px at 90% 0%, rgba(0,163,196,0.07), transparent 50%), linear-gradient(180deg, #eef1f6 0%, #e8ecf4 100%)",
       },
     },
   },

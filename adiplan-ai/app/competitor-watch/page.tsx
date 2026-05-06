@@ -336,8 +336,8 @@ function CompetitorWatchContent() {
 
   return (
     <WorkspaceShell>
-      <main className="min-h-screen bg-slate-50">
-        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-adisseo-line bg-white px-6 py-4">
+      <main className="min-h-screen bg-white/70 backdrop-blur-sm">
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-adisseo-line/80 bg-white/90 px-6 py-4 backdrop-blur-md">
           <div className="flex items-center gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">

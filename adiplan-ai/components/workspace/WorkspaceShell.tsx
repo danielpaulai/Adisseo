@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
-  BookOpen,
   FileCheck,
   LayoutGrid,
   Library,
@@ -65,10 +64,10 @@ function SidebarNav({
   onNavigate?: () => void;
 }) {
   return (
-    <nav className="flex flex-1 flex-col gap-6 px-3 py-4">
+    <nav className="flex flex-1 flex-col gap-6 px-2 py-4">
       {GROUPS.map((g) => (
         <div key={g.label}>
-          <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
+          <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-adisseo-sidebar-muted">
             {g.label}
           </p>
           <ul className="space-y-0.5">
@@ -80,13 +79,16 @@ function SidebarNav({
                   <Link
                     href={item.href}
                     onClick={onNavigate}
-                    className={`flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium transition ${
+                    className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                       active
-                        ? "bg-adisseo-crimson/10 text-adisseo-crimson"
-                        : "text-adisseo-ink hover:bg-adisseo-bg"
+                        ? "bg-white/10 text-white shadow-inner ring-1 ring-white/10"
+                        : "text-adisseo-sidebar-muted hover:bg-white/5 hover:text-adisseo-sidebar-fg"
                     }`}
                   >
-                    <Icon size={16} className="shrink-0 opacity-80" />
+                    <Icon
+                      size={17}
+                      className={`shrink-0 ${active ? "text-adisseo-crimson-soft" : "opacity-75"}`}
+                    />
                     {item.label}
                   </Link>
                 </li>
@@ -95,19 +97,19 @@ function SidebarNav({
           </ul>
         </div>
       ))}
-      <div className="border-t border-adisseo-line pt-4">
+      <div className="border-t border-adisseo-sidebar-border pt-4">
         <Link
           href="/"
           onClick={onNavigate}
-          className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-adisseo-muted hover:bg-adisseo-bg hover:text-adisseo-crimson"
+          className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-adisseo-sidebar-muted transition hover:bg-white/5 hover:text-adisseo-sidebar-fg"
         >
-          <LayoutGrid size={16} />
+          <LayoutGrid size={17} />
           Full catalogue
         </Link>
         <Link
           href="/login"
           onClick={onNavigate}
-          className="mt-0.5 flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-adisseo-muted hover:bg-adisseo-bg hover:text-adisseo-crimson"
+          className="mt-0.5 flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-adisseo-sidebar-muted transition hover:bg-white/5 hover:text-adisseo-sidebar-fg"
         >
           Sign in
         </Link>
@@ -123,56 +125,56 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const closeMobile = () => setMobileOpen(false);
 
   return (
-    <div className="flex min-h-screen bg-adisseo-bg">
+    <div className="flex min-h-screen">
       {/* Desktop sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col border-r border-adisseo-line bg-white lg:flex">
-        <div className="flex items-center gap-2 border-b border-adisseo-line px-4 py-4">
-          <Logo size="sm" />
+      <aside className="sticky top-0 z-20 hidden h-screen w-60 shrink-0 flex-col border-r border-adisseo-sidebar-border bg-adisseo-sidebar shadow-adi-sidebar lg:flex">
+        <div className="flex items-center gap-2 border-b border-adisseo-sidebar-border px-4 py-5">
+          <Logo size="sm" variant="onDark" />
         </div>
         <SidebarNav pathname={pathname} />
-        <div className="mt-auto space-y-2 border-t border-adisseo-line p-3">
-          <TenantSwitcher compact />
-          <LiveModeChip />
+        <div className="mt-auto space-y-2 border-t border-adisseo-sidebar-border p-3">
+          <TenantSwitcher compact variant="sidebar" />
+          <LiveModeChip variant="sidebar" />
         </div>
       </aside>
 
       {/* Mobile drawer */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
           aria-hidden
           onClick={closeMobile}
         />
       )}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 max-w-[85vw] flex-col border-r border-adisseo-line bg-white shadow-xl transition-transform duration-200 lg:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 max-w-[85vw] flex-col border-r border-adisseo-sidebar-border bg-adisseo-sidebar shadow-2xl transition-transform duration-200 ease-out lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between border-b border-adisseo-line px-4 py-3">
-          <Logo size="sm" />
+        <div className="flex items-center justify-between border-b border-adisseo-sidebar-border px-4 py-4">
+          <Logo size="sm" variant="onDark" />
           <button
             type="button"
             onClick={closeMobile}
-            className="rounded-lg p-2 text-adisseo-muted hover:bg-adisseo-bg hover:text-adisseo-ink-strong"
+            className="rounded-lg p-2 text-adisseo-sidebar-muted transition hover:bg-white/10 hover:text-white"
             aria-label="Close menu"
           >
             <X size={18} />
           </button>
         </div>
         <SidebarNav pathname={pathname} onNavigate={closeMobile} />
-        <div className="space-y-2 border-t border-adisseo-line p-3">
-          <TenantSwitcher compact />
-          <LiveModeChip />
+        <div className="space-y-2 border-t border-adisseo-sidebar-border p-3">
+          <TenantSwitcher compact variant="sidebar" />
+          <LiveModeChip variant="sidebar" />
         </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-adisseo-line bg-white px-4 py-3 lg:hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-adisseo-line/80 bg-white/85 px-4 py-3 backdrop-blur-md lg:hidden">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="rounded-lg p-2 text-adisseo-ink-strong hover:bg-adisseo-bg"
+            className="rounded-xl p-2 text-adisseo-ink-strong transition hover:bg-adisseo-bg"
             aria-label="Open navigation"
           >
             <Menu size={20} />

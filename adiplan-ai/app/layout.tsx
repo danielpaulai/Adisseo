@@ -1,7 +1,20 @@
 import type { Metadata, Viewport } from "next";
+import { Fraunces, Public_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import { Phase8SupabaseSync } from "@/components/Phase8SupabaseSync";
 import "./globals.css";
+
+const publicSans = Public_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "APAC AI · Adisseo APAC",
@@ -24,8 +37,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen font-sans antialiased">
+    <html
+      lang="en"
+      className={`${publicSans.variable} ${fraunces.variable}`}
+      suppressHydrationWarning
+    >
+      <body
+        className={`${publicSans.className} adi-app-body min-h-screen font-sans antialiased`}
+      >
         <Phase8SupabaseSync />
         {children}
         <Toaster
@@ -35,7 +54,7 @@ export default function RootLayout({
           toastOptions={{
             classNames: {
               toast:
-                "border border-adisseo-line bg-white text-adisseo-ink-strong shadow-lg",
+                "border border-adisseo-line/90 bg-white/95 text-adisseo-ink-strong shadow-adi-card backdrop-blur-sm",
             },
           }}
         />

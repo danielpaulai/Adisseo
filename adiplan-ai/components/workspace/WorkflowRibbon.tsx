@@ -76,7 +76,7 @@ export function WorkflowRibbon({ emphasizeHref }: WorkflowRibbonProps) {
 
   return (
     <section
-      className="mb-8 rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm"
+      className="adi-surface mb-8 p-4 sm:p-5"
       aria-label="Suggested workflow"
     >
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -95,9 +95,9 @@ export function WorkflowRibbon({ emphasizeHref }: WorkflowRibbonProps) {
             <Link
               key={s.href}
               href={s.href}
-              className={`group relative flex flex-col rounded-xl border p-4 transition hover:shadow-md ${s.accent} ${
+              className={`group relative flex flex-col rounded-xl border p-4 transition hover:shadow-adi-card-hover ${s.accent} ${
                 emphasized
-                  ? "z-[1] ring-2 ring-adisseo-crimson ring-offset-2 ring-offset-white shadow-md"
+                  ? "z-[1] ring-2 ring-adisseo-crimson ring-offset-2 ring-offset-white shadow-adi-card"
                   : ""
               }`}
             >

@@ -13,7 +13,14 @@ import { TENANT_LIST, getTenant, type TenantId } from "@/lib/tenant";
  * trust floor + channel count. Selecting a tenant updates the global
  * store and rescopes every downstream consumer.
  */
-export function TenantSwitcher({ compact = false }: { compact?: boolean }) {
+export function TenantSwitcher({
+  compact = false,
+  variant = "default",
+}: {
+  compact?: boolean;
+  /** Dark sidebar chrome — inverted control surface. */
+  variant?: "default" | "sidebar";
+}) {
   const activeTenantId = useAdiPlanStore((s) => s.activeTenantId);
   const setActiveTenant = useAdiPlanStore((s) => s.setActiveTenant);
   const [open, setOpen] = useState(false);
@@ -26,15 +33,31 @@ export function TenantSwitcher({ compact = false }: { compact?: boolean }) {
         title="Workshop tenant simulation — rescopes brand voice, Vault slice, trust floor, and channels (not production customer tenants)."
         aria-label="Choose active workshop tenant"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1.5 rounded-md border border-adisseo-line bg-white px-2.5 py-1.5 text-[11px] font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson"
+        className={
+          variant === "sidebar"
+            ? "inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] font-semibold text-adisseo-sidebar-fg transition hover:border-adisseo-crimson/60 hover:bg-white/10"
+            : "inline-flex items-center gap-1.5 rounded-md border border-adisseo-line bg-white px-2.5 py-1.5 text-[11px] font-semibold text-adisseo-ink-strong transition hover:border-adisseo-crimson"
+        }
       >
         <span
           className="h-2 w-2 rounded-full"
           style={{ backgroundColor: tenant.accent }}
         />
-        {compact ? <Building2 size={11} className="text-adisseo-muted" /> : null}
+        {compact ? (
+          <Building2
+            size={11}
+            className={
+              variant === "sidebar" ? "text-adisseo-sidebar-muted" : "text-adisseo-muted"
+            }
+          />
+        ) : null}
         <span>{compact ? tenant.id.toUpperCase() : tenant.name}</span>
-        <ChevronDown size={11} className="text-adisseo-muted" />
+        <ChevronDown
+          size={11}
+          className={
+            variant === "sidebar" ? "text-adisseo-sidebar-muted" : "text-adisseo-muted"
+          }
+        />
       </button>
 
       {open && (

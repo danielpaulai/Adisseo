@@ -3,17 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --background: #FBF9F9;
-  --foreground: #1F252A;
-  --adisseo-crimson: #A70A2D;
-  --adisseo-cyan: #00A3C4;
-  --adisseo-orange: #D97641;
+  --background: #eef1f6;
+  --foreground: #1f252a;
+  --adisseo-crimson: #a70a2d;
+  --adisseo-cyan: #00a3c4;
+  --adisseo-orange: #d97641;
 }
 
-html, body {
+html,
+body {
   height: 100%;
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
+}
+
+/** Atmospheric canvas — applied on <body> from layout. */
+.adi-app-body {
+  @apply bg-adi-mesh bg-fixed;
 }
 
 .react-flow__node-stakeholder {
@@ -39,7 +45,8 @@ html, body {
 }
 
 @keyframes adiplan-pulse-soft {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(167, 10, 45, 0.45);
   }
   50% {
@@ -49,4 +56,11 @@ html, body {
 
 .adiplan-pulse {
   animation: adiplan-pulse-soft 2.4s ease-out infinite;
+}
+
+@layer components {
+  /** Default elevated surface for SaaS cards (use with border-adisseo-line/80). */
+  .adi-surface {
+    @apply rounded-2xl border border-adisseo-line/90 bg-white shadow-adi-card;
+  }
 }
