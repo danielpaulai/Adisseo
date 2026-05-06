@@ -29,6 +29,7 @@ import {
   DEMO_DELIVERABLES,
   type DemoDeliverable,
 } from "@/lib/distribution";
+import { buildPreview } from "@/lib/channel-adapter";
 import { useAdiPlanStore } from "@/lib/store";
 import type { ChannelPreview as ChannelPreviewType } from "@/lib/channel-adapter";
 
@@ -105,12 +106,9 @@ export default function DistributionPage() {
                 Distribution rails
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-adisseo-muted">
-                Preview-only by design. Approved deliverables render the
-                channel-native card here so regional marketing can sanity-check the layout
-                before pushing into Coschedule. We do not auto-distribute —
-                the team owns the publish step in the tool they already pay
-                for. Inbound engagement webhooks still flow into the audit log
-                + engagement-tracker.
+                Every deliverable below renders into channel-native output, not a placeholder label.
+                Regional marketing can review the exact LinkedIn, WeChat, WhatsApp, email, and trade-mag
+                shapes before shipping through the approved rail.
               </p>
             </div>
             <div
@@ -234,7 +232,7 @@ export default function DistributionPage() {
                       <h3 className="mt-1 text-base font-bold text-adisseo-ink-strong">
                         {d.label}
                       </h3>
-                      <p className="mt-1 line-clamp-2 text-[11px] text-adisseo-muted">
+                      <p className="mt-1 line-clamp-3 text-[11px] leading-relaxed text-adisseo-muted">
                         {d.body}
                       </p>
                       <p className="mt-1 text-[10px] text-adisseo-muted">
@@ -315,8 +313,46 @@ export default function DistributionPage() {
                       </span>
                     )}
                     <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide text-adisseo-muted">
-                      Preview-only · push to Coschedule on approval
+                      Channel-ready outputs
                     </span>
+                  </div>
+
+                  <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                    {channelsForTenant
+                      .filter(
+                        (c) =>
+                          d.recommendedChannels.includes(c.id) &&
+                          (filterChannel === "all" || c.id === filterChannel)
+                      )
+                      .map((c) => {
+                        const inlinePreview = buildPreview({
+                          tenantId: d.tenantId,
+                          channel: c.id,
+                          deliverable: d.label,
+                          body: d.body,
+                          subject: d.label,
+                          hashtags: d.hashtags,
+                          region: d.region,
+                          species: d.species,
+                          manager: d.manager,
+                          trustScore: d.trustScore,
+                          citationCount: d.citationCount,
+                        });
+                        return (
+                          <div key={c.id} className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <p className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
+                                <ChannelIcon channel={c.id} />
+                                {c.label} output
+                              </p>
+                              <span className="text-[10px] font-semibold text-adisseo-muted">
+                                {c.blurb}
+                              </span>
+                            </div>
+                            <ChannelPreview preview={inlinePreview} />
+                          </div>
+                        );
+                      })}
                   </div>
                 </article>
               );

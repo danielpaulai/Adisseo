@@ -41,12 +41,12 @@ function LinkedInCard({
   p: Extract<ChannelPreviewType, { channel: "linkedin" }>;
 }) {
   return (
-    <div className="rounded-xl border border-[#0A66C2]/20 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-[#0A66C2]/20 bg-white shadow-sm">
       <div className="flex items-center justify-between rounded-t-xl bg-[#0A66C2] px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white">
         <span>LinkedIn \u00b7 {p.variant}</span>
         <span className="opacity-80">{p.audienceLine}</span>
       </div>
-      <div className="space-y-2 px-3 py-2.5">
+      <div className="space-y-3 px-3 py-3">
         <div className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0A66C2] text-[10px] font-black text-white">
             in
@@ -58,15 +58,18 @@ function LinkedInCard({
             <p className="text-[9px] text-stone-500">Sponsored \u00b7 just now</p>
           </div>
         </div>
-        <p className="text-[12px] leading-snug text-stone-800">{p.caption}</p>
+        <div className="rounded-xl border border-stone-200 bg-stone-50 p-2.5">
+          <p className="text-[13px] font-black leading-tight text-stone-900">{p.headline}</p>
+          <p className="mt-1 text-[11px] leading-snug text-stone-600">{p.caption}</p>
+        </div>
         {p.slides && (
           <div className="grid grid-cols-5 gap-1">
             {p.slides.map((s, i) => (
               <div
                 key={i}
-                className="flex aspect-[4/5] items-end rounded-md border border-[#0A66C2]/30 bg-gradient-to-br from-[#0A66C2]/8 via-white to-[#0A66C2]/15 p-1"
+                className="flex aspect-[4/5] items-end rounded-md border border-[#0A66C2]/30 bg-gradient-to-br from-[#0A66C2]/8 via-white to-[#0A66C2]/15 p-1.5"
               >
-                <p className="line-clamp-3 text-[8px] font-semibold text-stone-700">
+                <p className="line-clamp-4 text-[8px] font-semibold leading-tight text-stone-700">
                   {s}
                 </p>
               </div>
@@ -108,6 +111,7 @@ function WeChatCard({
         <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-500">
           {p.oaName}
         </p>
+        <p className="text-[9px] font-bold uppercase tracking-widest text-[#07C160]">{p.kicker}</p>
         <h4 className="text-[13px] font-black leading-tight text-stone-900">
           {p.headline}
         </h4>
@@ -139,6 +143,15 @@ function WhatsAppCard({
         <p className="text-[10px] font-semibold text-stone-700">{p.senderName}</p>
         <div className="max-w-[80%] rounded-lg rounded-tl-none bg-[#DCF8C6] p-2 shadow-sm">
           <p className="text-[12px] leading-snug text-stone-900">{p.bubbleText}</p>
+          {p.bulletPoints && p.bulletPoints.length > 0 && (
+            <div className="mt-2 space-y-1 border-t border-emerald-700/10 pt-2">
+              {p.bulletPoints.map((point, index) => (
+                <p key={index} className="text-[10px] leading-snug text-stone-700">
+                  • {point}
+                </p>
+              ))}
+            </div>
+          )}
           {p.attachmentLabel && (
             <p className="mt-1 inline-flex items-center gap-1 rounded bg-white/70 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-700">
               <Paperclip size={9} />
@@ -175,6 +188,11 @@ function EmailCard({
         <p className="text-[10px] text-stone-500">{p.fromAddress}</p>
         <h4 className="text-[12px] font-black text-stone-900">{p.subject}</h4>
         <p className="text-[10px] italic text-stone-500">{p.preheader}</p>
+        {p.proofLine && (
+          <p className="rounded-md bg-indigo-50 px-2 py-1 text-[10px] font-semibold text-indigo-800">
+            {p.proofLine}
+          </p>
+        )}
         <div className="border-t border-stone-200 pt-1.5">
           {p.bodyHtmlLikeLines.map((line, i) => (
             <p
@@ -208,10 +226,20 @@ function TradeMagCard({
           {p.publication}
         </p>
         <p className="text-[11px] font-semibold text-stone-700">{p.section}</p>
+        <h4 className="text-[13px] font-black leading-tight text-stone-900">{p.headline}</h4>
         <p className="text-[11px] text-stone-700">
           <span className="font-semibold">Desk:</span> {p.desk}
         </p>
         <p className="text-[11px] leading-snug text-stone-700">{p.abstract}</p>
+        {p.keyPoints.length > 0 && (
+          <div className="space-y-1 rounded-lg bg-purple-50 p-2">
+            {p.keyPoints.map((point, index) => (
+              <p key={index} className="text-[10px] leading-snug text-purple-900">
+                • {point}
+              </p>
+            ))}
+          </div>
+        )}
         <p className="inline-flex items-center gap-1 rounded bg-purple-100 px-1.5 py-0.5 text-[9px] font-semibold text-purple-800">
           <Send size={9} /> Submitted \u2014 awaiting editorial review
         </p>

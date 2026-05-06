@@ -72,6 +72,7 @@ export type ChannelPreview =
 export interface LinkedInPreview {
   channel: "linkedin";
   authorHandle: string;
+  headline: string;
   /** What the body text reads. */
   caption: string;
   hashtags: string[];
@@ -87,6 +88,7 @@ export interface LinkedInPreview {
 export interface WeChatPreview {
   channel: "wechat";
   oaName: string;
+  kicker: string;
   headline: string;
   digest: string;
   /** Cover stripe colour. */
@@ -98,6 +100,7 @@ export interface WhatsAppPreview {
   channel: "whatsapp";
   senderName: string;
   bubbleText: string;
+  bulletPoints?: string[];
   /** Optional attachment label. */
   attachmentLabel?: string;
   audienceLine: string;
@@ -109,6 +112,7 @@ export interface EmailPreview {
   fromAddress: string;
   subject: string;
   preheader: string;
+  proofLine?: string;
   bodyHtmlLikeLines: string[];
   audienceLine: string;
 }
@@ -116,8 +120,10 @@ export interface EmailPreview {
 export interface TradeMagPreview {
   channel: "trade-mag";
   publication: string;
+  headline: string;
   desk: string;
   abstract: string;
+  keyPoints: string[];
   /** Section, e.g. "Dairy nutrition · Q2 2026". */
   section: string;
   audienceLine: string;
@@ -157,9 +163,37 @@ function id(prefix: string) {
 }
 
 function clipBody(body: string, max = 320): string {
-  const trimmed = body.replace(/\s+/g, " ").trim();
+  const trimmed = body.replace(/\[\^[^\]]+\]/g, "").replace(/\s+/g, " ").trim();
   if (trimmed.length <= max) return trimmed;
   return trimmed.slice(0, max - 1).trimEnd() + "\u2026";
+}
+
+function sentenceParts(body: string, limit = 6): string[] {
+  return clipBody(body, 1600)
+    .split(/\.(?=\s|$)/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, limit)
+    .map((s) => (s.endsWith(".") ? s : `${s}.`));
+}
+
+function headlineFrom(deliverable: string, max = 58): string {
+  return clipBody(deliverable.replace(/\s*·\s*/g, " · "), max);
+}
+
+function compactPoints(body: string, limit = 3, max = 72): string[] {
+  return sentenceParts(body, limit).map((s) => clipBody(s, max));
+}
+
+function slideTitles(input: ChannelDispatchInput): string[] {
+  const points = compactPoints(input.body, 3, 44);
+  return [
+    headlineFrom(input.deliverable, 38),
+    points[0] ?? `Signal from ${input.region ?? "APAC"}.`,
+    points[1] ?? `Proof for ${input.species ?? "feed"} buyers.`,
+    points[2] ?? "What the sales team should do next.",
+    anchorLine(input),
+  ];
 }
 
 function audienceCountFor(channel: DistributionChannel): number {
@@ -245,10 +279,11 @@ const linkedin: ChannelAdapter = {
     return {
       channel: "linkedin",
       authorHandle: tenantHandle(input.tenantId, input.manager),
+      headline: headlineFrom(input.deliverable),
       caption: clipBody(input.body, 480),
       hashtags: defaultHashtags(input),
       variant,
-      slides,
+      slides: variant === "carousel" ? slideTitles(input) : slides,
       anchor: anchorLine(input),
       audienceLine: CHANNELS.linkedin.audience,
     };
@@ -274,6 +309,7 @@ const wechat: ChannelAdapter = {
     return {
       channel: "wechat",
       oaName: `${TENANTS[input.tenantId].name} \u00b7 \u4e2d\u56fd\u5b98\u65b9\u53f7`,
+      kicker: `${input.species ?? "feed"} · ${input.region ?? "APAC"}`,
       headline: clipBody(input.deliverable, 60),
       digest: clipBody(input.body, 200),
       cover: TENANTS[input.tenantId].accent,
@@ -308,6 +344,7 @@ const whatsapp: ChannelAdapter = {
       channel: "whatsapp",
       senderName,
       bubbleText: clipBody(input.body, 280),
+      bulletPoints: compactPoints(input.body, 2, 56),
       attachmentLabel,
       audienceLine: CHANNELS.whatsapp.audience,
     };
@@ -351,6 +388,7 @@ const email: ChannelAdapter = {
       fromAddress,
       subject,
       preheader,
+      proofLine: compactPoints(input.body, 1, 96)[0],
       bodyHtmlLikeLines: lines,
       audienceLine: CHANNELS.email.audience,
     };
@@ -388,8 +426,10 @@ const tradeMag: ChannelAdapter = {
     return {
       channel: "trade-mag",
       publication,
+      headline: headlineFrom(input.deliverable, 72),
       desk,
       abstract: clipBody(input.body, 600),
+      keyPoints: compactPoints(input.body, 3, 82),
       section,
       audienceLine: CHANNELS["trade-mag"].audience,
     };
