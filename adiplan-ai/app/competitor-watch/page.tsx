@@ -24,6 +24,7 @@ import {
   PenLine,
   Megaphone,
   CalendarDays,
+  ChevronDown,
 } from "lucide-react";
 import { useAdiPlanStore } from "@/lib/store";
 import type { ScrapedArticle, Species } from "@/lib/scraper-api";
@@ -132,6 +133,8 @@ function CompetitorWatchContent() {
 
   const [compareOpen, setCompareOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   const setSelectedArticle = useAdiPlanStore((s) => s.setSelectedArticle);
   const setMatch = useAdiPlanStore((s) => s.setMatch);
@@ -407,63 +410,96 @@ function CompetitorWatchContent() {
           <WorkflowRibbon />
         </div>
 
-        <div className="mx-auto max-w-7xl px-6 pb-4">
-          <section className="adi-surface p-4">
-            <div className="mb-3 flex flex-wrap items-center gap-2">
-              <Filter size={14} className="text-adisseo-muted" />
-              <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
-                Filters · word cloud & roll-ups follow this slice
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <label className="flex flex-col gap-1 text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
-                Timeline
-                <select
-                  value={dayWindow}
-                  onChange={(e) => setDayWindow(e.target.value as DayWindow)}
-                  className="rounded-lg border border-adisseo-line bg-white px-2 py-1.5 text-xs font-medium text-adisseo-ink-strong"
-                >
-                  <option value="30">Last 30 days</option>
-                  <option value="90">Last 90 days</option>
-                  <option value="365">Last 12 months</option>
-                  <option value="all">All ingested</option>
-                </select>
-              </label>
-              <label className="flex flex-col gap-1 text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
-                Region contains
-                <select
-                  value={regionFilter}
-                  onChange={(e) => setRegionFilter(e.target.value)}
-                  className="rounded-lg border border-adisseo-line bg-white px-2 py-1.5 text-xs font-medium text-adisseo-ink-strong"
-                >
-                  <option value="all">Any region</option>
-                  {regions.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="flex flex-col gap-1 text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
-                Species
-                <select
-                  value={speciesFilter}
-                  onChange={(e) => setSpeciesFilter(e.target.value)}
-                  className="rounded-lg border border-adisseo-line bg-white px-2 py-1.5 text-xs font-medium text-adisseo-ink-strong"
-                >
-                  <option value="all">Any species</option>
-                  <option value="aqua">Aqua</option>
-                  <option value="poultry">Poultry</option>
-                  <option value="ruminants">Ruminants</option>
-                  <option value="swine">Swine</option>
-                  <option value="cross">Cross</option>
-                </select>
-              </label>
-            </div>
-            <div className="mt-3">
-              <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
-                Focus competitors (top sources — multi-select)
-              </p>
+        <div className="mx-auto max-w-7xl px-6 pb-0">
+          {/* ── Slim filter toolbar ─────────────────────────────── */}
+          <div className="flex flex-wrap items-center gap-2 border-b border-adisseo-line/60 py-2.5">
+            {/* Inline filter selects */}
+            <select
+              value={dayWindow}
+              onChange={(e) => setDayWindow(e.target.value as DayWindow)}
+              className="rounded-md border border-adisseo-line bg-white px-2 py-1 text-[11px] font-medium text-adisseo-ink-strong focus:outline-none"
+            >
+              <option value="30">Last 30 days</option>
+              <option value="90">Last 90 days</option>
+              <option value="365">Last 12 months</option>
+              <option value="all">All ingested</option>
+            </select>
+            <select
+              value={regionFilter}
+              onChange={(e) => setRegionFilter(e.target.value)}
+              className="rounded-md border border-adisseo-line bg-white px-2 py-1 text-[11px] font-medium text-adisseo-ink-strong focus:outline-none"
+            >
+              <option value="all">Any region</option>
+              {regions.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+            <select
+              value={speciesFilter}
+              onChange={(e) => setSpeciesFilter(e.target.value)}
+              className="rounded-md border border-adisseo-line bg-white px-2 py-1 text-[11px] font-medium text-adisseo-ink-strong focus:outline-none"
+            >
+              <option value="all">Any species</option>
+              <option value="aqua">Aqua</option>
+              <option value="poultry">Poultry</option>
+              <option value="ruminants">Ruminants</option>
+              <option value="swine">Swine</option>
+              <option value="cross">Cross</option>
+            </select>
+
+            <div className="h-4 w-px bg-adisseo-line/60" />
+
+            {/* Competitor focus toggle */}
+            <button
+              type="button"
+              onClick={() => setShowFilters((v) => !v)}
+              className={`inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-[11px] font-semibold transition ${
+                competitorFocus.size > 0
+                  ? "border-adisseo-crimson bg-adisseo-crimson/10 text-adisseo-crimson"
+                  : "border-adisseo-line text-adisseo-ink hover:border-adisseo-crimson/50"
+              }`}
+            >
+              <Filter size={11} />
+              Competitors
+              {competitorFocus.size > 0 && (
+                <span className="ml-0.5 rounded-full bg-adisseo-crimson px-1.5 text-[9px] font-black text-white">
+                  {competitorFocus.size}
+                </span>
+              )}
+              <ChevronDown size={10} className={`transition-transform ${showFilters ? "rotate-180" : ""}`} />
+            </button>
+
+            <div className="h-4 w-px bg-adisseo-line/60" />
+
+            {/* Analytics toggle */}
+            <button
+              type="button"
+              onClick={() => setShowAnalytics((v) => !v)}
+              className={`inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-[11px] font-semibold transition ${
+                showAnalytics
+                  ? "border-adisseo-ink bg-adisseo-ink text-white"
+                  : "border-adisseo-line text-adisseo-ink hover:border-adisseo-ink/50"
+              }`}
+            >
+              <BarChart3 size={11} />
+              Analytics
+              {corpusStats.total > 0 && (
+                <span className="ml-0.5 text-[9px] font-black opacity-60">
+                  {corpusStats.total}
+                </span>
+              )}
+              <ChevronDown size={10} className={`transition-transform ${showAnalytics ? "rotate-180" : ""}`} />
+            </button>
+
+            {/* Spacer */}
+            <span className="ml-auto text-[10px] text-adisseo-muted tabular-nums">
+              {filteredArticles.length} / {articles.length} articles
+            </span>
+          </div>
+
+          {/* ── Competitor pills (collapsible) ──────────────────── */}
+          {showFilters && (
+            <div className="border-b border-adisseo-line/60 py-2.5">
               <div className="flex flex-wrap gap-1.5">
                 {topCompetitors.map((name) => {
                   const on = competitorFocus.has(name);
@@ -482,94 +518,54 @@ function CompetitorWatchContent() {
                     </button>
                   );
                 })}
+                {competitorFocus.size > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setCompetitorFocus(new Set())}
+                    className="rounded-full border border-adisseo-line px-2.5 py-1 text-[10px] font-semibold text-adisseo-crimson hover:bg-adisseo-crimson/5"
+                  >
+                    Clear all
+                  </button>
+                )}
               </div>
-              {competitorFocus.size > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setCompetitorFocus(new Set())}
-                  className="mt-2 text-[10px] font-semibold text-adisseo-crimson hover:underline"
-                >
-                  Clear competitor focus
-                </button>
-              )}
             </div>
-          </section>
-
-          {corpusStats.total > 0 && (
-            <section className="adi-surface mt-4 p-4 sm:p-5">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-crimson">
-                Corpus at a glance
-              </p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="rounded-xl bg-adisseo-bg/80 px-3 py-2.5">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
-                    Articles in this view
-                  </p>
-                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
-                    {corpusStats.total}
-                  </p>
-                </div>
-                <div className="rounded-xl bg-adisseo-bg/80 px-3 py-2.5">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
-                    Competitor-sourced
-                  </p>
-                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
-                    {corpusStats.competitorCount}
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-adisseo-muted">
-                    Third-party publishers only
-                  </p>
-                </div>
-                <div className="rounded-xl bg-adisseo-bg/80 px-3 py-2.5">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
-                    Adisseo-owned items
-                  </p>
-                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
-                    {corpusStats.ownCount}
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-adisseo-muted">
-                    Same inbox — your releases and announcements
-                  </p>
-                </div>
-                <div className="rounded-xl border border-adisseo-crimson/25 bg-adisseo-warmth/40 px-3 py-2.5">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-crimson">
-                    Brand vs. market coverage
-                  </p>
-                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
-                    {corpusStats.voicePct}%
-                  </p>
-                  <p className="mt-0.5 text-[10px] leading-snug text-adisseo-ink">
-                    <span className="font-semibold">{corpusStats.mentionHits} of {corpusStats.competitorCount}</span> competitor articles mention{" "}
-                    <span className="font-semibold">Adisseo</span> by name in the
-                    title or summary. This shows how visible Adisseo is in the
-                    market conversation — <em>not</em> revenue share.
-                  </p>
-                </div>
-              </div>
-            </section>
           )}
 
-          <div className="mt-4">
-            <div className="mb-2 flex items-center gap-2 text-adisseo-muted">
-              <BarChart3 size={14} />
-              <p className="text-xs font-semibold uppercase tracking-widest">
-                Analytics · word cloud (filtered corpus)
-              </p>
+          {/* ── Analytics panel (collapsible) ───────────────────── */}
+          {showAnalytics && (
+            <div className="border-b border-adisseo-line/60 py-4 space-y-4">
+              {corpusStats.total > 0 && (
+                <div className="grid gap-3 sm:grid-cols-4">
+                  <div className="rounded-xl border border-adisseo-line bg-[#FBFAF6] px-3 py-2.5">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">In this view</p>
+                    <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">{corpusStats.total}</p>
+                  </div>
+                  <div className="rounded-xl border border-adisseo-line bg-[#FBFAF6] px-3 py-2.5">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">Competitor-sourced</p>
+                    <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">{corpusStats.competitorCount}</p>
+                  </div>
+                  <div className="rounded-xl border border-adisseo-line bg-[#FBFAF6] px-3 py-2.5">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">Adisseo-owned</p>
+                    <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">{corpusStats.ownCount}</p>
+                  </div>
+                  <div className="rounded-xl border border-adisseo-crimson/25 bg-adisseo-warmth/40 px-3 py-2.5">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-crimson">Brand coverage</p>
+                    <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">{corpusStats.voicePct}%</p>
+                    <p className="mt-0.5 text-[10px] text-adisseo-muted">{corpusStats.mentionHits} of {corpusStats.competitorCount} mention Adisseo</p>
+                  </div>
+                </div>
+              )}
+              <ArticleWordCloud words={wordCloud} />
+              <div className="grid gap-3 sm:grid-cols-3">
+                <RollupCard title="Top CBIs" rows={rollup.cbi.slice(0, 5)} />
+                <RollupCard title="Top CSFs" rows={rollup.csf.slice(0, 5)} />
+                <RollupCard title="Top personas" rows={rollup.persona.slice(0, 5)} />
+              </div>
             </div>
-            <ArticleWordCloud words={wordCloud} />
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <RollupCard title="Top CBIs (count)" rows={rollup.cbi.slice(0, 5)} />
-            <RollupCard title="Top CSFs (count)" rows={rollup.csf.slice(0, 5)} />
-            <RollupCard
-              title="Top personas (count)"
-              rows={rollup.persona.slice(0, 5)}
-            />
-          </div>
+          )}
         </div>
 
-        <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[1fr,1.2fr]">
+        <div className="mx-auto grid max-w-7xl gap-6 px-6 py-4 lg:grid-cols-[1fr,1.2fr]">
           <section>
             <div className="mb-2 flex items-center gap-2 text-adisseo-muted">
               <Newspaper size={16} />
@@ -578,10 +574,6 @@ function CompetitorWatchContent() {
                 ({filteredArticles.length} of {articles.length})
               </span>
             </div>
-            <p className="mb-3 text-[10px] leading-snug text-adisseo-muted">
-              Competitor articles <span className="font-semibold">+ Adisseo&rsquo;s own content</span> — use the competitor focus filter above to isolate a single source.
-            </p>
-
             <FeedStatusBadge
               meta={feedMeta}
               refreshing={refreshing}
