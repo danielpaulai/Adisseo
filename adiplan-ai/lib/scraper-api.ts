@@ -128,11 +128,141 @@ export const seededArticles: ScrapedArticle[] = [
     region: "APAC",
     language: "vi",
   },
+  {
+    id: "art-009",
+    competitor: "Adisseo",
+    title: "Adisseo APAC rolls out SmartCare layer programme for broilers in Malaysia",
+    summary:
+      "Regional technical team positions SmartCare as a structured approach to gut integrity and uniformity — paired with trial data from Malaysian integrators and distributor training dates through Q3.",
+    url: "https://example.com/adisseo-smartcare-my",
+    publishedAt: "2026-04-28",
+    species: ["poultry"],
+    tags: ["smartcare", "broiler", "malaysia", "gut-integrity", "distributor"],
+    region: "APAC",
+    language: "en",
+  },
+  {
+    id: "art-010",
+    competitor: "Adisseo",
+    title: "Adisseo methane roadmap: rumen solutions for Japanese dairy co-ops",
+    summary:
+      "Press note summarising on-farm methane pilots with partner co-ops in Hokkaido — links to J-credit context and technical FAQ for nutritionists.",
+    url: "https://example.com/adisseo-methane-jp",
+    publishedAt: "2026-04-27",
+    species: ["ruminants"],
+    tags: ["methane", "japan", "dairy", "rumen", "sustainability"],
+    region: "NEA",
+    language: "en",
+  },
+  {
+    id: "art-011",
+    competitor: "Nutreco",
+    title: "Trouw Nutrition expands shrimp specialty line in Indonesia and Vietnam",
+    summary:
+      "Nutreco positions new starter and grower diets for vannamei with lower fishmeal inclusion — cites regional disease pressure and references how integrators benchmark against Adisseo aqua programmes.",
+    url: "https://example.com/nutreco-shrimp-id-vn",
+    publishedAt: "2026-04-26",
+    species: ["aqua"],
+    tags: ["shrimp", "indonesia", "vietnam", "fishmeal", "vannamei"],
+    region: "APAC",
+    language: "en",
+  },
+  {
+    id: "art-012",
+    competitor: "Biomin",
+    title: "Biomin Asia survey: mycotoxin risk shifting northward in China corn belt",
+    summary:
+      "Annual survey highlights DON and zearalenone uptick — recommends broader screening at receiving. Includes comparison table naming Adisseo mycotoxin binders as reference category.",
+    url: "https://example.com/biomin-survey-cn",
+    publishedAt: "2026-04-25",
+    species: ["swine", "poultry", "ruminants"],
+    tags: ["mycotoxin", "china", "survey", "corn", "binders"],
+    region: "China",
+    language: "en",
+  },
+  {
+    id: "art-013",
+    competitor: "Novus",
+    title: "Novus promotes MHA methionine equivalency trials in nursery pigs across Thailand",
+    summary:
+      "Field bulletin summarising ADG and FCR deltas vs control diets — distributor webinar series scheduled with Thai integrators.",
+    url: "https://example.com/novus-mha-th",
+    publishedAt: "2026-04-24",
+    species: ["swine"],
+    tags: ["methionine", "nursery", "thailand", "fcr", "trials"],
+    region: "APAC",
+    language: "en",
+  },
+  {
+    id: "art-014",
+    competitor: "Jefo",
+    title: "Jefo targets transport-stressed cattle in Australia with protected vitamin packs",
+    summary:
+      "Technical note for lot feeders on shrink and liver enzyme markers — partnership with two Queensland yards for summer 2026.",
+    url: "https://example.com/jefo-cattle-au",
+    publishedAt: "2026-04-23",
+    species: ["ruminants"],
+    tags: ["transport", "cattle", "australia", "vitamins", "feedlot"],
+    region: "Oceania",
+    language: "en",
+  },
+  {
+    id: "art-015",
+    competitor: "De Heus",
+    title: "De Heus opens aqua technical centre in Surabaya with pangasius focus",
+    summary:
+      "New facility offers water-quality diagnostics and feed trial tanks — positions regional expansion against incumbent aqua nutrition suppliers.",
+    url: "https://example.com/deheus-aqua-id",
+    publishedAt: "2026-04-21",
+    species: ["aqua"],
+    tags: ["pangasius", "indonesia", "technical-centre", "aqua-feed"],
+    region: "APAC",
+    language: "id",
+  },
+  {
+    id: "art-016",
+    competitor: "CJ Bio",
+    title: "CJ Bio announces amino acid capacity expansion for SEA swine and poultry",
+    summary:
+      "Korea-headquartered group outlines lysine and threonine debottlenecking — notes competitive tension with European amino acid suppliers in Vietnam.",
+    url: "https://example.com/cj-bio-amino-kr",
+    publishedAt: "2026-04-19",
+    species: ["swine", "poultry"],
+    tags: ["lysine", "threonine", "capacity", "vietnam", "korea"],
+    region: "APAC",
+    language: "en",
+  },
+  {
+    id: "art-017",
+    competitor: "ForFarmers",
+    title: "ForFarmers publishes layer sustainability scorecard for EU retail chains",
+    summary:
+      "Scorecard ties feed inputs to scope-3 reporting — primarily EU but referenced in APAC distributor briefings as a template for retailer audits.",
+    url: "https://example.com/forfarmers-layers-eu",
+    publishedAt: "2026-04-17",
+    species: ["poultry"],
+    tags: ["layers", "sustainability", "scope-3", "retail", "eu"],
+    region: "Europe",
+    language: "en",
+  },
+  {
+    id: "art-018",
+    competitor: "Charoen Pokphand",
+    title: "CP Foods integrates vertical swine biosecurity dashboard across Thailand farms",
+    summary:
+      "Internal comms piece on ASF monitoring layers — mentions co-development discussions with global nutrition partners including Adisseo on nursery protocols.",
+    url: "https://example.com/cp-biosecurity-th",
+    publishedAt: "2026-04-16",
+    species: ["swine"],
+    tags: ["ASF", "biosecurity", "thailand", "integrator", "dashboard"],
+    region: "APAC",
+    language: "th",
+  },
 ];
 
 /**
  * Source tag — surfaced in /api/articles so the UI can render a
- * "Live · N · X ago" or "Demo · 8 seeded" badge on Competitor Watch.
+ * "Live · N · X ago" or "Demo · seeded corpus" badge on Competitor Watch.
  */
 export type ScraperSource = "live" | "live-cache" | "live-failed-fallback" | "demo";
 

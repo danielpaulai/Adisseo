@@ -31,7 +31,7 @@ import { LiveModeChip } from "@/components/LiveModeChip";
 const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
   {
     kind: "match",
-    title: "Matched: Cargill SE-Asia ASF webinar Q3 2025",
+    title: "Analyzed: Cargill SE-Asia ASF webinar Q3 2025",
     detail:
       "Cargill · → Disease-resilience nutrition / Integrator vet desk",
     href: "/competitor-watch",
@@ -57,7 +57,7 @@ const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
   },
   {
     kind: "match",
-    title: "Matched: Kemin AGP-Free webinar Jan 2026",
+    title: "Analyzed: Kemin AGP-Free webinar Jan 2026",
     detail: "Kemin · → Regulatory shift / Integrator nutrition manager",
     href: "/competitor-watch",
     tone: "ink",
@@ -82,7 +82,7 @@ const DEMO_SEED: Omit<ActivityEntry, "id">[] = [
   },
   {
     kind: "match",
-    title: "Matched: Hokkaido Dairy Times · summer-yield issue",
+    title: "Analyzed: Hokkaido Dairy Times · summer-yield issue",
     detail:
       "Hokkaido Dairy Times · → Heat stress / Hokkaido dairy R&D buyer",
     href: "/competitor-watch",
@@ -229,7 +229,7 @@ export default function DashboardPage() {
           />
           <Stat
             n={`${matchToFrame}%`}
-            label="Match → Frame conversion"
+            label="Analyze → Frame conversion"
             sub={`${frameToShip}% Frame → Deliverable`}
           />
         </div>
@@ -442,7 +442,7 @@ function EmptyState({
           href="/competitor-watch"
           className="flex items-center gap-1 rounded-md bg-adisseo-crimson px-3 py-2 font-semibold text-white hover:opacity-90"
         >
-          1 · Match an article <ArrowRight size={11} />
+          1 · Analyze an article <ArrowRight size={11} />
         </Link>
         <Link
           href="/strategic-frame"

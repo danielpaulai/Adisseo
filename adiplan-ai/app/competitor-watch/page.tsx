@@ -86,7 +86,7 @@ function CompetitorWatchContent() {
   const searchParams = useSearchParams();
   const [articles, setArticles] = useState<ScrapedArticle[]>([]);
   const [feedMeta, setFeedMeta] = useState<FeedMeta | null>(null);
-  const [loadingMatch, setLoadingMatch] = useState(false);
+  const [loadingAnalyze, setLoadingAnalyze] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [response, setResponse] = useState<MatchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -213,6 +213,28 @@ function CompetitorWatchContent() {
     [filteredArticles, llmHintsById]
   );
 
+  const corpusStats = useMemo(() => {
+    const list = filteredArticles;
+    const isOwn = (a: ScrapedArticle) =>
+      /^adisseo\b/i.test((a.competitor || "").trim());
+    const ownBrand = list.filter(isOwn);
+    const competitorOnly = list.filter((a) => !isOwn(a));
+    const mentionHits = competitorOnly.filter((a) =>
+      /\badisseo\b/i.test(`${a.title} ${a.summary}`)
+    ).length;
+    const voicePct =
+      competitorOnly.length > 0
+        ? Math.round((mentionHits / competitorOnly.length) * 100)
+        : 0;
+    return {
+      total: list.length,
+      ownCount: ownBrand.length,
+      competitorCount: competitorOnly.length,
+      mentionHits,
+      voicePct,
+    };
+  }, [filteredArticles]);
+
   const loadFeed = async (force = false) => {
     try {
       const r = await fetch(`/api/articles${force ? "?refresh=1" : ""}`);
@@ -251,8 +273,8 @@ function CompetitorWatchContent() {
     setRefreshing(false);
   };
 
-  const matchArticle = async (article: ScrapedArticle) => {
-    setLoadingMatch(true);
+  const analyzeArticle = async (article: ScrapedArticle) => {
+    setLoadingAnalyze(true);
     setResponse(null);
     setError(null);
     setSelectedArticle(article.id);
@@ -262,7 +284,7 @@ function CompetitorWatchContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ articleId: article.id }),
       });
-      if (!res.ok) throw new Error("Match failed");
+      if (!res.ok) throw new Error("Analyze failed");
       const data: MatchResponse = await res.json();
       setResponse(data);
       setMatch(data.match);
@@ -285,21 +307,21 @@ function CompetitorWatchContent() {
       });
       useAdiPlanStore.getState().pushActivity({
         kind: "match",
-        title: `Matched: ${article.title}`,
+        title: `Analyzed: ${article.title}`,
         detail: `${article.competitor} \u00b7 \u2192 ${data.match.cbi} / ${data.match.persona}`,
         href: COMPETITOR_WATCH_PATH,
         tone: "ink",
       });
-      toast.success(`Matched \u2192 ${data.match.cbi}`, {
+      toast.success(`Analyzed \u2192 ${data.match.cbi}`, {
         description: `${data.match.persona} \u00b7 ${data.match.recommendedFormats[0] ?? "deliverable"}`,
       });
     } catch {
-      setError("Match request failed. Check API keys or try again.");
-      toast.error("Match request failed", {
+      setError("Analyze request failed. Check API keys or try again.");
+      toast.error("Analyze request failed", {
         description: "Check the OpenAI / Anthropic key, or try a different article.",
       });
     } finally {
-      setLoadingMatch(false);
+      setLoadingAnalyze(false);
     }
   };
 
@@ -319,10 +341,10 @@ function CompetitorWatchContent() {
           <div className="flex items-center gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
-                Competitor Watch · Scraped news → APAC lens
+                Competitor Watch
               </p>
               <h1 className="text-lg font-semibold text-adisseo-ink-strong">
-                Monitor competitor narratives with CSF, CBI, and persona roll-ups
+                Scraped news → APAC framework (CBI · CSF · persona)
               </h1>
             </div>
           </div>
@@ -439,6 +461,60 @@ function CompetitorWatchContent() {
               )}
             </div>
           </section>
+
+          {corpusStats.total > 0 && (
+            <section className="mt-4 rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm sm:p-5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-crimson">
+                Corpus at a glance
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-xl bg-adisseo-bg/80 px-3 py-2.5">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
+                    Articles in this view
+                  </p>
+                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
+                    {corpusStats.total}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-adisseo-bg/80 px-3 py-2.5">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
+                    Competitor-sourced
+                  </p>
+                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
+                    {corpusStats.competitorCount}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-adisseo-muted">
+                    Third-party publishers only
+                  </p>
+                </div>
+                <div className="rounded-xl bg-adisseo-bg/80 px-3 py-2.5">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-muted">
+                    Adisseo-owned items
+                  </p>
+                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
+                    {corpusStats.ownCount}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-adisseo-muted">
+                    Same inbox — your releases and announcements
+                  </p>
+                </div>
+                <div className="rounded-xl border border-adisseo-crimson/25 bg-adisseo-warmth/40 px-3 py-2.5">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-crimson">
+                    Brand mention rate
+                  </p>
+                  <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
+                    {corpusStats.voicePct}%
+                  </p>
+                  <p className="mt-0.5 text-[10px] leading-snug text-adisseo-ink">
+                    Of competitor articles, how many reference{" "}
+                    <span className="font-semibold">Adisseo</span> in title or
+                    summary — not market share, just narrative visibility in this
+                    slice.
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
 
           <div className="mt-4">
             <div className="mb-2 flex items-center gap-2 text-adisseo-muted">
@@ -621,16 +697,16 @@ function CompetitorWatchContent() {
                           Analysis pack
                         </button>
                         <button
-                          onClick={() => matchArticle(a)}
-                          disabled={loadingMatch}
+                          onClick={() => analyzeArticle(a)}
+                          disabled={loadingAnalyze}
                           className="inline-flex items-center justify-center gap-1.5 rounded-md bg-adisseo-crimson px-3 py-2 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
                         >
-                          {loadingMatch ? (
+                          {loadingAnalyze ? (
                             <Loader2 size={12} className="animate-spin" />
                           ) : (
                             <Sparkles size={12} />
                           )}
-                          Match
+                          Analyze
                         </button>
                       </div>
                     </div>
@@ -644,18 +720,18 @@ function CompetitorWatchContent() {
             <div className="rounded-2xl border border-adisseo-line bg-white p-6 shadow-sm">
               <div className="mb-3 flex items-center gap-2 text-adisseo-muted">
                 <Sparkles size={16} />
-                <p className="text-sm font-medium">APAC match result</p>
+                <p className="text-sm font-medium">APAC analysis</p>
               </div>
 
-              {!response && !loadingMatch && (
+              {!response && !loadingAnalyze && (
                 <p className="py-12 text-center text-sm text-adisseo-muted">
-                  Click <span className="font-semibold">Match</span> on any
-                  article — returns CBI, target persona, and suggested formats
-                  against the APAC framework.
+                  Click <span className="font-semibold">Analyze</span> on any
+                  article — maps CBI, target persona, and suggested formats to
+                  the APAC framework.
                 </p>
               )}
 
-              {loadingMatch && (
+              {loadingAnalyze && (
                 <div className="flex flex-col items-center gap-3 py-12 text-adisseo-muted">
                   <Loader2 size={28} className="animate-spin" />
                   <p className="text-sm">Reasoning over the APAC framework&hellip;</p>
@@ -724,6 +800,7 @@ function CompetitorWatchContent() {
 
                   {scoreById[response.match.articleId] && (
                     <ThreeAxisRadar
+                      featured
                       score={scoreById[response.match.articleId]}
                     />
                   )}

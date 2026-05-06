@@ -21,7 +21,7 @@ import { toast } from "sonner";
 const KIND_LABEL: Record<TraceKind, string> = {
   "score-prose": "Trust scoring",
   "research-deep": "Deep research",
-  "match-article": "Article matching",
+  "match-article": "Article analysis",
   "render-aqua-leaflet": "Aqua leaflet",
   "render-poultry-pack": "Poultry pack",
   "render-ruminants-brochure": "Ruminants brochure",

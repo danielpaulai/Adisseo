@@ -191,7 +191,7 @@ export default function PlanOnPagePage() {
                   detail={
                     match
                       ? `${match.cbi} · ${match.persona}`
-                      : "Match an article in Competitor Watch"
+                      : "Analyze an article in Competitor Watch"
                   }
                   href="/competitor-watch"
                 />

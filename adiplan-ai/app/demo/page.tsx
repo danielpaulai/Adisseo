@@ -25,7 +25,7 @@ const STEPS = [
   {
     n: "01",
     title: "Match a competitor article",
-    body: "Open Competitor Watch. Pick any seeded article (Mintec, Kemin, Cargill\u2026). Click Match. The LLM returns the CBI it surfaces, the persona to target, and three deliverable formats grounded in the APAC vocabulary.",
+    body: "Open Competitor Watch. Pick any seeded article (Mintec, Kemin, Cargill\u2026). Click Analyze. The LLM returns the CBI it surfaces, the persona to target, and three deliverable formats grounded in the APAC vocabulary.",
     href: "/competitor-watch",
     cta: "Open Competitor Watch",
     icon: Newspaper,

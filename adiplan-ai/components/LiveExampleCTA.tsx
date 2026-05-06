@@ -72,7 +72,7 @@ export function LiveExampleCTA() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ articleId: ex.articleId }),
       });
-      if (!matchRes.ok) throw new Error("Match failed");
+      if (!matchRes.ok) throw new Error("Analyze failed");
       const matchData = await matchRes.json();
 
       setSelectedArticle(article.id);
@@ -109,7 +109,7 @@ export function LiveExampleCTA() {
         <Play size={12} /> Run a live example
       </p>
       <p className="mt-1 text-sm text-adisseo-ink">
-        One click runs the full pipeline against a seeded competitor article — match,
+        One click runs the full pipeline against a seeded competitor article — analyze,
         derive CBI &amp; persona, route to the right Studio with the campaign and
         audience pre-selected. The Studio just needs &ldquo;Generate.&rdquo;
       </p>

@@ -302,7 +302,7 @@ export default function ResearchDeepPage() {
                   </li>
                   <li>
                     <Link href="/competitor-watch" className="inline-flex items-center gap-1 hover:text-adisseo-crimson">
-                      Match against today's competitor news <ArrowRight size={10} />
+                      Analyze today&apos;s competitor news <ArrowRight size={10} />
                     </Link>
                   </li>
                   <li>
