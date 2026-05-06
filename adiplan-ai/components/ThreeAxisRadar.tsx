@@ -67,17 +67,21 @@ function shortenLabel(s: string): string {
 function ScoreBar({
   label,
   score,
+  maxScore,
   color,
   isTop,
 }: {
   label: string;
   score: number;
+  maxScore: number;
   color: string;
   isTop: boolean;
 }) {
+  const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+
   if (isTop) {
     return (
-      <div className="mb-3 overflow-hidden rounded-xl p-3.5" style={{ background: `${color}10` }}>
+      <div className="mb-3 overflow-hidden rounded-xl p-3.5" style={{ background: `${color}12` }}>
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <p className="text-[9px] font-black uppercase tracking-[0.15em]" style={{ color }}>
@@ -92,25 +96,25 @@ function ScoreBar({
             {score}
           </div>
         </div>
-        <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-black/8">
+        <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-black/8">
           <div
-            className="h-1.5 rounded-full"
-            style={{ width: `${score}%`, background: color }}
+            className="h-2 rounded-full transition-all"
+            style={{ width: `${pct}%`, background: color }}
           />
         </div>
       </div>
     );
   }
   return (
-    <div className="mb-2">
-      <div className="flex items-center justify-between gap-1">
-        <p className="truncate text-[11px] font-semibold text-[#0E1014]">{label}</p>
+    <div className="mb-2.5">
+      <div className="flex items-center justify-between gap-1 mb-1">
+        <p className="truncate text-[11px] font-medium text-[#0E1014]">{label}</p>
         <p className="shrink-0 text-[11px] font-bold tabular-nums" style={{ color }}>{score}</p>
       </div>
-      <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-[#E2DFD7]">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-[#E8E5DE]">
         <div
-          className="h-1 rounded-full"
-          style={{ width: `${score}%`, background: color, opacity: 0.65 }}
+          className="h-2 rounded-full transition-all"
+          style={{ width: `${pct}%`, background: color }}
         />
       </div>
     </div>
@@ -243,6 +247,7 @@ export function ThreeAxisRadar({ score, perAxis = 5, featured = false }: Props) 
                       key={item.id}
                       label={item.label}
                       score={item.score}
+                      maxScore={items[0]?.score ?? 100}
                       color={ax.color}
                       isTop={idx === 0}
                     />
