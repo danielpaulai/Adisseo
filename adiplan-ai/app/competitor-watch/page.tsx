@@ -18,6 +18,12 @@ import {
   Radio,
   AlertTriangle,
   Clapperboard,
+  Mail,
+  Video,
+  FileText,
+  PenLine,
+  Megaphone,
+  CalendarDays,
 } from "lucide-react";
 import { useAdiPlanStore } from "@/lib/store";
 import type { ScrapedArticle, Species } from "@/lib/scraper-api";
@@ -824,22 +830,41 @@ function CompetitorWatchContent() {
 
                   {/* ── Recommended deliverables ──────────────────── */}
                   <div className="overflow-hidden rounded-xl border border-[#E2DFD7]">
-                    <div className="flex items-center gap-2 border-b border-[#E2DFD7] bg-[#FBFAF6] px-4 py-2.5">
-                      <Layers size={13} className="text-[#888] shrink-0" />
-                      <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#888]">
-                        Recommended Deliverables
-                      </p>
+                    <div className="flex items-center justify-between border-b border-[#E2DFD7] bg-[#FBFAF6] px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <Layers size={13} className="text-[#888] shrink-0" />
+                        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#888]">
+                          Recommended Deliverables
+                        </p>
+                      </div>
+                      <span className="rounded-full bg-[#E2DFD7] px-2 py-0.5 text-[9px] font-bold text-[#666]">
+                        {response.match.recommendedFormats.length}
+                      </span>
                     </div>
-                    <ul className="divide-y divide-[#E2DFD7] bg-white">
-                      {response.match.recommendedFormats.map((f, i) => (
-                        <li key={i} className="flex items-center gap-3 px-4 py-3">
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-adisseo-crimson text-[11px] font-black text-white">
-                            {i + 1}
-                          </span>
-                          <p className="text-[13px] font-semibold text-[#0E1014]">{f}</p>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="grid grid-cols-2 gap-px bg-[#E2DFD7]">
+                      {response.match.recommendedFormats.map((f, i) => {
+                        const { icon: Icon, cat } = getFormatMeta(f);
+                        const href = studioProduceHandoff?.href ?? "/studio";
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => router.push(href)}
+                            className="group flex flex-col gap-2.5 bg-white px-3.5 py-3.5 text-left transition-colors hover:bg-[#FBFAF6]"
+                          >
+                            <div className="flex items-start justify-between gap-1">
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F3F1EB] text-[#555] transition-colors group-hover:bg-adisseo-crimson/10 group-hover:text-adisseo-crimson">
+                                <Icon size={14} />
+                              </span>
+                              <span className="rounded-full bg-[#F3F1EB] px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-[#888] group-hover:bg-adisseo-crimson/10 group-hover:text-adisseo-crimson">
+                                {cat}
+                              </span>
+                            </div>
+                            <p className="text-[11.5px] font-semibold leading-tight text-[#0E1014]">{f}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
 
@@ -924,6 +949,26 @@ function RollupCard({
       </ul>
     </div>
   );
+}
+
+type FormatMeta = { icon: React.ElementType; cat: string };
+function getFormatMeta(f: string): FormatMeta {
+  const l = f.toLowerCase();
+  if (l.includes("carousel") || l.includes("reel") || l.includes("story")) return { icon: Layers, cat: "Social" };
+  if (l.includes("email") || l.includes("blast") || l.includes("newsletter")) return { icon: Mail, cat: "CRM" };
+  if (l.includes("magazine") || l.includes("trade") || l.includes("journal") || l.includes("print")) return { icon: Newspaper, cat: "Print" };
+  if (l.includes("infograph") || l.includes("chart") || l.includes("data viz")) return { icon: BarChart3, cat: "Visual" };
+  if (l.includes("case study") || l.includes("success")) return { icon: FileText, cat: "Proof" };
+  if (l.includes("webinar") || l.includes("video") || l.includes("demo")) return { icon: Video, cat: "Video" };
+  if (l.includes("white paper") || l.includes("whitepaper") || l.includes("report")) return { icon: FileText, cat: "Research" };
+  if (l.includes("blog") || l.includes("article") || l.includes("editorial")) return { icon: PenLine, cat: "Editorial" };
+  if (l.includes("press") || l.includes("release")) return { icon: Radio, cat: "PR" };
+  if (l.includes("present") || l.includes("deck") || l.includes("slide")) return { icon: Target, cat: "Sales" };
+  if (l.includes("fact") || l.includes("one-pager") || l.includes("brief")) return { icon: FileText, cat: "Sales" };
+  if (l.includes("workshop") || l.includes("event") || l.includes("seminar")) return { icon: CalendarDays, cat: "Events" };
+  if (l.includes("linkedin") || l.includes("social") || l.includes("post")) return { icon: Megaphone, cat: "Social" };
+  if (l.includes("user") || l.includes("customer") || l.includes("audience")) return { icon: Users, cat: "Research" };
+  return { icon: Sparkles, cat: "Content" };
 }
 
 export default function CompetitorWatchPage() {
