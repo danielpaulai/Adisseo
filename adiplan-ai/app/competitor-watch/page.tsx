@@ -89,6 +89,30 @@ function normalizeSourceHref(url: string): string {
   return `https://${raw}`;
 }
 
+function downloadArticleTxt(a: ScrapedArticle) {
+  const lines = [
+    `TITLE: ${a.title}`,
+    `SOURCE: ${a.competitor}`,
+    `DATE: ${a.publishedAt}`,
+    `REGION: ${a.region}`,
+    `SPECIES: ${a.species.join(", ")}`,
+    `URL: ${a.url || "(no url)"}`,
+    "",
+    "SUMMARY:",
+    a.summary,
+    "",
+    "---",
+    "Downloaded from AdiPlan AI · Competitor Watch",
+  ];
+  const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const el = document.createElement("a");
+  el.href = url;
+  el.download = `${a.competitor.replace(/\s+/g, "-").toLowerCase()}-${a.id.slice(0, 8)}.txt`;
+  el.click();
+  URL.revokeObjectURL(url);
+}
+
 function CompetitorWatchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -508,16 +532,16 @@ function CompetitorWatchContent() {
                 </div>
                 <div className="rounded-xl border border-adisseo-crimson/25 bg-adisseo-warmth/40 px-3 py-2.5">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-adisseo-crimson">
-                    Brand mention rate
+                    Brand vs. market coverage
                   </p>
                   <p className="mt-1 text-2xl font-bold tabular-nums text-adisseo-ink-strong">
                     {corpusStats.voicePct}%
                   </p>
                   <p className="mt-0.5 text-[10px] leading-snug text-adisseo-ink">
-                    Of competitor articles, how many reference{" "}
-                    <span className="font-semibold">Adisseo</span> in title or
-                    summary — not market share, just narrative visibility in this
-                    slice.
+                    <span className="font-semibold">{corpusStats.mentionHits} of {corpusStats.competitorCount}</span> competitor articles mention{" "}
+                    <span className="font-semibold">Adisseo</span> by name in the
+                    title or summary. This shows how visible Adisseo is in the
+                    market conversation — <em>not</em> revenue share.
                   </p>
                 </div>
               </div>
@@ -546,13 +570,16 @@ function CompetitorWatchContent() {
 
         <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[1fr,1.2fr]">
           <section>
-            <div className="mb-4 flex items-center gap-2 text-adisseo-muted">
+            <div className="mb-2 flex items-center gap-2 text-adisseo-muted">
               <Newspaper size={16} />
-              <p className="text-sm font-medium">Competitor feed</p>
+              <p className="text-sm font-medium">News feed</p>
               <span className="text-xs">
                 ({filteredArticles.length} of {articles.length})
               </span>
             </div>
+            <p className="mb-3 text-[10px] leading-snug text-adisseo-muted">
+              Competitor articles <span className="font-semibold">+ Adisseo&rsquo;s own content</span> — use the competitor focus filter above to isolate a single source.
+            </p>
 
             <FeedStatusBadge
               meta={feedMeta}
@@ -608,9 +635,15 @@ function CompetitorWatchContent() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <div className="flex flex-wrap items-center gap-2 text-xs">
-                          <span className="font-semibold uppercase tracking-widest text-adisseo-crimson">
-                            {a.competitor}
-                          </span>
+                          {/^adisseo\b/i.test((a.competitor || "").trim()) ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-adisseo-cyan/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-adisseo-cyan">
+                              ★ Adisseo
+                            </span>
+                          ) : (
+                            <span className="font-semibold uppercase tracking-widest text-adisseo-crimson">
+                              {a.competitor}
+                            </span>
+                          )}
                           <span className="text-adisseo-muted">&middot;</span>
                           <span className="text-adisseo-muted">
                             {a.publishedAt}
@@ -689,6 +722,21 @@ function CompetitorWatchContent() {
                         )}
                       </div>
                       <div className="flex flex-none flex-col items-stretch gap-2 sm:flex-row sm:items-start">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            downloadArticleTxt(a);
+                            toast.success("Article downloaded", {
+                              description:
+                                "Open Copilot, upload this .txt, then paste your prompt.",
+                            });
+                          }}
+                          className="inline-flex items-center justify-center gap-1.5 rounded-md border border-adisseo-line bg-white px-3 py-2 text-xs font-medium text-adisseo-ink-strong hover:border-adisseo-cyan hover:text-adisseo-cyan"
+                          title="Download article as .txt — upload to Copilot for Adisseo-specific analysis"
+                        >
+                          <FileDown size={12} />
+                          Download article
+                        </button>
                         <button
                           type="button"
                           onClick={() => {
