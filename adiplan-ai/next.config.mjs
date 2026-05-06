@@ -37,6 +37,13 @@ function devAllowedOrigins() {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: [
+    "@liveblocks/core",
+    "@liveblocks/client",
+    "@liveblocks/react",
+    "@liveblocks/react-ui",
+    "@liveblocks/react-flow",
+  ],
   ...(process.env.NODE_ENV !== "production"
     ? { allowedDevOrigins: devAllowedOrigins() }
     : {}),
@@ -49,6 +56,17 @@ const nextConfig = {
   // so skipping this one Next-internal step costs us nothing.
   typescript: {
     ignoreBuildErrors: true,
+  },
+  webpack: (config) => {
+    config.resolve ??= {};
+    config.resolve.alias ??= {};
+    // Some Next/Webpack builds resolve @liveblocks/core through a path that
+    // loses ESM named exports. Pin to the explicit ESM entry file.
+    config.resolve.alias["@liveblocks/core$"] = path.resolve(
+      __dirname,
+      "node_modules/@liveblocks/core/dist/index.js"
+    );
+    return config;
   },
 };
 
