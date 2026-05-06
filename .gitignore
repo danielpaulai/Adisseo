@@ -1,3 +1,15 @@
+# Large binary / asset files (not for git)
+*.pptx
+*.ppt
+*.docx
+*.doc
+*.pdf
+*.jpeg
+*.jpg
+*.png
+*.mp4
+*.mov
+
 # macOS
 .DS_Store
 .AppleDouble
