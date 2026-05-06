@@ -773,42 +773,148 @@ function CompetitorWatchContent() {
           </section>
 
           <section className="space-y-4">
-            <div className="adi-surface p-6">
-              <div className="mb-3 flex items-center gap-2 text-adisseo-muted">
-                <Sparkles size={16} />
-                <p className="text-sm font-medium">APAC comparison</p>
+            <div className="overflow-hidden rounded-2xl border border-[#E2DFD7] bg-white">
+              {/* Panel header */}
+              <div className="flex items-center gap-3 border-b border-[#E2DFD7] bg-[#FBFAF6] px-5 py-4">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
+                  <Sparkles size={14} />
+                </span>
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#888]">
+                    Competitor Watch
+                  </p>
+                  <p className="text-[13px] font-bold text-[#0E1014]">
+                    APAC Framework Match
+                  </p>
+                </div>
               </div>
 
+              <div className="p-5">
+
               {!response && !loadingAnalyze && (
-                <p className="py-12 text-center text-sm text-adisseo-muted">
-                  Click <span className="font-semibold">Compare</span> on any
-                  article — maps CBI, target persona, and suggested formats to
-                  the APAC framework.
-                </p>
+                <div className="flex flex-col items-center gap-3 py-14 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-adisseo-crimson/10">
+                    <Sparkles size={22} className="text-adisseo-crimson" />
+                  </div>
+                  <div>
+                    <p className="text-[13px] font-bold text-[#0E1014]">
+                      Click <span className="text-adisseo-crimson">Compare</span> on any article
+                    </p>
+                    <p className="mt-1 text-[11px] text-[#888]">
+                      Maps CBI, target persona, and suggested formats to the APAC framework.
+                    </p>
+                  </div>
+                </div>
               )}
 
               {loadingAnalyze && (
-                <div className="flex flex-col items-center gap-3 py-12 text-adisseo-muted">
-                  <Loader2 size={28} className="animate-spin" />
-                  <p className="text-sm">Comparing against the APAC framework&hellip;</p>
+                <div className="flex flex-col items-center gap-3 py-14 text-center">
+                  <Loader2 size={28} className="animate-spin text-adisseo-crimson" />
+                  <p className="text-[12px] font-semibold text-[#888]">Comparing against the APAC framework&hellip;</p>
                 </div>
               )}
 
               {response && (
-                <div className="space-y-5">
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
-                      Article
-                    </p>
-                    <h2 className="mt-1 text-base font-semibold leading-snug text-adisseo-ink">
-                      {response.article.title}
-                    </h2>
-                    <p className="text-xs text-adisseo-muted">
-                      {response.article.competitor} &middot;{" "}
-                      {response.article.publishedAt}
-                    </p>
+                <div className="space-y-4">
+                  {/* ── Article hero ─────────────────────────────── */}
+                  <div className="overflow-hidden rounded-2xl bg-[#0E1014]">
+                    <div className="px-5 pt-5 pb-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white/60">
+                          {response.article.competitor}
+                        </span>
+                        <span className="text-[10px] text-white/40">
+                          {response.article.publishedAt} · {response.article.region}
+                        </span>
+                      </div>
+                      <h2 className="text-[15px] font-bold leading-snug text-white">
+                        {response.article.title}
+                      </h2>
+                    </div>
+                    {/* Match score strip */}
+                    <div className="flex items-center gap-3 border-t border-white/10 bg-adisseo-crimson/90 px-5 py-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[17px] font-black text-adisseo-crimson">
+                        ✓
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/60">
+                          APAC match confirmed
+                        </p>
+                        <p className="text-[13px] font-bold text-white">
+                          {response.match.cbi}
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
+                  {/* ── CBI + Persona insight cards ───────────────── */}
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {/* CBI card */}
+                    <div className="overflow-hidden rounded-xl border border-[#E2DFD7]">
+                      <div className="flex items-center gap-2 bg-[#9C2A2A] px-4 py-2.5">
+                        <Target size={13} className="text-white/70 shrink-0" />
+                        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/80">
+                          Critical Business Issue
+                        </p>
+                      </div>
+                      <div className="bg-white p-4">
+                        <p className="text-[14px] font-bold leading-snug text-[#0E1014]">
+                          {response.match.cbi}
+                        </p>
+                        <p className="mt-1.5 text-[11px] leading-relaxed text-[#666]">
+                          {response.match.cbiRationale}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Persona card */}
+                    <div className="overflow-hidden rounded-xl border border-[#E2DFD7]">
+                      <div className="flex items-center gap-2 bg-[#0E7C46] px-4 py-2.5">
+                        <Users size={13} className="text-white/70 shrink-0" />
+                        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/80">
+                          Target Persona
+                        </p>
+                      </div>
+                      <div className="bg-white p-4">
+                        <p className="text-[14px] font-bold leading-snug text-[#0E1014]">
+                          {response.match.persona}
+                        </p>
+                        <p className="mt-1.5 text-[11px] leading-relaxed text-[#666]">
+                          {response.match.personaRationale}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Framework breakdown (ThreeAxisRadar) ─────── */}
+                  {scoreById[response.match.articleId] && (
+                    <ThreeAxisRadar
+                      featured
+                      score={scoreById[response.match.articleId]}
+                    />
+                  )}
+
+                  {/* ── Recommended deliverables ──────────────────── */}
+                  <div className="overflow-hidden rounded-xl border border-[#E2DFD7]">
+                    <div className="flex items-center gap-2 border-b border-[#E2DFD7] bg-[#FBFAF6] px-4 py-2.5">
+                      <Layers size={13} className="text-[#888] shrink-0" />
+                      <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#888]">
+                        Recommended Deliverables
+                      </p>
+                    </div>
+                    <ul className="divide-y divide-[#E2DFD7] bg-white">
+                      {response.match.recommendedFormats.map((f, i) => (
+                        <li key={i} className="flex items-center gap-3 px-4 py-3">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-adisseo-crimson text-[11px] font-black text-white">
+                            {i + 1}
+                          </span>
+                          <p className="text-[13px] font-semibold text-[#0E1014]">{f}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* ── Decision flow ────────────────────────────── */}
                   <DecisionMatrixFlow
                     active="output"
                     inputLabel={response.article.title}
@@ -817,84 +923,23 @@ function CompetitorWatchContent() {
                     synthesisSub="CBI ladder, persona matrix, regional context"
                     branchLabel={`${response.match.persona} \u2192 ${response.match.recommendedFormats[0] ?? "carousel"}`}
                     branchSub={response.match.cbi}
-                    outputLabel={
-                      response.match.recommendedFormats[0] ?? "deliverable"
-                    }
+                    outputLabel={response.match.recommendedFormats[0] ?? "deliverable"}
                     outputSub="Persona-tuned, region-localised, citation-anchored"
                   />
 
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-xl border border-adisseo-line p-4">
-                      <div className="flex items-center gap-2 text-adisseo-crimson">
-                        <Target size={14} />
-                        <p className="text-[10px] font-semibold uppercase tracking-widest">
-                          Critical Business Issue
-                        </p>
-                      </div>
-                      <p className="mt-1 text-sm font-semibold text-adisseo-ink">
-                        {response.match.cbi}
-                      </p>
-                      <p className="mt-1 text-xs text-adisseo-muted">
-                        {response.match.cbiRationale}
-                      </p>
-                    </div>
-                    <div className="rounded-xl border border-adisseo-line p-4">
-                      <div className="flex items-center gap-2 text-adisseo-crimson">
-                        <Users size={14} />
-                        <p className="text-[10px] font-semibold uppercase tracking-widest">
-                          Target Persona
-                        </p>
-                      </div>
-                      <p className="mt-1 text-sm font-semibold text-adisseo-ink">
-                        {response.match.persona}
-                      </p>
-                      <p className="mt-1 text-xs text-adisseo-muted">
-                        {response.match.personaRationale}
-                      </p>
-                    </div>
-                  </div>
-
-                  {scoreById[response.match.articleId] && (
-                    <ThreeAxisRadar
-                      featured
-                      score={scoreById[response.match.articleId]}
-                    />
-                  )}
-
-                  <div className="rounded-xl border border-adisseo-line p-4">
-                    <div className="flex items-center gap-2 text-adisseo-crimson">
-                      <Layers size={14} />
-                      <p className="text-[10px] font-semibold uppercase tracking-widest">
-                        Recommended Deliverables
-                      </p>
-                    </div>
-                    <ul className="mt-2 space-y-1.5">
-                      {response.match.recommendedFormats.map((f, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-2 text-sm text-adisseo-ink"
-                        >
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-adisseo-crimson/10 text-[10px] font-bold text-adisseo-crimson">
-                            {i + 1}
-                          </span>
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
+                  {/* ── Studio prefill CTA ───────────────────────── */}
                   {studioProduceHandoff && (
-                    <div className="rounded-xl border border-adisseo-cyan/50 bg-gradient-to-br from-adisseo-cyan/15 via-white to-white p-4 shadow-adi-card">
-                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="flex gap-3">
-                          <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-adisseo-cyan/25 text-adisseo-cyan">
+                    <div className="overflow-hidden rounded-xl border border-adisseo-cyan/50 bg-gradient-to-br from-adisseo-cyan/15 via-white to-white">
+                      <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex gap-3 items-start">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-adisseo-cyan/25 text-adisseo-cyan">
                             <Clapperboard size={18} />
                           </span>
                           <div>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-cyan">
-                              Produce · Studio prefill ready (optional)
+                            <p className="text-[9px] font-black uppercase tracking-widest text-adisseo-cyan">
+                              Produce · Studio prefill ready
                             </p>
-                            <p className="mt-1 text-xs text-adisseo-muted">
+                            <p className="mt-0.5 text-[12px] text-adisseo-muted">
                               Topic line and locale hints carry into{" "}
                               <span className="font-semibold text-adisseo-ink-strong">
                                 {studioProduceHandoff.speciesLabel}
@@ -915,71 +960,74 @@ function CompetitorWatchContent() {
                     </div>
                   )}
 
+                  {/* ── Strategic frame CTA ──────────────────────── */}
                   <button
                     onClick={() => router.push("/strategic-frame")}
-                    className="group flex w-full items-center justify-between rounded-xl border border-adisseo-crimson bg-adisseo-crimson/5 p-4 text-left transition hover:bg-adisseo-crimson hover:text-white"
+                    className="group flex w-full items-center justify-between rounded-xl border border-adisseo-crimson bg-adisseo-crimson/5 p-4 text-left transition hover:bg-adisseo-crimson"
                   >
                     <div className="flex items-center gap-3">
                       <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
                         <Sparkles size={16} />
                       </span>
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson group-hover:text-white">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-adisseo-crimson group-hover:text-white">
                           Strategic Frame · Total Value Solution
                         </p>
-                        <p className="text-sm font-semibold text-adisseo-ink-strong group-hover:text-white">
+                        <p className="text-[13px] font-semibold text-adisseo-ink-strong group-hover:text-white">
                           Compose the APAC answer before species deliverables
                         </p>
                       </div>
                     </div>
-                    <ArrowRight
-                      size={16}
-                      className="text-adisseo-crimson group-hover:text-white"
-                    />
+                    <ArrowRight size={16} className="text-adisseo-crimson group-hover:text-white" />
                   </button>
 
-                  <div className="flex items-center justify-between border-t border-adisseo-line pt-4">
-                    <div className="text-xs text-adisseo-muted">
-                      Species fit:{" "}
-                      {response.match.speciesFit.join(", ") || "n/a"}
+                  {/* ── Species studio buttons ───────────────────── */}
+                  {response.match.speciesFit.length > 0 && (
+                    <div className="overflow-hidden rounded-xl border border-[#E2DFD7]">
+                      <div className="border-b border-[#E2DFD7] bg-[#FBFAF6] px-4 py-2.5">
+                        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#888]">
+                          Species fit: {response.match.speciesFit.join(", ")}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2 bg-white p-4">
+                        {response.match.speciesFit.includes("aqua") && (
+                          <button
+                            onClick={() => router.push("/studio/aqua")}
+                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
+                          >
+                            Open Aqua Studio <ArrowRight size={13} />
+                          </button>
+                        )}
+                        {response.match.speciesFit.includes("poultry") && (
+                          <button
+                            onClick={() => router.push("/studio/poultry")}
+                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
+                          >
+                            Open Poultry Studio <ArrowRight size={13} />
+                          </button>
+                        )}
+                        {response.match.speciesFit.includes("ruminants") && (
+                          <button
+                            onClick={() => router.push("/studio/ruminants")}
+                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
+                          >
+                            Open Ruminants Studio <ArrowRight size={13} />
+                          </button>
+                        )}
+                        {response.match.speciesFit.includes("swine") && (
+                          <button
+                            onClick={() => router.push("/studio/swine")}
+                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
+                          >
+                            Open Swine Studio <ArrowRight size={13} />
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {response.match.speciesFit.includes("aqua") && (
-                        <button
-                          onClick={() => router.push("/studio/aqua")}
-                          className="flex items-center gap-2 rounded-md bg-adisseo-crimson px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-                        >
-                          Open Aqua Studio &rarr;
-                        </button>
-                      )}
-                      {response.match.speciesFit.includes("poultry") && (
-                        <button
-                          onClick={() => router.push("/studio/poultry")}
-                          className="flex items-center gap-2 rounded-md bg-adisseo-crimson px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-                        >
-                          Open Poultry Studio &rarr;
-                        </button>
-                      )}
-                      {response.match.speciesFit.includes("ruminants") && (
-                        <button
-                          onClick={() => router.push("/studio/ruminants")}
-                          className="flex items-center gap-2 rounded-md bg-adisseo-crimson px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-                        >
-                          Open Ruminants Studio &rarr;
-                        </button>
-                      )}
-                      {response.match.speciesFit.includes("swine") && (
-                        <button
-                          onClick={() => router.push("/studio/swine")}
-                          className="flex items-center gap-2 rounded-md bg-adisseo-crimson px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-                        >
-                          Open Swine Studio &rarr;
-                        </button>
-                      )}
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
+              </div>{/* /p-5 */}
             </div>
           </section>
         </div>
