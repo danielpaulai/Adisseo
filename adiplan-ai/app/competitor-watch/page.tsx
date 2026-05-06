@@ -7,7 +7,6 @@ import {
   ArrowRight,
   BarChart3,
   ExternalLink,
-  FileDown,
   Filter,
   Loader2,
   Newspaper,
@@ -36,16 +35,11 @@ import {
   buildComparisonGrid,
   type LlmHints,
 } from "@/lib/news-scorer";
-import { downloadArticleAnalysisPack } from "@/lib/article-analysis-pack";
 import { ThreeAxisRadar } from "@/components/ThreeAxisRadar";
-import { DecisionMatrixFlow } from "@/components/DecisionMatrixFlow";
 import { ComparisonHeatGrid } from "@/components/ComparisonHeatGrid";
 import type { PersonaId } from "@/lib/personas-matrix";
 import { ArticleWordCloud } from "@/components/ArticleWordCloud";
-import {
-  buildWordCloudEntries,
-  looksLikeTruncatedExcerpt,
-} from "@/lib/article-analytics";
+import { buildWordCloudEntries } from "@/lib/article-analytics";
 import { rollupCompetitorCorpus } from "@/lib/competitor-corpus-rollup";
 import { COMPETITOR_WATCH_PATH, MARKETING_PLAN_PATH } from "@/lib/routes";
 
@@ -131,6 +125,7 @@ function CompetitorWatchContent() {
   );
 
   const [compareOpen, setCompareOpen] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const setSelectedArticle = useAdiPlanStore((s) => s.setSelectedArticle);
   const setMatch = useAdiPlanStore((s) => s.setMatch);
@@ -617,159 +612,92 @@ function CompetitorWatchContent() {
               </div>
             )}
 
-            <ul className="space-y-3">
-              {filteredArticles.map((a) => {
+            <div className="overflow-hidden rounded-xl border border-adisseo-line bg-white">
+              <div className="max-h-[calc(100vh-380px)] min-h-[280px] divide-y divide-adisseo-line/40 overflow-y-auto">
+              {filteredArticles.length === 0 ? (
+                <p className="px-4 py-8 text-center text-sm text-adisseo-muted">No articles match this filter.</p>
+              ) : filteredArticles.map((a) => {
                 const sc = scoreByIdFiltered[a.id];
-                const truncated = looksLikeTruncatedExcerpt(a.summary);
                 const href = normalizeSourceHref(a.url || "");
+                const isOwn = /^adisseo\b/i.test((a.competitor || "").trim());
+                const isExpanded = expandedId === a.id;
+                const isSelected = articleIdFromUrl === a.id;
                 return (
-                  <li
+                  <div
                     key={a.id}
                     id={`article-${a.id}`}
-                    className={`adi-surface p-4 transition hover:border-adisseo-crimson hover:shadow-adi-card-hover ${
-                      articleIdFromUrl === a.id
-                        ? "border-adisseo-crimson ring-2 ring-adisseo-crimson/25"
-                        : "border-adisseo-line"
-                    }`}
+                    className={`group ${isSelected ? "bg-adisseo-crimson/5" : ""}`}
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <div className="flex flex-wrap items-center gap-2 text-xs">
-                          {/^adisseo\b/i.test((a.competitor || "").trim()) ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-adisseo-cyan/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-adisseo-cyan">
-                              ★ Adisseo
-                            </span>
+                    <div
+                      className="flex cursor-pointer items-center gap-3 px-4 py-2.5 transition hover:bg-[#FAFAF8]"
+                      onClick={() => setExpandedId(isExpanded ? null : a.id)}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                          {isOwn ? (
+                            <span className="font-bold uppercase tracking-widest text-adisseo-cyan">★ Adisseo</span>
                           ) : (
-                            <span className="font-semibold uppercase tracking-widest text-adisseo-crimson">
-                              {a.competitor}
-                            </span>
+                            <span className="font-bold uppercase tracking-widest text-adisseo-crimson">{a.competitor}</span>
                           )}
-                          <span className="text-adisseo-muted">&middot;</span>
-                          <span className="text-adisseo-muted">
-                            {a.publishedAt}
-                          </span>
-                          <span className="text-adisseo-muted">&middot;</span>
-                          <span className="text-adisseo-muted">{a.region}</span>
-                          {href ? (
-                            <a
-                              href={href}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="ml-1 inline-flex items-center gap-0.5 text-[10px] font-bold text-adisseo-crimson hover:underline"
-                            >
-                              Source <ExternalLink size={10} />
-                            </a>
-                          ) : null}
+                          <span className="text-adisseo-muted">· {a.publishedAt}</span>
+                          {a.region && <span className="text-adisseo-muted">· {a.region}</span>}
                         </div>
-                        <h3 className="mt-1 text-sm font-semibold leading-snug text-adisseo-ink">
+                        <p className="mt-0.5 truncate text-[13px] font-semibold leading-snug text-adisseo-ink-strong">
                           {a.title}
-                        </h3>
-                        <p className="mt-2 text-xs text-adisseo-muted">
-                          {a.summary}
                         </p>
-                        {truncated && href ? (
-                          <p className="mt-1 text-[10px] text-amber-800">
-                            Excerpt may be truncated by the feed — open the source
-                            for the full article.
-                          </p>
-                        ) : null}
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {a.species.map((s) => (
-                            <span
-                              key={s}
-                              className="rounded-full bg-adisseo-crimson/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-adisseo-crimson"
-                            >
-                              {s}
-                            </span>
-                          ))}
-                          {a.tags.slice(0, 4).map((t) => (
-                            <span
-                              key={t}
-                              className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-adisseo-muted"
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-
-                        {sc && (
-                          <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-dashed border-adisseo-line pt-2 text-[10px]">
-                            <ScoreChip
-                              tint="#9C2A2A"
-                              kind="CBI"
-                              value={sc.cbi.score}
-                              label={shortLabelFromCbi(sc.cbi.id)}
-                            />
-                            <ScoreChip
-                              tint="#0F4C81"
-                              kind="CSF"
-                              value={sc.csf.score}
-                              label={sc.csf.id.replace("csf-", "")}
-                            />
-                            <ScoreChip
-                              tint="#0E7C46"
-                              kind="Persona"
-                              value={sc.persona.score}
-                              label={sc.persona.id.replace("persona-", "")}
-                            />
-                            <span
-                              className="ml-1 rounded-full bg-adisseo-ink-strong px-2 py-0.5 font-mono text-[10px] font-bold text-white"
-                              title="Composite (mean of top CBI, CSF, Persona scores)"
-                            >
-                              {sc.composite}/100
-                            </span>
-                          </div>
-                        )}
                       </div>
-                      <div className="flex flex-none flex-col items-stretch gap-2 sm:flex-row sm:items-start">
+                      <div className="flex shrink-0 items-center gap-2">
+                        {sc && (
+                          <span className="rounded-full bg-[#0E1014]/8 px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums text-[#0E1014]">
+                            {sc.composite}
+                          </span>
+                        )}
                         <button
                           type="button"
-                          onClick={() => {
-                            downloadArticleTxt(a);
-                            toast.success("Article downloaded", {
-                              description:
-                                "Open Copilot, upload this .txt, then paste your prompt.",
-                            });
-                          }}
-                          className="inline-flex items-center justify-center gap-1.5 rounded-md border border-adisseo-line bg-white px-3 py-2 text-xs font-medium text-adisseo-ink-strong hover:border-adisseo-cyan hover:text-adisseo-cyan"
-                          title="Download article as .txt — upload to Copilot for Adisseo-specific analysis"
-                        >
-                          <FileDown size={12} />
-                          Download article
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            downloadArticleAnalysisPack(a, sc ?? undefined);
-                            toast.success("Analysis pack downloaded", {
-                              description:
-                                "JSON for Copilot / internal trend workflows.",
-                            });
-                          }}
-                          className="inline-flex items-center justify-center gap-1.5 rounded-md border border-adisseo-line bg-white px-3 py-2 text-xs font-medium text-adisseo-ink-strong hover:border-adisseo-cyan hover:text-adisseo-cyan"
-                          title="JSON for trend analysis, Copilot, and comparison with Adisseo internal context"
-                        >
-                          <FileDown size={12} />
-                          Analysis pack
-                        </button>
-                        <button
-                          onClick={() => analyzeArticle(a)}
+                          onClick={(e) => { e.stopPropagation(); analyzeArticle(a); }}
                           disabled={loadingAnalyze}
-                          className="inline-flex items-center justify-center gap-1.5 rounded-md bg-adisseo-crimson px-3 py-2 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
+                          className="inline-flex items-center gap-1 rounded-md bg-adisseo-crimson px-2.5 py-1.5 text-[11px] font-semibold text-white opacity-0 transition group-hover:opacity-100 hover:opacity-90 disabled:opacity-50"
                         >
-                          {loadingAnalyze ? (
-                            <Loader2 size={12} className="animate-spin" />
-                          ) : (
-                            <Sparkles size={12} />
-                          )}
+                          {loadingAnalyze ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
                           Compare
                         </button>
                       </div>
                     </div>
-                  </li>
+                    {isExpanded && (
+                      <div className="border-t border-adisseo-line/50 bg-[#FBFAF6] px-4 py-3">
+                        <p className="text-[11px] leading-relaxed text-adisseo-muted">{a.summary}</p>
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <div className="flex flex-wrap gap-1">
+                            {a.species.map((s) => (
+                              <span key={s} className="rounded-full bg-adisseo-crimson/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-adisseo-crimson">{s}</span>
+                            ))}
+                            {a.tags.slice(0, 3).map((t) => (
+                              <span key={t} className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-adisseo-muted">{t}</span>
+                            ))}
+                          </div>
+                          <div className="ml-auto flex gap-1.5">
+                            {href && (
+                              <a href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 rounded-md border border-adisseo-line px-2 py-1 text-[10px] font-medium text-adisseo-muted hover:text-adisseo-crimson">
+                                Source <ExternalLink size={9} />
+                              </a>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => { analyzeArticle(a); setExpandedId(null); }}
+                              disabled={loadingAnalyze}
+                              className="inline-flex items-center gap-1 rounded-md bg-adisseo-crimson px-3 py-1.5 text-[11px] font-semibold text-white hover:opacity-90 disabled:opacity-60"
+                            >
+                              <Sparkles size={10} /> Compare
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
-            </ul>
+              </div>
+            </div>
           </section>
 
           <section className="space-y-4">
@@ -914,18 +842,7 @@ function CompetitorWatchContent() {
                     </ul>
                   </div>
 
-                  {/* ── Decision flow ────────────────────────────── */}
-                  <DecisionMatrixFlow
-                    active="output"
-                    inputLabel={response.article.title}
-                    inputSub={`${response.article.competitor} \u00B7 ${response.article.region}`}
-                    synthesisLabel="APAC vault + Adisseo brand voice"
-                    synthesisSub="CBI ladder, persona matrix, regional context"
-                    branchLabel={`${response.match.persona} \u2192 ${response.match.recommendedFormats[0] ?? "carousel"}`}
-                    branchSub={response.match.cbi}
-                    outputLabel={response.match.recommendedFormats[0] ?? "deliverable"}
-                    outputSub="Persona-tuned, region-localised, citation-anchored"
-                  />
+
 
                   {/* ── Studio prefill CTA ───────────────────────── */}
                   {studioProduceHandoff && (
@@ -960,71 +877,9 @@ function CompetitorWatchContent() {
                     </div>
                   )}
 
-                  {/* ── Strategic frame CTA ──────────────────────── */}
-                  <button
-                    onClick={() => router.push("/strategic-frame")}
-                    className="group flex w-full items-center justify-between rounded-xl border border-adisseo-crimson bg-adisseo-crimson/5 p-4 text-left transition hover:bg-adisseo-crimson"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-crimson text-white">
-                        <Sparkles size={16} />
-                      </span>
-                      <div>
-                        <p className="text-[9px] font-black uppercase tracking-widest text-adisseo-crimson group-hover:text-white">
-                          Strategic Frame · Total Value Solution
-                        </p>
-                        <p className="text-[13px] font-semibold text-adisseo-ink-strong group-hover:text-white">
-                          Compose the APAC answer before species deliverables
-                        </p>
-                      </div>
-                    </div>
-                    <ArrowRight size={16} className="text-adisseo-crimson group-hover:text-white" />
-                  </button>
 
-                  {/* ── Species studio buttons ───────────────────── */}
-                  {response.match.speciesFit.length > 0 && (
-                    <div className="overflow-hidden rounded-xl border border-[#E2DFD7]">
-                      <div className="border-b border-[#E2DFD7] bg-[#FBFAF6] px-4 py-2.5">
-                        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#888]">
-                          Species fit: {response.match.speciesFit.join(", ")}
-                        </p>
-                      </div>
-                      <div className="flex flex-wrap gap-2 bg-white p-4">
-                        {response.match.speciesFit.includes("aqua") && (
-                          <button
-                            onClick={() => router.push("/studio/aqua")}
-                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
-                          >
-                            Open Aqua Studio <ArrowRight size={13} />
-                          </button>
-                        )}
-                        {response.match.speciesFit.includes("poultry") && (
-                          <button
-                            onClick={() => router.push("/studio/poultry")}
-                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
-                          >
-                            Open Poultry Studio <ArrowRight size={13} />
-                          </button>
-                        )}
-                        {response.match.speciesFit.includes("ruminants") && (
-                          <button
-                            onClick={() => router.push("/studio/ruminants")}
-                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
-                          >
-                            Open Ruminants Studio <ArrowRight size={13} />
-                          </button>
-                        )}
-                        {response.match.speciesFit.includes("swine") && (
-                          <button
-                            onClick={() => router.push("/studio/swine")}
-                            className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-2 text-[13px] font-semibold text-white hover:opacity-90"
-                          >
-                            Open Swine Studio <ArrowRight size={13} />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
+
+
                 </div>
               )}
               </div>{/* /p-5 */}
