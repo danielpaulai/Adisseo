@@ -136,7 +136,7 @@ export default function EngagementTrackerPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Layer 5 · Activation
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               Engagement tracker
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -149,7 +149,7 @@ export default function EngagementTrackerPage() {
         <WorkflowRibbon />
 
         {/* Phase 7 / TFIP-F — channel signal legend with workshop-framework tab */}
-        <section className="mb-8 rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm">
+        <section className="adi-surface mb-8 p-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
               <Activity size={11} />
@@ -162,7 +162,7 @@ export default function EngagementTrackerPage() {
                 onClick={() => setLegendTab("per-channel")}
                 className={`rounded px-2.5 py-1 text-[10px] font-semibold transition ${
                   legendTab === "per-channel"
-                    ? "bg-white text-adisseo-ink-strong shadow-sm"
+                    ? "bg-white text-adisseo-ink-strong shadow-adi-card"
                     : "text-adisseo-muted hover:text-adisseo-ink"
                 }`}
               >
@@ -172,7 +172,7 @@ export default function EngagementTrackerPage() {
                 onClick={() => setLegendTab("workshop")}
                 className={`rounded px-2.5 py-1 text-[10px] font-semibold transition ${
                   legendTab === "workshop"
-                    ? "bg-adisseo-crimson text-white shadow-sm"
+                    ? "bg-adisseo-crimson text-white shadow-adi-card"
                     : "text-adisseo-muted hover:text-adisseo-ink"
                 }`}
               >
@@ -207,7 +207,7 @@ export default function EngagementTrackerPage() {
         </section>
 
         {/* MALAYSIA BENCHMARK CALLOUT */}
-        <section className="mb-8 overflow-hidden rounded-3xl border border-adisseo-crimson bg-white shadow-sm">
+        <section className="mb-8 overflow-hidden rounded-3xl border-2 border-adisseo-crimson/35 bg-white shadow-adi-card">
           <div className="border-l-8 border-adisseo-crimson p-6 md:p-8">
             <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               <Quote size={12} />
@@ -272,7 +272,7 @@ export default function EngagementTrackerPage() {
             </div>
           </div>
           <FunnelStrip funnel={overall} />
-          <div className="mt-3 flex items-center gap-3 rounded-xl border border-adisseo-line bg-white px-4 py-3 text-xs">
+          <div className="adi-surface mt-3 flex items-center gap-3 px-4 py-3 text-xs">
             <ShieldCheck size={14} className="text-adisseo-crimson" />
             <span className="font-semibold text-adisseo-ink-strong">Trust-layer floor:</span>
             <span className="text-adisseo-muted">
@@ -295,7 +295,7 @@ export default function EngagementTrackerPage() {
 
         {/* BY SPECIES + BY KIND */}
         <section className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-adisseo-line bg-white p-5">
+          <div className="adi-surface p-5">
             <div className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               <Users size={12} /> By species
             </div>
@@ -335,7 +335,7 @@ export default function EngagementTrackerPage() {
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-adisseo-line bg-white p-5">
+          <div className="adi-surface p-5">
             <div className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               <Layers size={12} /> By deliverable kind
             </div>
@@ -410,7 +410,7 @@ export default function EngagementTrackerPage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-adisseo-line bg-white">
+          <div className="adi-surface overflow-hidden">
             <table className="w-full text-xs">
               <thead className="bg-adisseo-bg text-[10px] uppercase tracking-widest text-adisseo-muted">
                 <tr>
@@ -538,7 +538,7 @@ function Filter<T extends string>({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
-        className="rounded-md border border-adisseo-line bg-white px-2 py-1 text-[11px] font-semibold text-adisseo-ink-strong"
+        className="rounded-md border border-adisseo-line/90 bg-white px-2 py-1 text-[11px] font-semibold text-adisseo-ink-strong shadow-adi-card"
       >
         {options.map((o) => (
           <option key={o.id} value={o.id}>
@@ -788,7 +788,7 @@ function WorkshopFrameworkPanel() {
                 return (
                   <li
                     key={m.id}
-                    className="rounded-lg border border-adisseo-line bg-white p-2.5 text-[11px]"
+                    className="rounded-lg border border-adisseo-line/90 bg-white p-2.5 text-[11px] shadow-adi-card"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <p className="text-[11px] font-semibold leading-snug text-adisseo-ink-strong">

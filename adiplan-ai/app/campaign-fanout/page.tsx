@@ -156,7 +156,7 @@ export default function CampaignFanoutPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               TFIP campaign · fan-out
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong sm:text-xl">
               One campaign × {variantCount} stakeholder-tuned variants
             </h1>
           </div>
@@ -191,11 +191,11 @@ export default function CampaignFanoutPage() {
 
       <section className="mx-auto max-w-6xl px-6 py-8">
         {/* Campaign banner */}
-        <div className="mb-6 rounded-2xl border border-adisseo-line bg-gradient-to-br from-adisseo-warmth/40 to-white p-5 shadow-sm">
+        <div className="mb-6 rounded-2xl border border-adisseo-line/90 bg-gradient-to-br from-adisseo-warmth/40 to-white p-5 shadow-adi-card">
           <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
             <Target size={11} /> Anchored on TFIP corpus · {TFIP_VAULT_ENTRIES.length} vault entries
           </div>
-          <h2 className="mt-2 text-2xl font-semibold leading-tight text-adisseo-ink-strong">
+          <h2 className="font-display mt-2 text-2xl font-semibold leading-tight text-adisseo-ink-strong">
             {TFIP_CAMPAIGN.name}
           </h2>
           <p className="mt-1 max-w-3xl text-sm leading-relaxed text-adisseo-muted">
@@ -207,7 +207,7 @@ export default function CampaignFanoutPage() {
             {TFIP_PRIMARY_METRICS.slice(0, 3).map((m) => (
               <div
                 key={m.label}
-                className="rounded-lg border border-adisseo-line bg-white px-3 py-2 text-[11px]"
+                className="rounded-lg border border-adisseo-line/90 bg-white px-3 py-2 text-[11px] shadow-adi-card"
               >
                 <p className="font-semibold uppercase tracking-widest text-adisseo-muted">
                   {m.label}
@@ -253,8 +253,8 @@ export default function CampaignFanoutPage() {
                   onClick={() => toggleStakeholder(s.id)}
                   className={`flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition ${
                     active
-                      ? "border-2 shadow-sm"
-                      : "border border-adisseo-line bg-white"
+                      ? "border-2 shadow-adi-card"
+                      : "border border-adisseo-line/90 bg-white shadow-adi-card"
                   }`}
                   style={{
                     borderColor: active ? palette.accent : undefined,
@@ -300,8 +300,8 @@ export default function CampaignFanoutPage() {
                   onClick={() => toggleChannel(c)}
                   className={`flex items-center gap-3 rounded-xl border p-3 text-left transition ${
                     active
-                      ? "border-2 border-adisseo-crimson bg-adisseo-warmth/40 shadow-sm"
-                      : "border border-adisseo-line bg-white"
+                      ? "border-2 border-adisseo-crimson bg-adisseo-warmth/40 shadow-adi-card"
+                      : "border border-adisseo-line/90 bg-white shadow-adi-card"
                   }`}
                 >
                   <span
@@ -342,7 +342,7 @@ export default function CampaignFanoutPage() {
           <button
             onClick={generate}
             disabled={variantCount === 0}
-            className="flex items-center gap-2 rounded-xl bg-adisseo-crimson px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex items-center gap-2 rounded-xl bg-adisseo-crimson px-5 py-3 text-sm font-semibold text-white shadow-adi-card transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Sparkles size={14} />
             Fan TFIP into {variantCount} variant{variantCount === 1 ? "" : "s"}
@@ -366,7 +366,7 @@ export default function CampaignFanoutPage() {
                 return (
                   <article
                     key={card.id}
-                    className="flex flex-col rounded-2xl border bg-white p-4 shadow-sm transition hover:shadow-md"
+                    className="flex flex-col rounded-2xl border bg-white p-4 shadow-adi-card transition hover:shadow-adi-card-hover"
                     style={{ borderColor: palette.accent + "40" }}
                   >
                     <header className="flex items-start justify-between gap-2">
@@ -419,7 +419,7 @@ export default function CampaignFanoutPage() {
         )}
 
         {/* How it works */}
-        <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <section className="adi-surface mt-10 p-5">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
             How this works
           </p>
@@ -455,7 +455,7 @@ export default function CampaignFanoutPage() {
           </ul>
         </section>
 
-        <div className="mt-8 flex items-center justify-between rounded-2xl border border-adisseo-line bg-white p-4 text-[11px] text-adisseo-muted shadow-sm">
+        <div className="adi-surface mt-8 flex items-center justify-between p-4 text-[11px] text-adisseo-muted">
           <span className="flex items-center gap-2">
             <Newspaper size={12} /> Want a non-TFIP campaign? Use{" "}
             <Link href="/stakeholder-fanout" className="text-adisseo-crimson underline">
@@ -481,13 +481,13 @@ function Step({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mb-5 rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm">
+    <div className="adi-surface mb-5 p-4">
       <div className="mb-3 flex items-center gap-3">
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-adisseo-crimson text-[11px] font-semibold text-white">
           {n}
         </span>
         <div>
-          <h3 className="text-sm font-semibold text-adisseo-ink-strong">{title}</h3>
+          <h3 className="font-display text-sm font-semibold text-adisseo-ink-strong">{title}</h3>
           {subtitle && <p className="text-[10px] text-adisseo-muted">{subtitle}</p>}
         </div>
       </div>

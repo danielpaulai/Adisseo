@@ -93,7 +93,7 @@ export default function ResearchDeepPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Research depth
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               Research-to-anchor agent
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -106,7 +106,7 @@ export default function ResearchDeepPage() {
         </div>
 
         {/* QUERY BAR */}
-        <section className="mb-6 rounded-2xl border border-adisseo-line bg-white p-4">
+        <section className="adi-surface mb-6 p-4">
           <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-widest text-adisseo-muted">
             <span>Sample:</span>
             {SAMPLE_QUESTIONS.map((q, i) => (
@@ -154,7 +154,7 @@ export default function ResearchDeepPage() {
             <button
               onClick={run}
               disabled={loading || !question.trim()}
-              className="inline-flex items-center gap-1.5 rounded-md bg-adisseo-crimson px-3 py-2 text-xs font-semibold text-white transition hover:bg-adisseo-crimson/90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md bg-adisseo-crimson px-3 py-2 text-xs font-semibold text-white shadow-adi-card transition hover:bg-adisseo-crimson/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
               Research
@@ -172,7 +172,7 @@ export default function ResearchDeepPage() {
           <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* BRIEFING */}
             <div className="lg:col-span-2">
-              <div className="rounded-2xl border border-adisseo-line bg-white p-6">
+              <div className="adi-surface p-6">
                 <div className="mb-4 flex items-baseline justify-between">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                     Composed briefing
@@ -255,7 +255,7 @@ export default function ResearchDeepPage() {
               {response.subqueries.map((sq) => (
                 <div
                   key={sq.id}
-                  className="rounded-xl border border-adisseo-line bg-white p-3"
+                  className="rounded-xl border border-adisseo-line/90 bg-white p-3 shadow-adi-card"
                 >
                   <div className="flex items-baseline justify-between">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-ink-strong">

@@ -66,7 +66,7 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-adisseo-bg px-6 py-12">
-      <div className="w-full max-w-md rounded-3xl border border-adisseo-line bg-white p-8 shadow-md">
+      <div className="w-full max-w-md rounded-3xl border border-adisseo-line/90 bg-white p-8 shadow-adi-card">
         <div className="flex items-center justify-between">
           <Logo size="md" />
           <span className="rounded-full border border-adisseo-line bg-adisseo-warmth/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
@@ -74,7 +74,7 @@ export default function LoginPage() {
           </span>
         </div>
 
-        <h1 className="mt-6 text-2xl font-bold text-adisseo-ink">
+        <h1 className="font-display mt-6 text-2xl font-semibold text-adisseo-ink">
           Sign in to APAC
         </h1>
         <p className="mt-1 text-sm text-adisseo-muted">

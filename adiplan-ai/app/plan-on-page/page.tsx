@@ -141,7 +141,7 @@ export default function PlanOnPagePage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Executing · APAC
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               Plan on a Page
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -221,7 +221,7 @@ export default function PlanOnPagePage() {
             <button
               onClick={downloadPdf}
               disabled={downloading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-3 text-sm font-semibold text-white shadow-adi-card transition hover:opacity-90 disabled:opacity-50"
             >
               {downloading ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -239,7 +239,7 @@ export default function PlanOnPagePage() {
             </button>
 
             {/* Mini-preview of the plan content (HTML, not PDF) */}
-            <div className="rounded-2xl border border-adisseo-line bg-white p-4">
+            <div className="adi-surface p-4">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                 Composed plan summary
               </p>
@@ -332,7 +332,7 @@ export default function PlanOnPagePage() {
             <iframe
               key={previewUrl ?? "no-preview"}
               src={previewUrl ?? undefined}
-              className="-mt-4 h-[1400px] w-full rounded-b-2xl border border-adisseo-line bg-white shadow-sm"
+              className="-mt-4 h-[1400px] w-full rounded-b-2xl border border-adisseo-line/90 bg-white shadow-adi-card"
               title="Plan on a Page preview"
             />
           </div>
@@ -350,7 +350,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-adisseo-line bg-white p-4">
+    <div className="adi-surface p-4">
       <div className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
         {title}
       </div>

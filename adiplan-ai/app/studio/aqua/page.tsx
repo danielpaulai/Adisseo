@@ -211,7 +211,7 @@ export default function AquaStudioPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               Content Studio &middot; Aqua (Aileen)
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong">
               1-page technical leaflet — local-magazine ready
             </h1>
           </div>
@@ -252,7 +252,7 @@ export default function AquaStudioPage() {
       </div>
 
       <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[380px,1fr]">
-        <aside className="space-y-5 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <aside className="adi-surface space-y-5 p-5">
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
@@ -461,7 +461,7 @@ export default function AquaStudioPage() {
           )}
         </aside>
 
-        <section className="min-h-[600px] overflow-hidden rounded-2xl border border-adisseo-line bg-white shadow-sm">
+        <section className="adi-surface min-h-[600px] overflow-hidden">
           {!response && !loading && (
             <div className="flex h-full flex-col items-center justify-center gap-3 py-32 text-adisseo-muted">
               <FileText size={36} />

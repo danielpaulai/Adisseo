@@ -85,8 +85,8 @@ export default function VaultPage() {
   }
 
   return (
-    <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
+    <main className="min-h-screen">
+      <header className="border-b border-adisseo-line/80 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Logo size="sm" />
           <nav className="flex items-center gap-4 text-xs">
@@ -122,7 +122,7 @@ export default function VaultPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Research depth
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               {tenant.name} Vault
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -151,7 +151,7 @@ export default function VaultPage() {
         </section>
 
         {/* SEARCH BAR */}
-        <section className="mb-6 rounded-2xl border border-adisseo-line bg-white p-4">
+        <section className="adi-surface mb-6 p-4">
           <div className="flex items-center gap-2">
             <Search size={14} className="text-adisseo-muted" />
             <input
@@ -215,7 +215,7 @@ export default function VaultPage() {
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-3 lg:col-span-2">
             {hits.length === 0 && (
-              <p className="rounded-2xl border border-adisseo-line bg-white p-6 text-center text-sm text-adisseo-muted">
+              <p className="adi-surface p-6 text-center text-sm text-adisseo-muted">
                 No entries match. Loosen the filters or change the search text.
               </p>
             )}
@@ -229,8 +229,8 @@ export default function VaultPage() {
                   onClick={() => setSelected(entry)}
                   className={`block w-full rounded-xl border p-4 text-left transition ${
                     active
-                      ? "border-adisseo-crimson bg-white shadow"
-                      : "border-adisseo-line bg-white hover:border-adisseo-crimson"
+                      ? "border-adisseo-crimson bg-white shadow-adi-card"
+                      : "border-adisseo-line bg-white hover:border-adisseo-crimson hover:shadow-adi-card"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -299,7 +299,7 @@ export default function VaultPage() {
             {selected ? (
               <Drilldown entry={selected} onCopy={() => copyCitation(selected)} />
             ) : (
-              <div className="rounded-2xl border border-dashed border-adisseo-line bg-white p-6 text-center text-xs text-adisseo-muted">
+              <div className="adi-surface border-dashed p-6 text-center text-xs text-adisseo-muted">
                 Select an entry to see metrics, citation snippet, and the canonical Vault ID.
               </div>
             )}
@@ -316,7 +316,7 @@ function Drilldown({ entry, onCopy }: { entry: VaultEntry; onCopy: () => void })
   const isInternal = entry.sourceUrl.startsWith("internal://");
   const citation = formatCitation(entry);
   return (
-    <div className="rounded-2xl border border-adisseo-line bg-white p-5">
+    <div className="adi-surface p-5">
       <div className="flex items-start gap-3">
         <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${tone.bg} ${tone.text}`}>
           <Icon size={14} />

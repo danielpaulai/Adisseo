@@ -95,13 +95,13 @@ export default function DistributionPage() {
     <WorkspaceShell>
       <main className="min-h-screen bg-adisseo-bg pb-24 text-adisseo-ink">
       <div className="mx-auto max-w-6xl px-6 pt-10">
-        <div className="rounded-3xl border border-adisseo-line bg-white p-8 shadow-sm">
+        <div className="adi-surface rounded-3xl p-8">
           <div className="flex items-start justify-between gap-6">
             <div>
               <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
                 <Share2 size={10} /> Production-readiness
               </p>
-              <h1 className="mt-3 text-3xl font-black text-adisseo-ink-strong">
+              <h1 className="font-display mt-3 text-3xl font-semibold text-adisseo-ink-strong">
                 Distribution rails
               </h1>
               <p className="mt-2 max-w-2xl text-sm text-adisseo-muted">
@@ -224,7 +224,7 @@ export default function DistributionPage() {
               return (
                 <article
                   key={d.id}
-                  className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm"
+                  className="adi-surface rounded-2xl p-5"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -341,7 +341,7 @@ export default function DistributionPage() {
               Engagement updates auto-feed the engagement-tracker.
             </p>
           </div>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-adisseo-line bg-white">
+          <div className="adi-surface mt-4 overflow-hidden rounded-2xl">
             <table className="w-full text-left text-sm">
               <thead className="bg-stone-50 text-[10px] uppercase tracking-widest text-adisseo-muted">
                 <tr>
@@ -489,7 +489,7 @@ export default function DistributionPage() {
         </section>
 
         {/* Tenant overview */}
-        <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-6">
+        <section className="adi-surface mt-10 rounded-2xl p-6">
           <h2 className="text-lg font-black text-adisseo-ink-strong">
             Tenant channel matrix
           </h2>

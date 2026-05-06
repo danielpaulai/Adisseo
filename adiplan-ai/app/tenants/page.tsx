@@ -71,11 +71,11 @@ export default function TenantsPage() {
       </header>
 
       <div className="mx-auto max-w-6xl px-6 pt-10">
-        <div className="rounded-3xl border border-adisseo-line bg-white p-8 shadow-sm">
+        <div className="rounded-3xl border border-adisseo-line/90 bg-white p-8 shadow-adi-card">
           <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
             <Building2 size={10} /> Workshop simulation
           </p>
-          <h1 className="mt-3 text-3xl font-black text-adisseo-ink-strong">
+          <h1 className="font-display mt-3 text-3xl font-semibold text-adisseo-ink-strong">
             Tenant directory
           </h1>
           <p className="mt-2 max-w-3xl text-sm text-adisseo-muted">
@@ -116,10 +116,10 @@ export default function TenantsPage() {
             return (
               <article
                 key={t.id}
-                className={`rounded-2xl border p-6 shadow-sm transition ${
+                className={`rounded-2xl border p-6 transition ${
                   isActive
-                    ? "border-2 bg-white"
-                    : "border-adisseo-line bg-white"
+                    ? "border-2 bg-white shadow-adi-card-hover"
+                    : "border-adisseo-line bg-white shadow-adi-card"
                 }`}
                 style={isActive ? { borderColor: t.accent } : undefined}
               >
@@ -133,7 +133,7 @@ export default function TenantsPage() {
                       {t.id === "adisseo" ? "Live" : "Blueprint"}
                     </span>
                     <h2
-                      className="mt-2 text-2xl font-black"
+                      className="font-display mt-2 text-2xl font-semibold"
                       style={{ color: t.accent }}
                     >
                       {t.name}
@@ -249,13 +249,13 @@ export default function TenantsPage() {
         </section>
 
         {/* COST MODEL --------------------------------------------------- */}
-        <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-6">
+        <section className="adi-surface mt-10 p-6">
           <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-amber-800">
                 <Coins size={10} /> Run-cost model
               </p>
-              <h2 className="mt-2 text-lg font-black text-adisseo-ink-strong">
+              <h2 className="font-display mt-2 text-lg font-semibold text-adisseo-ink-strong">
                 What does APAC actually cost per tenant?
               </h2>
               <p className="mt-1 max-w-3xl text-xs text-adisseo-muted">
@@ -288,7 +288,7 @@ export default function TenantsPage() {
                 return (
                   <div
                     key={k}
-                    className="rounded-lg border border-adisseo-line bg-white p-2"
+                    className="rounded-lg border border-adisseo-line/90 bg-white p-2 shadow-adi-card"
                   >
                     <p className="text-[10px] font-semibold text-adisseo-muted">
                       {DELIVERABLE_LABEL[k]}
@@ -308,8 +308,8 @@ export default function TenantsPage() {
           </div>
         </section>
 
-        <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-6">
-          <h2 className="text-lg font-black text-adisseo-ink-strong">
+        <section className="adi-surface mt-10 p-6">
+          <h2 className="font-display text-lg font-semibold text-adisseo-ink-strong">
             What "tenant-aware" actually means here
           </h2>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-adisseo-muted">
@@ -368,7 +368,7 @@ function CostAggregate() {
 
   return (
     <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4">
-      <div className="rounded-xl border border-adisseo-line bg-white p-3 text-center">
+      <div className="rounded-xl border border-adisseo-line/90 bg-white p-3 text-center shadow-adi-card">
         <p className="text-[10px] uppercase tracking-widest text-adisseo-muted">
           Monthly run cost
         </p>
@@ -395,7 +395,7 @@ function CostAggregate() {
         </p>
         <p className="text-[10px] text-emerald-700">savings / year</p>
       </div>
-      <div className="rounded-xl border border-adisseo-line bg-white p-3 text-center">
+      <div className="rounded-xl border border-adisseo-line/90 bg-white p-3 text-center shadow-adi-card">
         <p className="text-[10px] uppercase tracking-widest text-adisseo-muted">
           Marketing-ops hours
         </p>
@@ -424,7 +424,7 @@ function TenantCostCard({
   const variableTotal = cost.llmTotal + cost.emailTotal + cost.whisperTotal;
 
   return (
-    <article className="rounded-xl border border-adisseo-line bg-white p-4">
+    <article className="rounded-xl border border-adisseo-line/90 bg-white p-4 shadow-adi-card">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p

@@ -47,7 +47,7 @@ export default function TrustLayerPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Trust layer
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               Prose-quality scorer + brand-voice gate
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -90,7 +90,7 @@ export default function TrustLayerPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <section className="rounded-2xl border border-adisseo-line bg-white p-5">
+          <section className="adi-surface p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
                 Source text
@@ -132,7 +132,7 @@ export default function TrustLayerPage() {
 
           <section className="space-y-4">
             <ProseQualityCard text={text} brandVoice={voice} language={lang} />
-            <div className="rounded-2xl border border-adisseo-line bg-white p-5">
+            <div className="adi-surface p-5">
               <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                 <Sparkles size={12} /> What this gate is doing
               </p>

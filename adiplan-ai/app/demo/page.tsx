@@ -143,7 +143,7 @@ export default function DemoPage() {
           <Sparkles size={12} />
           Guided walkthrough
         </p>
-        <h1 className="mt-3 font-serif text-4xl font-bold leading-tight text-adisseo-ink-strong md:text-5xl">
+        <h1 className="font-display mt-3 text-4xl font-semibold leading-tight text-adisseo-ink-strong md:text-5xl">
           The fastest path to &ldquo;wow&rdquo;
         </h1>
         <p className="mt-3 max-w-2xl text-base text-adisseo-muted">
@@ -171,7 +171,7 @@ export default function DemoPage() {
             return (
               <li
                 key={s.n}
-                className="rounded-3xl border border-adisseo-line bg-white p-6 shadow-sm md:p-8"
+                className="rounded-3xl border border-adisseo-line/90 bg-white p-6 shadow-adi-card md:p-8"
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
                   <div className="flex shrink-0 items-baseline gap-3">
@@ -221,7 +221,7 @@ export default function DemoPage() {
                 <Link
                   key={s.title}
                   href={s.href}
-                  className="group flex flex-col rounded-2xl border border-adisseo-line bg-white p-5 transition hover:border-adisseo-crimson hover:shadow-sm"
+                  className="group flex flex-col rounded-2xl border border-adisseo-line/90 bg-white p-5 shadow-adi-card transition hover:border-adisseo-crimson hover:shadow-adi-card-hover"
                 >
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-adisseo-crimson/5 text-adisseo-crimson">
                     <Icon size={18} />

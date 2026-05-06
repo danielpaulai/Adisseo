@@ -193,7 +193,7 @@ export default function DashboardPage() {
               <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                 Sales war-room
               </p>
-              <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+              <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
                 What got shipped this session
               </h1>
               <p className="text-sm text-adisseo-muted">
@@ -238,11 +238,11 @@ export default function DashboardPage() {
 
         {/* CURRENT FRAME */}
         {composedFrame && (
-          <section className="mb-8 rounded-3xl border border-adisseo-crimson bg-white p-6 shadow-sm">
+          <section className="mb-8 rounded-3xl border-2 border-adisseo-crimson/35 bg-white p-6 shadow-adi-card">
             <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               <Target size={12} /> Current strategic frame
             </div>
-            <h2 className="mt-2 font-serif text-2xl font-bold text-adisseo-ink-strong">
+            <h2 className="font-display mt-2 text-2xl font-semibold text-adisseo-ink-strong">
               {composedFrame.oneLineSummary}
             </h2>
             <p className="mt-2 text-sm text-adisseo-muted">
@@ -395,7 +395,7 @@ function Stat({
   href?: string;
 }) {
   const inner = (
-    <div className="flex h-full flex-col rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md">
+    <div className="adi-surface flex h-full flex-col p-4 transition hover:border-adisseo-crimson hover:shadow-adi-card-hover">
       <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-adisseo-muted">
         {Icon && <Icon size={11} />}
         {label}

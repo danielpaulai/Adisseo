@@ -181,8 +181,8 @@ export default function DigestPage() {
   );
 
   return (
-    <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
+    <main className="min-h-screen">
+      <header className="border-b border-adisseo-line/80 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Logo size="sm" />
           <nav className="flex items-center gap-4 text-xs">
@@ -211,7 +211,7 @@ export default function DigestPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Overnight digest
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               The 04:00 species-manager briefing
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -231,8 +231,8 @@ export default function DigestPage() {
                 onClick={() => setActive(m.id)}
                 className={`rounded-2xl border p-4 text-left transition ${
                   isActive
-                    ? "border-adisseo-crimson bg-white shadow"
-                    : "border-adisseo-line bg-white hover:border-adisseo-crimson"
+                    ? "border-adisseo-crimson bg-white shadow-adi-card"
+                    : "border-adisseo-line bg-white hover:border-adisseo-crimson hover:shadow-adi-card"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -259,7 +259,7 @@ export default function DigestPage() {
         </section>
 
         {/* MAIL HEADER */}
-        <section className="mb-4 rounded-2xl border border-adisseo-line bg-white p-5">
+        <section className="adi-surface mb-4 p-5">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <div>
               <p className="text-[10px] uppercase tracking-widest text-adisseo-muted">
@@ -287,13 +287,13 @@ export default function DigestPage() {
 
         {/* DIGEST ITEMS */}
         {items.length === 0 ? (
-          <p className="rounded-2xl border border-adisseo-line bg-white p-6 text-center text-sm text-adisseo-muted">
+          <p className="adi-surface p-6 text-center text-sm text-adisseo-muted">
             No new competitor activity overnight in {activeManager.speciesLabel}'s regions.
           </p>
         ) : (
           <section className="space-y-4">
             {items.map((it, i) => (
-              <article key={it.article.id} className="rounded-2xl border border-adisseo-line bg-white p-5">
+              <article key={it.article.id} className="adi-surface p-5">
                 <div className="mb-2 flex items-baseline justify-between">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                     Story 0{i + 1}

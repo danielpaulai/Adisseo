@@ -247,7 +247,7 @@ export default function PoultryStudioPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               Content Studio · Poultry (Vish)
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong">
               AGP-Free Asia · email blast + LinkedIn carousel
             </h1>
           </div>
@@ -276,7 +276,7 @@ export default function PoultryStudioPage() {
       </div>
 
       <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[380px,1fr]">
-        <aside className="space-y-5 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <aside className="adi-surface space-y-5 p-5">
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
@@ -508,7 +508,7 @@ export default function PoultryStudioPage() {
           )}
         </aside>
 
-        <section className="min-h-[600px] overflow-hidden rounded-2xl border border-adisseo-line bg-white shadow-sm">
+        <section className="adi-surface min-h-[600px] overflow-hidden">
           <div className="flex items-center justify-between border-b border-adisseo-line bg-adisseo-tint px-2 py-1">
             <div className="flex">
               {(
@@ -524,7 +524,7 @@ export default function PoultryStudioPage() {
                     onClick={() => setTab(t.key)}
                     className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                       tab === t.key
-                        ? "bg-white text-adisseo-crimson shadow-sm"
+                        ? "bg-white text-adisseo-crimson shadow-adi-card"
                         : "text-adisseo-muted hover:text-adisseo-ink-strong"
                     }`}
                   >

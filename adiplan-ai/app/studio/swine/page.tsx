@@ -255,7 +255,7 @@ export default function SwineStudioPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               Content Studio &middot; Swine (Claire)
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong">
               &lt;60s vertical short &mdash; TikTok / WeChat / Instagram
             </h1>
           </div>
@@ -287,7 +287,7 @@ export default function SwineStudioPage() {
       </div>
 
       <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[380px,1fr]">
-        <aside className="space-y-5 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <aside className="adi-surface space-y-5 p-5">
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
@@ -466,7 +466,7 @@ export default function SwineStudioPage() {
           )}
         </aside>
 
-        <section className="min-h-[400px] rounded-2xl border border-adisseo-line bg-white p-6 shadow-sm">
+        <section className="adi-surface min-h-[400px] p-6">
           {!response && !loading && (
             <div className="flex h-full flex-col items-center justify-center gap-3 py-20 text-adisseo-muted">
               <Clapperboard size={36} />
@@ -514,7 +514,7 @@ export default function SwineStudioPage() {
                 <div className="flex flex-none items-center gap-2">
                   <button
                     onClick={playAll}
-                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm transition ${
+                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold shadow-adi-card transition ${
                       playingAll
                         ? "bg-red-500 text-white hover:opacity-90"
                         : "bg-adisseo-crimson text-white hover:opacity-90"

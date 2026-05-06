@@ -122,7 +122,7 @@ export default function CBILadderPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
           Module 02 &middot; Assessing
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-adisseo-ink">CBI / CSF Ladder</h1>
+        <h1 className="font-display mt-2 text-3xl font-semibold text-adisseo-ink">CBI / CSF Ladder</h1>
         <p className="mt-4 text-adisseo-muted">
           Pick stakeholders from the influence map first &mdash; this module auto-generates
           a &ldquo;Help me to&hellip;&rdquo; outcomes ladder for each one and ladders them up
@@ -149,7 +149,7 @@ export default function CBILadderPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               Module 02 &middot; Assessing
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong sm:text-xl">
               CBI / CSF Ladder
             </h1>
           </div>
@@ -226,7 +226,7 @@ export default function CBILadderPage() {
             return (
               <article
                 key={s.id}
-                className="overflow-hidden rounded-2xl border border-adisseo-line bg-white shadow-sm"
+                className="adi-surface overflow-hidden"
               >
                 <div
                   className="px-5 py-4 text-white"

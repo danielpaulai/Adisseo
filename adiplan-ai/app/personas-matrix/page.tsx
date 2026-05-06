@@ -119,7 +119,7 @@ function PersonasMatrixPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               Enterprise Personas · CSF matrix
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong sm:text-xl">
               Where do persona priority and Adisseo&apos;s strength meet?
             </h1>
           </div>
@@ -191,7 +191,7 @@ function PersonasMatrixPage() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           {/* === Matrix grid === */}
-          <div className="overflow-x-auto rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm">
+          <div className="adi-surface overflow-x-auto p-4">
             <div
               className="grid gap-1.5"
               style={{
@@ -253,7 +253,7 @@ function PersonasMatrixPage() {
           </div>
 
           {/* === Side panel === */}
-          <aside className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+          <aside className="adi-surface p-5">
             {!selectedCell ? (
               <div className="flex h-full flex-col items-start gap-3 text-sm text-adisseo-muted">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-adisseo-bg text-adisseo-crimson">

@@ -56,11 +56,11 @@ export default function CredentialsPage() {
       </header>
 
       <div className="mx-auto max-w-6xl px-6 pt-10">
-        <div className="rounded-3xl border border-adisseo-line bg-white p-8 shadow-sm">
+        <div className="adi-surface rounded-3xl p-8">
           <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
             <KeyRound size={10} /> Production-readiness
           </p>
-          <h1 className="mt-3 text-3xl font-black text-adisseo-ink-strong">
+          <h1 className="font-display mt-3 text-3xl font-semibold text-adisseo-ink-strong">
             Channel credentials &amp; webhook inbox
           </h1>
           <p className="mt-2 max-w-3xl text-sm text-adisseo-muted">
@@ -100,7 +100,7 @@ export default function CredentialsPage() {
           return (
             <section
               key={t.id}
-              className="mt-10 rounded-3xl border border-adisseo-line bg-white p-6 shadow-sm"
+              className="adi-surface mt-10 rounded-3xl p-6"
               style={{ borderColor: t.accent }}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -266,7 +266,7 @@ export default function CredentialsPage() {
                     {inbox.map((e) => (
                       <li
                         key={e.id}
-                        className="flex items-center justify-between gap-2 rounded-lg border border-adisseo-line bg-white px-3 py-1.5 text-[11px]"
+                        className="adi-surface flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-[11px]"
                       >
                         <div className="flex items-center gap-2">
                           <span
@@ -300,7 +300,7 @@ export default function CredentialsPage() {
           );
         })}
 
-        <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-6">
+        <section className="adi-surface mt-10 rounded-2xl p-6">
           <h2 className="text-lg font-black text-adisseo-ink-strong">
             How a tenant goes live
           </h2>

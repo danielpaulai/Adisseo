@@ -163,7 +163,7 @@ export default function RuminantsStudioPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               Content Studio · Ruminants (Antoine)
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong">
               Manga-style 2-page brochure — Japanese dairy
             </h1>
           </div>
@@ -192,7 +192,7 @@ export default function RuminantsStudioPage() {
       </div>
 
       <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[380px,1fr]">
-        <aside className="space-y-5 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <aside className="adi-surface space-y-5 p-5">
           {(bridgeContext || match) && (
             <div className="rounded-xl border border-adisseo-crimson/30 bg-adisseo-crimson/5 p-3 text-xs">
               <p className="font-semibold uppercase tracking-widest text-adisseo-crimson">
@@ -430,7 +430,7 @@ export default function RuminantsStudioPage() {
           )}
         </aside>
 
-        <section className="min-h-[600px] overflow-hidden rounded-2xl border border-adisseo-line bg-white shadow-sm">
+        <section className="adi-surface min-h-[600px] overflow-hidden">
           {!response && !loading && (
             <div className="flex h-full flex-col items-center justify-center gap-3 py-32 text-adisseo-muted">
               <FileText size={36} />

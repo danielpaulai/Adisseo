@@ -229,7 +229,7 @@ export default function StrategicFramePage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               The Strategic Frame &middot; Total Value Solution
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong sm:text-xl">
               Compose the APAC answer before the species deliverables ship
             </h1>
           </div>
@@ -276,7 +276,7 @@ export default function StrategicFramePage() {
         )}
 
         {!match && !loading && (
-          <div className="rounded-2xl border border-adisseo-line bg-white p-10 text-center text-adisseo-muted">
+          <div className="adi-surface p-10 text-center text-adisseo-muted">
             <p className="mb-4 text-sm">
               No matched article in state. Open the Competitor Watch and match one
               first.
@@ -330,7 +330,7 @@ export default function StrategicFramePage() {
 
             {/* === Enterprise persona + insight === */}
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm print:shadow-none">
+              <div className="adi-surface p-5 print:shadow-none">
                 <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
                   <Users size={11} /> Enterprise persona
                 </p>
@@ -338,7 +338,7 @@ export default function StrategicFramePage() {
                   {response.frame.enterprisePersona}
                 </p>
               </div>
-              <div className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm print:shadow-none">
+              <div className="adi-surface p-5 print:shadow-none">
                 <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-orange">
                   <Sparkles size={11} /> Enterprise insight
                 </p>
@@ -349,7 +349,7 @@ export default function StrategicFramePage() {
             </div>
 
             {/* === TVS 4-card === */}
-            <div className="rounded-2xl border border-adisseo-crimson/40 bg-white p-1.5 shadow-sm print:shadow-none">
+            <div className="rounded-2xl border border-adisseo-crimson/40 bg-white p-1.5 shadow-adi-card print:shadow-none">
               <div className="rounded-xl bg-adisseo-crimson/5 px-5 py-3">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                   Total Value Solution · Pain × Promise × Proof × Proposition
@@ -390,7 +390,7 @@ export default function StrategicFramePage() {
             </div>
 
             {/* === Activations === */}
-            <div className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm print:shadow-none">
+            <div className="adi-surface p-5 print:shadow-none">
               <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                 <Sparkles size={11} /> Activations · ship next
               </p>
@@ -443,7 +443,7 @@ export default function StrategicFramePage() {
               <button
                 onClick={downloadPdf}
                 disabled={downloadingPdf || !response}
-                className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-adisseo-crimson px-3 py-2 text-xs font-semibold text-white shadow-adi-card transition hover:opacity-90 disabled:opacity-50"
               >
                 {downloadingPdf ? (
                   <Loader2 size={12} className="animate-spin" />

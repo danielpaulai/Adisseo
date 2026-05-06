@@ -154,7 +154,7 @@ export default function StakeholderFanoutPage() {
 
   return (
     <main className="min-h-screen bg-adisseo-warmth">
-      <header className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-4 border-b border-adisseo-line bg-white/95 px-6 py-4 shadow-sm backdrop-blur">
+      <header className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-4 border-b border-adisseo-line bg-white/80 px-6 py-4 backdrop-blur">
         <div className="flex items-center gap-4">
           <Link
             href="/stakeholder-map"
@@ -168,7 +168,7 @@ export default function StakeholderFanoutPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Demo priority 2 · APAC plan
             </p>
-            <h1 className="text-xl font-bold leading-tight text-adisseo-ink">
+            <h1 className="font-display text-xl font-semibold leading-tight text-adisseo-ink sm:text-2xl">
               Stakeholder Fan-out
             </h1>
             <p className="text-xs text-adisseo-muted">
@@ -185,7 +185,7 @@ export default function StakeholderFanoutPage() {
 
       <section className="mx-auto max-w-6xl space-y-6 px-6 py-8">
         {/* Step 1 — pick article */}
-        <div className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <div className="adi-surface p-5">
           <div className="mb-3 flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-adisseo-crimson text-[11px] font-bold text-white">
               1
@@ -219,7 +219,7 @@ export default function StakeholderFanoutPage() {
         </div>
 
         {/* Step 2 — pick maps */}
-        <div className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <div className="adi-surface p-5">
           <div className="mb-3 flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-adisseo-crimson text-[11px] font-bold text-white">
               2
@@ -252,7 +252,7 @@ export default function StakeholderFanoutPage() {
                       }}
                       className={`block w-full rounded-xl border p-3 text-left transition ${
                         sel
-                          ? "border-adisseo-crimson bg-adisseo-crimson/5 shadow-sm"
+                          ? "border-adisseo-crimson bg-adisseo-crimson/5 shadow-adi-card"
                           : "border-adisseo-line bg-white hover:border-adisseo-ink/30"
                       }`}
                     >
@@ -309,7 +309,7 @@ export default function StakeholderFanoutPage() {
         </div>
 
         {/* Step 3 — generate */}
-        <div className="rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <div className="adi-surface p-5">
           <div className="mb-3 flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-adisseo-crimson text-[11px] font-bold text-white">
               3
@@ -322,7 +322,7 @@ export default function StakeholderFanoutPage() {
           <button
             onClick={generate}
             disabled={!article || selectedMaps.length === 0}
-            className="flex items-center gap-2 rounded-md bg-adisseo-crimson px-5 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex items-center gap-2 rounded-md bg-adisseo-crimson px-5 py-2 text-sm font-semibold text-white shadow-adi-card hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <LayersIcon size={14} />
             Generate {selectedMaps.length} variants
@@ -338,7 +338,7 @@ export default function StakeholderFanoutPage() {
                 return (
                   <li
                     key={v.mapId}
-                    className="overflow-hidden rounded-xl border border-adisseo-line bg-white shadow-sm"
+                    className="overflow-hidden rounded-xl border border-adisseo-line/90 bg-white shadow-adi-card"
                   >
                     <div
                       className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white"

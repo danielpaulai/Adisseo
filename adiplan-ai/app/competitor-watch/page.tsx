@@ -343,7 +343,7 @@ function CompetitorWatchContent() {
               <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
                 Competitor Watch
               </p>
-              <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+              <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong sm:text-xl">
                 Scraped news → APAC framework (CBI · CSF · persona)
               </h1>
             </div>
@@ -375,7 +375,7 @@ function CompetitorWatchContent() {
         </div>
 
         <div className="mx-auto max-w-7xl px-6 pb-4">
-          <section className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm">
+          <section className="adi-surface p-4">
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <Filter size={14} className="text-adisseo-muted" />
               <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
@@ -463,7 +463,7 @@ function CompetitorWatchContent() {
           </section>
 
           {corpusStats.total > 0 && (
-            <section className="mt-4 rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm sm:p-5">
+            <section className="adi-surface mt-4 p-4 sm:p-5">
               <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-crimson">
                 Corpus at a glance
               </p>
@@ -591,7 +591,7 @@ function CompetitorWatchContent() {
                   <li
                     key={a.id}
                     id={`article-${a.id}`}
-                    className={`rounded-2xl border bg-white p-4 shadow-sm transition hover:border-adisseo-crimson ${
+                    className={`adi-surface p-4 transition hover:border-adisseo-crimson hover:shadow-adi-card-hover ${
                       articleIdFromUrl === a.id
                         ? "border-adisseo-crimson ring-2 ring-adisseo-crimson/25"
                         : "border-adisseo-line"
@@ -717,7 +717,7 @@ function CompetitorWatchContent() {
           </section>
 
           <section className="space-y-4">
-            <div className="rounded-2xl border border-adisseo-line bg-white p-6 shadow-sm">
+            <div className="adi-surface p-6">
               <div className="mb-3 flex items-center gap-2 text-adisseo-muted">
                 <Sparkles size={16} />
                 <p className="text-sm font-medium">APAC analysis</p>
@@ -828,7 +828,7 @@ function CompetitorWatchContent() {
                   </div>
 
                   {studioProduceHandoff && (
-                    <div className="rounded-xl border border-adisseo-cyan/50 bg-gradient-to-br from-adisseo-cyan/15 via-white to-white p-4 shadow-sm">
+                    <div className="rounded-xl border border-adisseo-cyan/50 bg-gradient-to-br from-adisseo-cyan/15 via-white to-white p-4 shadow-adi-card">
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div className="flex gap-3">
                           <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-adisseo-cyan/25 text-adisseo-cyan">
@@ -850,7 +850,7 @@ function CompetitorWatchContent() {
                         <button
                           type="button"
                           onClick={() => router.push(studioProduceHandoff.href)}
-                          className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-adisseo-cyan px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:w-auto"
+                          className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-adisseo-cyan px-4 py-2.5 text-sm font-semibold text-white shadow-adi-card transition hover:opacity-90 sm:w-auto"
                         >
                           Open {studioProduceHandoff.speciesLabel} studio
                           <ArrowRight size={14} />
@@ -940,7 +940,7 @@ function RollupCard({
   rows: { id: string; label: string; count: number }[];
 }) {
   return (
-    <div className="rounded-xl border border-adisseo-line bg-white p-3 shadow-sm">
+    <div className="adi-surface rounded-xl p-3">
       <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
         {title}
       </p>

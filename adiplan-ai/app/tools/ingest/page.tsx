@@ -101,7 +101,7 @@ export default function ToolsIngestPage() {
               <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                 Tools · Ricardo workshop ingest
               </p>
-              <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+              <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong sm:text-xl">
                 Flipchart OCR + PDF extraction
               </h1>
             </div>
@@ -140,7 +140,7 @@ export default function ToolsIngestPage() {
           ).
         </p>
 
-        <section className="rounded-3xl border border-adisseo-line bg-white p-6 shadow-sm md:p-8">
+        <section className="rounded-3xl border border-adisseo-line/90 bg-white p-6 shadow-adi-card md:p-8">
           <div className="flex items-start gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-adisseo-crimson/10 text-adisseo-crimson">
               <Camera size={22} />
@@ -200,7 +200,7 @@ export default function ToolsIngestPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-adisseo-line bg-white p-6 shadow-sm md:p-8">
+        <section className="rounded-3xl border border-adisseo-line/90 bg-white p-6 shadow-adi-card md:p-8">
           <div className="flex items-start gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-adisseo-cyan/15 text-adisseo-cyan">
               <FileText size={22} />

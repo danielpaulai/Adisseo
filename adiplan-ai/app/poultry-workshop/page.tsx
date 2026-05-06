@@ -71,7 +71,7 @@ export default function PoultryWorkshopPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
               Apr-30 workshop · Poultry A team
             </p>
-            <h1 className="text-lg font-semibold text-adisseo-ink-strong">
+            <h1 className="font-display text-lg font-semibold text-adisseo-ink-strong sm:text-xl">
               Reference deck — 8 posters in HTML
             </h1>
           </div>
@@ -120,7 +120,7 @@ export default function PoultryWorkshopPage() {
             <a
               key={item.id}
               href={`#${item.id}`}
-              className="rounded-md border border-adisseo-line bg-white px-2.5 py-1.5 font-semibold text-adisseo-muted hover:border-adisseo-crimson hover:text-adisseo-crimson"
+              className="rounded-md border border-adisseo-line/90 bg-white px-2.5 py-1.5 font-semibold text-adisseo-muted shadow-adi-card hover:border-adisseo-crimson hover:text-adisseo-crimson"
             >
               {item.label}
             </a>
@@ -139,7 +139,7 @@ export default function PoultryWorkshopPage() {
             {poultryEnterprisePersonas.map((p) => (
               <article
                 key={p.id}
-                className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm"
+                className="adi-surface p-4"
               >
                 <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-crimson">
                   {p.nickname}
@@ -184,7 +184,7 @@ export default function PoultryWorkshopPage() {
               return (
                 <article
                   key={l.id}
-                  className="rounded-2xl border bg-white p-4 shadow-sm"
+                  className="rounded-2xl border bg-white p-4 shadow-adi-card"
                   style={{ borderColor: palette.accent + "40" }}
                 >
                   <p
@@ -232,7 +232,7 @@ export default function PoultryWorkshopPage() {
               return (
                 <article
                   key={vp.csfId}
-                  className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm"
+                  className="adi-surface p-4"
                 >
                   <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-crimson">
                     {csf?.shortLabel ?? vp.csfId}
@@ -265,7 +265,7 @@ export default function PoultryWorkshopPage() {
                 return (
                   <div
                     key={bucket}
-                    className="rounded-2xl border border-adisseo-line bg-white p-3 shadow-sm"
+                    className="adi-surface p-3"
                   >
                     <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-crimson">
                       {WWWK_LABEL[bucket]}
@@ -301,7 +301,7 @@ export default function PoultryWorkshopPage() {
             {poultryInsights.map((ins) => (
               <article
                 key={ins.rank}
-                className="rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm"
+                className="adi-surface p-4"
               >
                 <div className="flex items-start gap-3">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-adisseo-crimson text-[11px] font-bold text-white">
@@ -335,7 +335,7 @@ export default function PoultryWorkshopPage() {
         >
           <Link
             href="/engagement-tracker"
-            className="inline-flex items-center gap-2 rounded-xl bg-adisseo-crimson px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-xl bg-adisseo-crimson px-4 py-3 text-sm font-semibold text-white shadow-adi-card transition hover:opacity-90"
           >
             Open the workshop framework
             <CheckCircle2 size={14} />
@@ -359,13 +359,13 @@ export default function PoultryWorkshopPage() {
             </Link>
             <a
               href="/api/render-adisseo-onepager"
-              className="inline-flex items-center gap-2 rounded-xl border border-adisseo-line bg-white px-4 py-3 text-sm font-semibold text-adisseo-ink hover:border-adisseo-crimson"
+              className="inline-flex items-center gap-2 rounded-xl border border-adisseo-line/90 bg-white px-4 py-3 text-sm font-semibold text-adisseo-ink shadow-adi-card hover:border-adisseo-crimson"
             >
               <Download size={14} /> Decision-maker one-pager
             </a>
             <a
               href="/api/render-demo-script"
-              className="inline-flex items-center gap-2 rounded-xl border border-adisseo-line bg-white px-4 py-3 text-sm font-semibold text-adisseo-ink hover:border-adisseo-crimson"
+              className="inline-flex items-center gap-2 rounded-xl border border-adisseo-line/90 bg-white px-4 py-3 text-sm font-semibold text-adisseo-ink shadow-adi-card hover:border-adisseo-crimson"
             >
               <Download size={14} /> 90-second demo script
             </a>
@@ -373,7 +373,7 @@ export default function PoultryWorkshopPage() {
         </PosterSection>
 
         {/* Direct links to corpus assets */}
-        <section className="mt-10 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm">
+        <section className="adi-surface mt-10 p-5">
           <p className="text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
             TFIP corpus — direct links
           </p>
@@ -428,7 +428,7 @@ function PosterSection({
           <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
             Poster {n}
           </p>
-          <h2 className="text-xl font-semibold text-adisseo-ink-strong">{title}</h2>
+          <h2 className="font-display text-xl font-semibold text-adisseo-ink-strong">{title}</h2>
           <p className="mt-0.5 text-xs text-adisseo-muted">{subtitle}</p>
         </div>
       </header>
@@ -456,7 +456,7 @@ function PriorityHeatGrid() {
   // Lower priority number → darker shading. priority 1 = 0.95 alpha, 6 = 0.15.
   const opacityFor = (p: number) => 1 - (p - 1) * 0.16;
   return (
-    <div className="overflow-x-auto rounded-2xl border border-adisseo-line bg-white p-4 shadow-sm">
+    <div className="adi-surface overflow-x-auto p-4">
       <div
         className="grid gap-1.5"
         style={{

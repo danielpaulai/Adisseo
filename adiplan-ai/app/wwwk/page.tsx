@@ -166,7 +166,7 @@ export default function WWWKPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-orange">
               Assessing · We Wish We Knew
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               WWWK board
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -177,14 +177,14 @@ export default function WWWKPage() {
           </div>
           <button
             onClick={exportToCSV}
-            className="rounded-lg border border-adisseo-line bg-white px-3 py-2 text-xs font-semibold text-adisseo-ink-strong transition hover:border-adisseo-orange hover:text-adisseo-orange"
+            className="rounded-lg border border-adisseo-line/90 bg-white px-3 py-2 text-xs font-semibold text-adisseo-ink-strong shadow-adi-card transition hover:border-adisseo-orange hover:text-adisseo-orange"
           >
             Export CSV
           </button>
         </div>
 
         {/* Setup */}
-        <div className="mb-6 grid grid-cols-1 gap-3 rounded-2xl border border-adisseo-line bg-white p-4 sm:grid-cols-3">
+        <div className="adi-surface mb-6 grid grid-cols-1 gap-3 p-4 sm:grid-cols-3">
           <label className="block">
             <span className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
               Stakeholder
@@ -236,7 +236,7 @@ export default function WWWKPage() {
         </div>
 
         {/* Persona context strip */}
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-adisseo-line bg-white p-3 text-xs">
+        <div className="adi-surface mb-4 flex flex-wrap items-center gap-2 p-3 text-xs">
           <span className="rounded bg-adisseo-orange/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-orange">
             Persona
           </span>
@@ -252,7 +252,7 @@ export default function WWWKPage() {
           {questions.map((q, i) => (
             <li
               key={q.id}
-              className="rounded-2xl border border-adisseo-line bg-white p-4"
+              className="adi-surface p-4"
             >
               <div className="flex items-start gap-3">
                 <span
@@ -325,7 +325,7 @@ export default function WWWKPage() {
           ))}
         </ol>
 
-        <div className="mt-8 rounded-2xl border border-adisseo-line bg-white p-4 text-xs">
+        <div className="adi-surface mt-8 p-4 text-xs">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
             What this feeds
           </p>
@@ -376,7 +376,7 @@ function Stat({
       ? "bg-amber-50 text-amber-800 border-amber-200"
       : tone === "emerald"
         ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-        : "bg-white text-adisseo-ink-strong border-adisseo-line";
+        : "border-adisseo-line/90 bg-white text-adisseo-ink-strong shadow-adi-card";
   return (
     <div className={`rounded-2xl border p-3 ${cls}`}>
       <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest opacity-80">

@@ -151,7 +151,7 @@ export default function ObservabilityPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Langfuse-style observability
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               Every model call, in one trace ring
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -165,13 +165,13 @@ export default function ObservabilityPage() {
             <button
               onClick={refresh}
               disabled={loading}
-              className="inline-flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2.5 py-1.5 font-semibold text-adisseo-ink-strong hover:border-adisseo-crimson disabled:opacity-50"
+              className="inline-flex items-center gap-1 rounded-md border border-adisseo-line/90 bg-white px-2.5 py-1.5 font-semibold text-adisseo-ink-strong shadow-adi-card hover:border-adisseo-crimson disabled:opacity-50"
             >
               <RefreshCw size={11} className={loading ? "animate-spin" : ""} /> Refresh
             </button>
             <button
               onClick={clearAll}
-              className="inline-flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2.5 py-1.5 font-semibold text-rose-700 hover:border-rose-400"
+              className="inline-flex items-center gap-1 rounded-md border border-adisseo-line/90 bg-white px-2.5 py-1.5 font-semibold text-rose-700 shadow-adi-card hover:border-rose-400"
             >
               <Trash2 size={11} /> Clear
             </button>
@@ -202,7 +202,7 @@ export default function ObservabilityPage() {
         </section>
 
         {/* FILTERS */}
-        <section className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-adisseo-line bg-white p-3 text-xs">
+        <section className="adi-surface mb-4 flex flex-wrap items-center gap-2 p-3 text-xs">
           <span className="font-semibold uppercase tracking-widest text-adisseo-crimson">Filter</span>
           <select
             value={filterKind}
@@ -249,8 +249,8 @@ export default function ObservabilityPage() {
                   onClick={() => setSelected(t)}
                   className={`flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition ${
                     selected?.id === t.id
-                      ? "border-adisseo-crimson bg-white"
-                      : "border-adisseo-line bg-white hover:border-adisseo-crimson"
+                      ? "border-adisseo-crimson bg-white shadow-adi-card"
+                      : "border-adisseo-line/90 bg-white shadow-adi-card hover:border-adisseo-crimson hover:shadow-adi-card-hover"
                   }`}
                 >
                   <span className={`mt-0.5 rounded-md px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-widest ${KIND_TINT[t.kind] ?? "bg-stone-100"}`}>
@@ -290,7 +290,7 @@ export default function ObservabilityPage() {
               </li>
             ))}
             {filtered.length === 0 && (
-              <li className="rounded-2xl border border-dashed border-adisseo-line bg-white p-6 text-center text-xs text-adisseo-muted">
+              <li className="rounded-2xl border border-dashed border-adisseo-line/90 bg-white p-6 text-center text-xs text-adisseo-muted shadow-adi-card">
                 No traces match the filter.
               </li>
             )}
@@ -299,7 +299,7 @@ export default function ObservabilityPage() {
           {/* DETAIL */}
           <aside className="lg:col-span-5 lg:sticky lg:top-6 lg:h-fit">
             {selected ? (
-              <div className="rounded-2xl border border-adisseo-line bg-white p-4">
+              <div className="adi-surface p-4">
                 <div className="flex items-baseline justify-between">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
                     Span detail
@@ -352,7 +352,7 @@ export default function ObservabilityPage() {
                 </div>
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-adisseo-line bg-white p-6 text-center text-xs text-adisseo-muted">
+              <div className="rounded-2xl border border-dashed border-adisseo-line/90 bg-white p-6 text-center text-xs text-adisseo-muted shadow-adi-card">
                 <Activity size={20} className="mx-auto mb-2 text-adisseo-muted" />
                 Pick a span to drill down.
               </div>
@@ -376,7 +376,7 @@ function Stat({ label, v, tint }: { label: string; v: string | number; tint?: "v
             ? "text-amber-700"
             : "text-adisseo-ink-strong";
   return (
-    <div className="rounded-2xl border border-adisseo-line bg-white p-3">
+    <div className="adi-surface p-3">
       <p className="text-[9px] uppercase tracking-widest text-adisseo-muted">{label}</p>
       <p className={`mt-1 font-mono text-xl font-bold ${tintCls}`}>{v}</p>
     </div>

@@ -518,7 +518,7 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-2">
               <Link
                 href="/competitor-watch"
-                className="group flex flex-col rounded-2xl border-2 border-adisseo-crimson/45 bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md sm:p-6"
+                className="group flex flex-col rounded-2xl border-2 border-adisseo-crimson/45 bg-white p-5 shadow-adi-card transition hover:border-adisseo-crimson hover:shadow-adi-card-hover sm:p-6"
               >
                 <Newspaper size={22} className="text-adisseo-crimson" />
                 <h2 className="mt-3 text-base font-bold text-adisseo-ink-strong">
@@ -594,7 +594,7 @@ export default function Home() {
               ).map((s) => (
                 <div
                   key={s.step}
-                  className="rounded-xl border border-adisseo-line bg-white px-4 py-3 shadow-sm"
+                  className="rounded-xl border border-adisseo-line/90 bg-white px-4 py-3 shadow-adi-card"
                 >
                   <p className="text-[10px] font-bold uppercase tracking-wider text-adisseo-crimson">
                     Step {s.step}
@@ -610,14 +610,14 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/competitor-watch"
-                className="group inline-flex items-center gap-2 rounded-lg bg-adisseo-ink-strong px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+                className="group inline-flex items-center gap-2 rounded-lg bg-adisseo-ink-strong px-4 py-2.5 text-sm font-semibold text-white shadow-adi-card transition hover:opacity-90"
               >
                 Start with Competitor Watch
                 <ArrowRight size={14} className="transition group-hover:translate-x-0.5" />
               </Link>
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 rounded-lg border border-adisseo-crimson/40 bg-white px-4 py-2.5 text-sm font-semibold text-adisseo-ink-strong shadow-sm transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
+                className="inline-flex items-center gap-2 rounded-lg border border-adisseo-crimson/40 bg-white px-4 py-2.5 text-sm font-semibold text-adisseo-ink-strong shadow-adi-card transition hover:border-adisseo-crimson hover:text-adisseo-crimson"
               >
                 <KeyRound size={14} className="text-adisseo-crimson" />
                 Sign in to APAC

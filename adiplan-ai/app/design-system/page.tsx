@@ -69,7 +69,7 @@ export default function DesignSystemPage() {
 
       <div className="mx-auto max-w-6xl px-6 py-10">
         {/* Hero */}
-        <section className="rounded-3xl border border-adisseo-line bg-white p-10 shadow-sm">
+        <section className="rounded-3xl border border-adisseo-line/90 bg-white p-10 shadow-adi-card">
           <p className="inline-flex items-center gap-2 rounded-full bg-stone-900 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
             <Sparkles size={11} /> Pierre Hérubel · APAC
           </p>

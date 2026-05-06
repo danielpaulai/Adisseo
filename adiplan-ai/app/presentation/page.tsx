@@ -461,7 +461,7 @@ export default function PresentationPage() {
             </span>
             APAC AI · APAC Pilot · Built for Adisseo
           </div>
-          <h1 className="font-serif text-5xl font-bold leading-[1.05] text-adisseo-ink-strong md:text-6xl">
+          <h1 className="font-display text-5xl font-semibold leading-[1.05] text-adisseo-ink-strong md:text-6xl">
             How APAC AI bridges <br className="hidden md:inline" />
             <span className="text-adisseo-crimson">competitor news</span> to
             species-specific deliverables.
@@ -660,7 +660,7 @@ export default function PresentationPage() {
         title="The pipeline"
         subtitle="From a scraped headline to a deliverable in 4 stages"
       >
-        <div className="rounded-3xl border border-adisseo-line bg-white p-8 shadow-sm">
+        <div className="rounded-3xl border border-adisseo-line/90 bg-white p-8 shadow-adi-card">
           <PipelineVisual />
         </div>
         <p className="mt-6 max-w-3xl text-sm leading-relaxed text-adisseo-muted">
@@ -701,7 +701,7 @@ export default function PresentationPage() {
               <Link
                 key={m.href}
                 href={m.href}
-                className="group flex items-center gap-4 rounded-2xl border border-adisseo-line bg-white p-4 transition hover:border-adisseo-crimson hover:shadow-sm"
+                className="group flex items-center gap-4 rounded-2xl border border-adisseo-line/90 bg-white p-4 shadow-adi-card transition hover:border-adisseo-crimson hover:shadow-adi-card-hover"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-adisseo-crimson/5 text-adisseo-crimson group-hover:bg-adisseo-crimson group-hover:text-white">
                   <Icon size={18} />
@@ -805,7 +805,7 @@ function Section({
 
 function Pull({ children }: { children: React.ReactNode }) {
   return (
-    <blockquote className="my-10 border-l-4 border-adisseo-crimson bg-white px-6 py-6 shadow-sm">
+    <blockquote className="my-10 border-l-4 border-adisseo-crimson bg-white px-6 py-6 shadow-adi-card">
       {children}
     </blockquote>
   );
@@ -823,7 +823,7 @@ function PersonaCard({
   quirk: string;
 }) {
   return (
-    <div className="rounded-xl border border-adisseo-line bg-white p-4">
+    <div className="rounded-xl border border-adisseo-line/90 bg-white p-4 shadow-adi-card">
       <div className="flex items-baseline gap-2">
         <p className="text-base font-bold text-adisseo-ink-strong">{name}</p>
         <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
@@ -848,7 +848,7 @@ function FactBox({
   body: string;
 }) {
   return (
-    <div className="rounded-xl border border-adisseo-line bg-white p-4">
+    <div className="rounded-xl border border-adisseo-line/90 bg-white p-4 shadow-adi-card">
       <div className="flex items-center gap-2 text-adisseo-crimson">
         <Icon size={14} />
         <p className="text-[10px] font-semibold uppercase tracking-widest">
@@ -862,7 +862,7 @@ function FactBox({
 
 function GapCard({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-2xl border border-adisseo-line bg-white p-5">
+    <div className="adi-surface p-5">
       <p className="text-base font-bold leading-snug text-adisseo-ink-strong">
         {title}
       </p>
@@ -954,8 +954,8 @@ function ModuleCard({
       href={href}
       className={`group flex h-full flex-col rounded-2xl border bg-white p-5 transition ${
         highlight
-          ? "border-adisseo-crimson shadow-md"
-          : "border-adisseo-line hover:border-adisseo-crimson hover:shadow-sm"
+          ? "border-adisseo-crimson shadow-adi-card-hover"
+          : "border-adisseo-line shadow-adi-card hover:border-adisseo-crimson hover:shadow-adi-card-hover"
       }`}
     >
       <div className="flex items-center justify-between">
@@ -990,8 +990,8 @@ function ModuleCard({
 
 function Stat({ n, label, sub }: { n: string; label: string; sub?: string }) {
   return (
-    <div className="rounded-2xl border border-adisseo-line bg-white p-5">
-      <p className="font-serif text-4xl font-bold text-adisseo-crimson md:text-5xl">
+    <div className="adi-surface p-5">
+      <p className="font-display text-4xl font-semibold text-adisseo-crimson md:text-5xl">
         {n}
       </p>
       <p className="mt-2 text-sm font-bold text-adisseo-ink-strong">{label}</p>
@@ -1014,7 +1014,7 @@ function RoadmapCard({
   body: string;
 }) {
   return (
-    <div className="rounded-2xl border border-adisseo-line bg-white p-5">
+    <div className="adi-surface p-5">
       <div className="flex items-start gap-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-adisseo-crimson/5 text-adisseo-crimson">
           <Icon size={16} />

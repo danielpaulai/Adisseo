@@ -182,7 +182,7 @@ export default function VoiceMemoStudioPage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
               Studio · Voice Memo
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong">
               From a 30-second voice memo to a finished deliverable
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -316,7 +316,7 @@ export default function VoiceMemoStudioPage() {
               <button
                 onClick={sendToStudio}
                 disabled={!transcript.trim()}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-adisseo-crimson px-4 py-3 text-sm font-semibold text-white shadow-adi-card transition hover:opacity-90 disabled:opacity-50"
               >
                 <Sparkles size={14} />
                 Send to {SPECIES.find((s) => s.id === target)?.label} <ArrowRight size={14} />

@@ -81,8 +81,8 @@ const CAMPAIGN_WATCH = [
 
 export default function MarketingPlanPage() {
   return (
-    <main className="min-h-screen bg-adisseo-bg">
-      <header className="border-b border-adisseo-line bg-white">
+    <main className="min-h-screen">
+      <header className="border-b border-adisseo-line/80 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
             <Logo size="sm" />
@@ -95,7 +95,7 @@ export default function MarketingPlanPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-adisseo-crimson">
           Adisseo marketing plan
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-adisseo-ink-strong">
+        <h1 className="font-display mt-2 text-3xl font-semibold text-adisseo-ink-strong sm:text-[2.1rem] sm:leading-tight">
           Strategy spine — matrices, ladders, and frames
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-adisseo-ink">
@@ -117,11 +117,11 @@ export default function MarketingPlanPage() {
           .
         </p>
 
-        <section className="mt-10 rounded-3xl border border-adisseo-line bg-white p-6 shadow-sm">
+        <section className="adi-surface mt-10 rounded-3xl p-6">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
             Marketing Campaign Watch
           </p>
-          <h2 className="mt-2 text-xl font-bold text-adisseo-ink-strong">
+          <h2 className="font-display mt-2 text-xl font-semibold text-adisseo-ink-strong">
             From signals to campaign deliverables
           </h2>
           <p className="mt-1 max-w-2xl text-sm leading-relaxed text-adisseo-muted">
@@ -134,7 +134,7 @@ export default function MarketingPlanPage() {
             {CAMPAIGN_WATCH.map(({ source, icon: Icon, input, output }) => (
               <article
                 key={source}
-                className="rounded-2xl border border-adisseo-line bg-adisseo-bg/50 p-4"
+                className="rounded-2xl border border-adisseo-line/80 bg-adisseo-bg/60 p-4 shadow-adi-card"
               >
                 <p className="flex items-center gap-2 text-sm font-bold text-adisseo-ink-strong">
                   <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-adisseo-ink-strong text-white">
@@ -160,13 +160,13 @@ export default function MarketingPlanPage() {
             <li key={href}>
               <Link
                 href={href}
-                className="group flex gap-4 rounded-2xl border border-adisseo-line bg-white p-5 shadow-sm transition hover:border-adisseo-crimson hover:shadow-md"
+                className="adi-surface group flex gap-4 p-5 transition hover:border-adisseo-crimson hover:shadow-adi-card-hover"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-adisseo-ink-strong text-white">
                   <Icon size={22} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-lg font-semibold text-adisseo-ink-strong group-hover:text-adisseo-crimson">
+                  <h2 className="font-display text-lg font-semibold text-adisseo-ink-strong group-hover:text-adisseo-crimson">
                     {title}
                   </h2>
                   <p className="mt-1 text-sm text-adisseo-ink">{blurb}</p>

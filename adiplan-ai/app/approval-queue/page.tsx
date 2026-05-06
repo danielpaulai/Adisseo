@@ -134,7 +134,7 @@ export default function ApprovalQueuePage() {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
               Regional desk · brand guardrails
             </p>
-            <h1 className="text-2xl font-bold text-adisseo-ink-strong">
+            <h1 className="font-display text-2xl font-semibold text-adisseo-ink-strong sm:text-3xl">
               Approval queue
             </h1>
             <p className="text-sm text-adisseo-muted">
@@ -145,7 +145,7 @@ export default function ApprovalQueuePage() {
           </div>
           <button
             onClick={seedDemo}
-            className="rounded-lg border border-adisseo-line bg-white px-3 py-2 text-xs font-semibold text-adisseo-ink-strong transition hover:border-adisseo-cyan hover:text-adisseo-cyan"
+            className="rounded-lg border border-adisseo-line/90 bg-white px-3 py-2 text-xs font-semibold text-adisseo-ink-strong shadow-adi-card transition hover:border-adisseo-cyan hover:text-adisseo-cyan"
           >
             Seed demo queue
           </button>
@@ -212,7 +212,7 @@ export default function ApprovalQueuePage() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
           {/* List */}
-          <div className="rounded-2xl border border-adisseo-line bg-white">
+          <div className="adi-surface overflow-hidden">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
                 <ShieldCheck size={28} className="text-adisseo-muted" />
@@ -301,7 +301,7 @@ export default function ApprovalQueuePage() {
           </div>
 
           {/* Review pane */}
-          <div className="rounded-2xl border border-adisseo-line bg-white p-4">
+          <div className="adi-surface p-4">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
               Regional review
             </p>
@@ -417,7 +417,7 @@ function Stat({
         ? "bg-emerald-50 text-emerald-800 border-emerald-200"
         : tone === "rose"
           ? "bg-rose-50 text-rose-800 border-rose-200"
-          : "bg-white text-adisseo-ink-strong border-adisseo-line";
+          : "border-adisseo-line/90 bg-white text-adisseo-ink-strong shadow-adi-card";
   return (
     <div className={`rounded-2xl border p-3 ${cls}`}>
       <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest opacity-80">
