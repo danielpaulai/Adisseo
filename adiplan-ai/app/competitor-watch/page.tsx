@@ -339,17 +339,17 @@ function CompetitorWatchContent() {
       });
       useAdiPlanStore.getState().pushActivity({
         kind: "match",
-        title: `Analyzed: ${article.title}`,
+        title: `Compared: ${article.title}`,
         detail: `${article.competitor} \u00b7 \u2192 ${data.match.cbi} / ${data.match.persona}`,
         href: COMPETITOR_WATCH_PATH,
         tone: "ink",
       });
-      toast.success(`Analyzed \u2192 ${data.match.cbi}`, {
+      toast.success(`Compared \u2192 ${data.match.cbi}`, {
         description: `${data.match.persona} \u00b7 ${data.match.recommendedFormats[0] ?? "deliverable"}`,
       });
     } catch {
-      setError("Analyze request failed. Check API keys or try again.");
-      toast.error("Analyze request failed", {
+      setError("Compare request failed. Check API keys or try again.");
+      toast.error("Compare request failed", {
         description: "Check the OpenAI / Anthropic key, or try a different article.",
       });
     } finally {
@@ -762,7 +762,7 @@ function CompetitorWatchContent() {
                           ) : (
                             <Sparkles size={12} />
                           )}
-                          Analyze
+                          Compare
                         </button>
                       </div>
                     </div>
@@ -776,12 +776,12 @@ function CompetitorWatchContent() {
             <div className="adi-surface p-6">
               <div className="mb-3 flex items-center gap-2 text-adisseo-muted">
                 <Sparkles size={16} />
-                <p className="text-sm font-medium">APAC analysis</p>
+                <p className="text-sm font-medium">APAC comparison</p>
               </div>
 
               {!response && !loadingAnalyze && (
                 <p className="py-12 text-center text-sm text-adisseo-muted">
-                  Click <span className="font-semibold">Analyze</span> on any
+                  Click <span className="font-semibold">Compare</span> on any
                   article — maps CBI, target persona, and suggested formats to
                   the APAC framework.
                 </p>
@@ -790,7 +790,7 @@ function CompetitorWatchContent() {
               {loadingAnalyze && (
                 <div className="flex flex-col items-center gap-3 py-12 text-adisseo-muted">
                   <Loader2 size={28} className="animate-spin" />
-                  <p className="text-sm">Reasoning over the APAC framework&hellip;</p>
+                  <p className="text-sm">Comparing against the APAC framework&hellip;</p>
                 </div>
               )}
 
