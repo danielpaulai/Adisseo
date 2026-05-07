@@ -135,6 +135,13 @@ const TONE_BG: Record<NonNullable<ActivityEntry["tone"]>, string> = {
   ink: "bg-adisseo-ink/10 text-adisseo-ink-strong",
 };
 
+function materializeDemoActivity(): ActivityEntry[] {
+  return DEMO_SEED.map((entry, index) => ({
+    ...entry,
+    id: `showcase-${index}`,
+  }));
+}
+
 export default function DashboardPage() {
   const activity = useAdiPlanStore((s) => s.activity);
   const clearActivity = useAdiPlanStore((s) => s.clearActivity);
@@ -150,7 +157,10 @@ export default function DashboardPage() {
     for (const e of ordered) pushActivity(e);
   };
 
-  const counts = activity.reduce<Record<ActivityKind, number>>(
+  const usingShowcaseData = activity.length === 0;
+  const displayActivity = usingShowcaseData ? materializeDemoActivity() : activity;
+
+  const counts = displayActivity.reduce<Record<ActivityKind, number>>(
     (acc, a) => {
       acc[a.kind] = (acc[a.kind] ?? 0) + 1;
       return acc;
@@ -180,6 +190,11 @@ export default function DashboardPage() {
     ? Math.round((totalShipped / counts.frame) * 100)
     : 0;
 
+  const latestMatch = displayActivity.find((entry) => entry.kind === "match") ?? null;
+  const latestFrame = displayActivity.find((entry) => entry.kind === "frame") ?? null;
+  const latestShipment =
+    displayActivity.find((entry) => ["aqua", "poultry", "ruminants", "swine", "voice-memo"].includes(entry.kind)) ?? null;
+
   return (
     <WorkspaceShell>
       <main className="min-h-screen bg-adisseo-bg">
@@ -200,6 +215,11 @@ export default function DashboardPage() {
                 Every news match, composed strategic frame, and species deliverable
                 that moved through APAC AI — most-recent first.
               </p>
+              {usingShowcaseData && (
+                <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-adisseo-crimson/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+                  Showcase mode · seeded session story until a live workflow starts
+                </p>
+              )}
             </div>
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -235,6 +255,30 @@ export default function DashboardPage() {
         </div>
 
         <WorkflowRibbon />
+
+        <section className="mb-8 mt-8 grid gap-4 lg:grid-cols-[1.1fr,1fr,1fr]">
+          <OperatingCard
+            label="Latest market signal"
+            title={latestMatch?.title ?? "No article matched yet"}
+            detail={latestMatch?.detail ?? "Open Competitor Watch to create the first live signal."}
+            href={latestMatch?.href ?? "/competitor-watch"}
+            cta="Open signal"
+          />
+          <OperatingCard
+            label="Frame on deck"
+            title={latestFrame?.title ?? "No strategic frame composed"}
+            detail={latestFrame?.detail ?? "Compose the narrative before the creative leaves the studio."}
+            href={latestFrame?.href ?? "/strategic-frame"}
+            cta="Open frame"
+          />
+          <OperatingCard
+            label="Latest shipped asset"
+            title={latestShipment?.title ?? "No deliverable shipped yet"}
+            detail={latestShipment?.detail ?? "Push one studio asset through approval and distribution to light this up."}
+            href={latestShipment?.href ?? "/distribution"}
+            cta="Open asset"
+          />
+        </section>
 
         {/* CURRENT FRAME */}
         {composedFrame && (
@@ -284,10 +328,10 @@ export default function DashboardPage() {
                 className="flex items-center gap-1 rounded-md border border-adisseo-line bg-white px-2.5 py-1 text-[10px] font-semibold text-adisseo-crimson hover:border-adisseo-crimson"
                 title="Pre-load 10 realistic activity entries so the war-room isn't empty in cold-start screenshots."
               >
-                Pre-load demo activity
+                {usingShowcaseData ? "Load showcase into session" : "Pre-load demo activity"}
               </button>
               <DemoSeedAll compact />
-              {activity.length > 0 && (
+              {!usingShowcaseData && (
                 <button
                   onClick={() => {
                     if (confirm("Clear the war-room activity log?")) clearActivity();
@@ -325,7 +369,7 @@ export default function DashboardPage() {
           <h3 className="mb-3 text-sm font-bold text-adisseo-ink-strong">
             Activity timeline
           </h3>
-          {activity.length === 0 ? (
+          {displayActivity.length === 0 ? (
             <EmptyState
               match={!!match}
               composedFrame={!!composedFrame}
@@ -333,7 +377,7 @@ export default function DashboardPage() {
             />
           ) : (
             <ol className="space-y-2">
-              {activity.map((a) => {
+              {displayActivity.map((a) => {
                 const Icon = KIND_ICON[a.kind];
                 const tone = a.tone ? TONE_BG[a.tone] : TONE_BG.ink;
                 return (
@@ -408,6 +452,40 @@ function Stat({
   );
   if (href) return <Link href={href}>{inner}</Link>;
   return inner;
+}
+
+function OperatingCard({
+  label,
+  title,
+  detail,
+  href,
+  cta,
+}: {
+  label: string;
+  title: string;
+  detail: string;
+  href: string;
+  cta: string;
+}) {
+  return (
+    <div className="adi-surface rounded-2xl p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+        {label}
+      </p>
+      <p className="mt-2 text-sm font-bold leading-snug text-adisseo-ink-strong">
+        {title}
+      </p>
+      <p className="mt-1 min-h-[2.5rem] text-[11px] leading-relaxed text-adisseo-muted">
+        {detail}
+      </p>
+      <Link
+        href={href}
+        className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-adisseo-crimson hover:underline"
+      >
+        {cta} <ArrowRight size={11} />
+      </Link>
+    </div>
+  );
 }
 
 function EmptyState({

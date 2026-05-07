@@ -61,6 +61,63 @@ const DEMO_SEED: Omit<ApprovalRequest, "id" | "sentAt" | "status">[] = [
   },
 ];
 
+const SHOWCASE_APPROVALS: ApprovalRequest[] = [
+  {
+    id: "showcase-pending-poultry",
+    kind: "poultry-pack",
+    title: "Poultry email + carousel · ASF outbreak playbook",
+    summary: "5-slide LinkedIn carousel + sales email · EN · SE-Asia distributors",
+    sender: "Vish · Poultry",
+    href: "/studio/poultry",
+    payload: {
+      language: "en",
+      audience: "SE-Asia distributors",
+      channel: "linkedin + email",
+      citations: 4,
+    },
+    status: "pending",
+    sentAt: new Date(Date.now() - 45 * 60_000).toISOString(),
+  },
+  {
+    id: "showcase-approved-ruminants",
+    kind: "ruminants-brochure",
+    title: "Ruminants manga brochure · Hokkaido methane",
+    summary: "2-page manga brochure · JP · Japanese dairy co-ops",
+    sender: "Antoine · Ruminants",
+    href: "/studio/ruminants",
+    payload: {
+      language: "ja",
+      audience: "JP dairy co-ops",
+      channel: "trade-mag",
+      citations: 2,
+    },
+    status: "approved",
+    sentAt: new Date(Date.now() - 3 * 60 * 60_000).toISOString(),
+    reviewedAt: new Date(Date.now() - 2.5 * 60 * 60_000).toISOString(),
+    reviewer: "Ricardo Communod",
+    reviewerComment: "On-brand. Ship it.",
+  },
+  {
+    id: "showcase-rejected-swine",
+    kind: "swine-short",
+    title: "ASF nursery short · 60s WeChat",
+    summary: "WeChat short video script · ZH · nursery recovery protocol",
+    sender: "Claire · Swine",
+    href: "/studio/swine",
+    payload: {
+      language: "zh",
+      audience: "CN integrator vet desk",
+      channel: "wechat",
+      citations: 2,
+    },
+    status: "rejected",
+    sentAt: new Date(Date.now() - 5 * 60 * 60_000).toISOString(),
+    reviewedAt: new Date(Date.now() - 4.5 * 60 * 60_000).toISOString(),
+    reviewer: "Ricardo Communod",
+    reviewerComment: "Adjust headline tone — drop the superlative.",
+  },
+];
+
 export default function ApprovalQueuePage() {
   const approvals = useAdiPlanStore((s) => s.approvals);
   const decideApproval = useAdiPlanStore((s) => s.decideApproval);
@@ -72,18 +129,26 @@ export default function ApprovalQueuePage() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [comment, setComment] = useState("");
 
+  const usingShowcaseData = approvals.length === 0;
+  const displayApprovals = usingShowcaseData ? SHOWCASE_APPROVALS : approvals;
+
   const filtered = useMemo(
-    () => (filter === "all" ? approvals : approvals.filter((a) => a.status === filter)),
-    [approvals, filter]
+    () =>
+      filter === "all"
+        ? displayApprovals
+        : displayApprovals.filter((a) => a.status === filter),
+    [displayApprovals, filter]
   );
 
   const counts = useMemo(() => {
     const c = { pending: 0, approved: 0, rejected: 0 };
-    for (const a of approvals) c[a.status]++;
+    for (const a of displayApprovals) c[a.status]++;
     return c;
-  }, [approvals]);
+  }, [displayApprovals]);
 
-  const active = activeId ? approvals.find((a) => a.id === activeId) ?? null : null;
+  const active =
+    (activeId ? displayApprovals.find((a) => a.id === activeId) ?? null : null) ??
+    (usingShowcaseData ? filtered[0] ?? null : null);
 
   const seedDemo = () => {
     for (const e of DEMO_SEED) requestApproval(e);
@@ -142,6 +207,11 @@ export default function ApprovalQueuePage() {
               approval log auto-feeds the engagement tracker, so we know which
               assets shipped under regional guardrails.
             </p>
+            {usingShowcaseData && (
+              <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-adisseo-cyan/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
+                Showcase mode · sample approvals shown until a live review is created
+              </p>
+            )}
           </div>
           <button
             onClick={seedDemo}
@@ -197,7 +267,7 @@ export default function ApprovalQueuePage() {
               {f}
             </button>
           ))}
-          {approvals.length > 0 && (
+          {!usingShowcaseData && (
             <button
               onClick={() => {
                 clearApprovals();
@@ -230,7 +300,7 @@ export default function ApprovalQueuePage() {
                   <li
                     key={a.id}
                     onClick={() => {
-                      if (a.status === "pending") {
+                      if (a.status === "pending" && !usingShowcaseData) {
                         setActiveId(a.id);
                         setComment("");
                       } else {
@@ -328,7 +398,7 @@ export default function ApprovalQueuePage() {
                   </dl>
                 )}
 
-                {active.status === "pending" ? (
+                {active.status === "pending" && !usingShowcaseData ? (
                   <>
                     <p className="mt-4 text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
                       Reviewer comment
@@ -380,6 +450,16 @@ export default function ApprovalQueuePage() {
                     )}
                     {active.reviewerComment && (
                       <p className="mt-2 text-[11px]">{`"${active.reviewerComment}"`}</p>
+                    )}
+                    {usingShowcaseData && active.status === "pending" && (
+                      <div className="mt-3 rounded-md border border-adisseo-cyan/25 bg-white p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-cyan">
+                          Live review actions unlock after seeding
+                        </p>
+                        <p className="mt-1 text-[11px] leading-relaxed text-adisseo-muted">
+                          This sample shows the payload, reviewer context, and guardrail expectation. Click Seed demo queue to create live, interactive approval requests.
+                        </p>
+                      </div>
                     )}
                   </div>
                 )}
