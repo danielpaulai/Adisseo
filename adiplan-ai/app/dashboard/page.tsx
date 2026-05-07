@@ -13,14 +13,15 @@ import {
   Trash2,
   Mic,
   Layers,
-  Network,
-  Grid3x3,
+  Send,
 } from "lucide-react";
 import { useAdiPlanStore, type ActivityEntry, type ActivityKind } from "@/lib/store";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
 import { WorkflowRibbon } from "@/components/workspace/WorkflowRibbon";
 import { DemoSeedAll } from "@/components/DemoSeedAll";
 import { LiveModeChip } from "@/components/LiveModeChip";
+import { DEMO_DELIVERABLES } from "@/lib/distribution";
+import { CHANNELS, getTenant } from "@/lib/tenant";
 
 /* ----------------------------------------------------------------------------
  * Demo-seed payload — populates the war-room with realistic recent activity
@@ -143,11 +144,14 @@ function materializeDemoActivity(): ActivityEntry[] {
 }
 
 export default function DashboardPage() {
+  const activeTenantId = useAdiPlanStore((s) => s.activeTenantId);
   const activity = useAdiPlanStore((s) => s.activity);
+  const distribution = useAdiPlanStore((s) => s.distribution);
   const clearActivity = useAdiPlanStore((s) => s.clearActivity);
   const pushActivity = useAdiPlanStore((s) => s.pushActivity);
   const composedFrame = useAdiPlanStore((s) => s.composedFrame);
   const match = useAdiPlanStore((s) => s.match);
+  const tenant = getTenant(activeTenantId);
 
   const seedDemo = () => {
     // Replay in chronological order so the most-recent ends up on top.
@@ -194,6 +198,38 @@ export default function DashboardPage() {
   const latestFrame = displayActivity.find((entry) => entry.kind === "frame") ?? null;
   const latestShipment =
     displayActivity.find((entry) => ["aqua", "poultry", "ruminants", "swine", "voice-memo"].includes(entry.kind)) ?? null;
+
+  const showcaseShipments = DEMO_DELIVERABLES.filter(
+    (deliverable) =>
+      deliverable.tenantId === activeTenantId &&
+      deliverable.trustScore >= tenant.trustFloor &&
+      (!tenant.requiresRegionalApproval || deliverable.approvalStatus === "approved")
+  )
+    .slice(0, 3)
+    .map((deliverable, index) => ({
+      id: `ship-${deliverable.id}`,
+      deliverable: deliverable.label,
+      channel: deliverable.recommendedChannels[0],
+      reach:
+        deliverable.recommendedChannels[0] === "trade-mag"
+          ? "Editorial review"
+          : `${(5400 + index * 1800).toLocaleString()} reached`,
+      detail: `${deliverable.manager} · ${deliverable.region ?? "APAC"} · ${deliverable.citationCount ?? 0} citations`,
+    }));
+
+  const liveShipments = distribution
+    .filter((row) => row.tenantId === activeTenantId && row.status === "shipped")
+    .slice(0, 3)
+    .map((row) => ({
+      id: row.id,
+      deliverable: row.deliverable,
+      channel: row.channel,
+      reach: row.audienceCount ? `${row.audienceCount.toLocaleString()} reached` : row.audience,
+      detail: row.publicUrl ?? row.audience ?? "Live dispatch",
+    }));
+
+  const shippingLane = liveShipments.length > 0 ? liveShipments : showcaseShipments;
+  const usingShowcaseShipping = liveShipments.length === 0;
 
   return (
     <WorkspaceShell>
@@ -278,6 +314,51 @@ export default function DashboardPage() {
             href={latestShipment?.href ?? "/distribution"}
             cta="Open asset"
           />
+        </section>
+
+        <section className="mb-8 rounded-3xl border border-adisseo-line bg-white p-5 shadow-adi-card">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+                Channel shipping lane
+              </p>
+              <h3 className="mt-1 text-lg font-bold text-adisseo-ink-strong">
+                What left the desk and where it landed
+              </h3>
+              <p className="text-[11px] text-adisseo-muted">
+                {usingShowcaseShipping
+                  ? "Showcase shipments mirror the strongest distribution outputs until the first live dispatch lands."
+                  : "These rows are coming from the live distribution log for the active tenant."}
+              </p>
+            </div>
+            <Link
+              href="/distribution"
+              className="inline-flex items-center gap-1 rounded-md border border-adisseo-line px-3 py-2 text-[11px] font-semibold text-adisseo-ink-strong hover:border-adisseo-crimson hover:text-adisseo-crimson"
+            >
+              Open distribution <ArrowRight size={11} />
+            </Link>
+          </div>
+
+          <div className="mt-4 grid gap-3 lg:grid-cols-3">
+            {shippingLane.map((shipment) => (
+              <div key={shipment.id} className="rounded-2xl border border-adisseo-line bg-[#FBFAF6] p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-adisseo-ink/8 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-adisseo-ink-strong">
+                    <Send size={10} /> {CHANNELS[shipment.channel].label}
+                  </span>
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-muted">
+                    {shipment.reach}
+                  </span>
+                </div>
+                <p className="mt-3 text-sm font-bold leading-snug text-adisseo-ink-strong">
+                  {shipment.deliverable}
+                </p>
+                <p className="mt-1 text-[11px] leading-relaxed text-adisseo-muted">
+                  {shipment.detail}
+                </p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* CURRENT FRAME */}
