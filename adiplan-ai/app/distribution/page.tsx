@@ -30,7 +30,7 @@ import {
   type DemoDeliverable,
 } from "@/lib/distribution";
 import { buildPreview } from "@/lib/channel-adapter";
-import { useAdiPlanStore } from "@/lib/store";
+import { useAdiPlanStore, type DistributionLog } from "@/lib/store";
 import type { ChannelPreview as ChannelPreviewType } from "@/lib/channel-adapter";
 
 export default function DistributionPage() {
@@ -56,6 +56,109 @@ export default function DistributionPage() {
   );
 
   const tenantLog = distribution.filter((l) => l.tenantId === activeTenantId);
+
+  const eligibleDeliverables = useMemo(
+    () =>
+      tenantDeliverables.filter(
+        (d) =>
+          d.trustScore >= tenant.trustFloor &&
+          (!tenant.requiresRegionalApproval || d.approvalStatus === "approved")
+      ),
+    [tenantDeliverables, tenant.trustFloor, tenant.requiresRegionalApproval]
+  );
+
+  const featuredDeliverable = eligibleDeliverables[0] ?? tenantDeliverables[0] ?? null;
+
+  const showcaseLog = useMemo<DistributionLog[]>(() => {
+    const shipped = eligibleDeliverables.slice(0, 2).map((d, index) => {
+      const channel = d.recommendedChannels[0];
+      return {
+        id: `showcase-${d.id}-${channel}`,
+        tenantId: d.tenantId,
+        channel,
+        deliverable: d.label,
+        trustScore: d.trustScore,
+        status: "shipped" as const,
+        audience: CHANNELS[channel].audience,
+        shippedAt: new Date(Date.now() - (index + 1) * 75 * 60_000).toISOString(),
+        publicUrl: `https://preview.adiplan.ai/${d.tenantId}/${channel}/${d.id}`,
+        externalId: `showcase-${channel}-${index + 1}`,
+        audienceCount: channel === "trade-mag" ? 240 : 4200 + index * 1800,
+        preview: buildPreview({
+          tenantId: d.tenantId,
+          channel,
+          deliverable: d.label,
+          body: d.body,
+          subject: d.label,
+          hashtags: d.hashtags,
+          region: d.region,
+          species: d.species,
+          manager: d.manager,
+          trustScore: d.trustScore,
+          citationCount: d.citationCount,
+        }),
+        engagement:
+          channel === "trade-mag"
+            ? undefined
+            : {
+                impressions: 5800 + index * 1700,
+                qualifiedViews: 420 + index * 90,
+                conversations: 28 + index * 7,
+                conversions: 6 + index * 2,
+                updatedAt: new Date(Date.now() - (index + 1) * 60 * 60_000).toISOString(),
+              },
+        dispatchMode: "mock" as const,
+        rateLimited: false,
+        waitMs: 0,
+      };
+    });
+
+    const blockedDeliverable = tenantDeliverables.find(
+      (d) =>
+        d.trustScore < tenant.trustFloor ||
+        (tenant.requiresRegionalApproval && d.approvalStatus !== "approved")
+    );
+
+    const blocked = blockedDeliverable
+      ? [
+          {
+            id: `showcase-blocked-${blockedDeliverable.id}`,
+            tenantId: blockedDeliverable.tenantId,
+            channel: blockedDeliverable.recommendedChannels[0],
+            deliverable: blockedDeliverable.label,
+            trustScore: blockedDeliverable.trustScore,
+            status: "blocked" as const,
+            audience: CHANNELS[blockedDeliverable.recommendedChannels[0]].audience,
+            shippedAt: new Date(Date.now() - 4 * 60 * 60_000).toISOString(),
+            blockReason:
+              blockedDeliverable.trustScore < tenant.trustFloor
+                ? `Trust ${blockedDeliverable.trustScore} below floor ${tenant.trustFloor}`
+                : `Regional approval still ${blockedDeliverable.approvalStatus}`,
+            preview: buildPreview({
+              tenantId: blockedDeliverable.tenantId,
+              channel: blockedDeliverable.recommendedChannels[0],
+              deliverable: blockedDeliverable.label,
+              body: blockedDeliverable.body,
+              subject: blockedDeliverable.label,
+              hashtags: blockedDeliverable.hashtags,
+              region: blockedDeliverable.region,
+              species: blockedDeliverable.species,
+              manager: blockedDeliverable.manager,
+              trustScore: blockedDeliverable.trustScore,
+              citationCount: blockedDeliverable.citationCount,
+            }),
+            dispatchMode: "mock" as const,
+            rateLimited: false,
+            waitMs: 0,
+          },
+        ]
+      : [];
+
+    return [...shipped, ...blocked];
+  }, [eligibleDeliverables, tenantDeliverables, tenant.trustFloor, tenant.requiresRegionalApproval]);
+
+  const displayLog = tenantLog.length > 0 ? tenantLog : showcaseLog;
+  const usingShowcaseLog = tenantLog.length === 0;
 
   /* ------------------------------------------------------------------------ */
   /* Preview a channel card without dispatching.                              */
@@ -110,18 +213,56 @@ export default function DistributionPage() {
                 Regional marketing can review the exact LinkedIn, WeChat, WhatsApp, email, and trade-mag
                 shapes before shipping through the approved rail.
               </p>
+              {usingShowcaseLog && (
+                <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-adisseo-crimson/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+                  Showcase mode · seeded shipped examples shown until a live dispatch happens
+                </p>
+              )}
             </div>
             <div
               className="rounded-2xl border border-adisseo-line p-4 text-right"
+
+                    {featuredDeliverable && (
+                      <section className="mt-8 rounded-3xl border border-adisseo-line bg-white p-6 shadow-adi-card">
+                        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                          <div className="max-w-xl">
+                            <p className="text-[10px] font-semibold uppercase tracking-widest text-adisseo-crimson">
+                              Featured ready-to-ship asset
+                            </p>
+                            <h2 className="mt-2 text-2xl font-black text-adisseo-ink-strong">
+                              {featuredDeliverable.label}
+                            </h2>
+                            <p className="mt-2 text-sm leading-relaxed text-adisseo-muted">
+                              {featuredDeliverable.body}
+                            </p>
+                            <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
+                              <span className="rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-700">
+                                Trust {featuredDeliverable.trustScore}/100
+                              </span>
+                              <span className="rounded-full bg-stone-100 px-2 py-0.5 font-semibold text-stone-700">
+                                {featuredDeliverable.citationCount ?? 0} citations
+                              </span>
+                              <span className="rounded-full bg-stone-100 px-2 py-0.5 font-semibold text-stone-700">
+                                {featuredDeliverable.manager} · {featuredDeliverable.region ?? "APAC"}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[420px] lg:max-w-[480px] lg:flex-1">
+                            <MetricCard label="Eligible now" value={eligibleDeliverables.length} tone="emerald" />
+                            <MetricCard label="Showcase shipped" value={displayLog.filter((row) => row.status === "shipped").length} tone="ink" />
+                            <MetricCard label="Blocked by gate" value={displayLog.filter((row) => row.status === "blocked").length} tone="rose" />
+                          </div>
+                        </div>
+                      </section>
+                    )}
               style={{ borderColor: tenant.accent }}
             >
               <p className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-adisseo-muted">
                 <Building2 size={10} /> Active tenant
-              </p>
+                        Approved-and-ready deliverables ({tenantDeliverables.length})
               <p
                 className="text-lg font-black"
-                style={{ color: tenant.accent }}
-              >
+                        Each card below shows the channel-native artifact, the gate status, and the likely publish rail.
                 {tenant.name}
               </p>
               <p className="mt-1 text-[11px] text-adisseo-muted">
@@ -370,7 +511,7 @@ export default function DistributionPage() {
         <section className="mt-10">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-black text-adisseo-ink-strong">
-              Distribution log ({tenantLog.length})
+              Distribution log ({displayLog.length})
             </h2>
             <p className="text-[11px] text-adisseo-muted">
               Each row links to the public URL + the channel-native preview.
@@ -391,7 +532,7 @@ export default function DistributionPage() {
                 </tr>
               </thead>
               <tbody>
-                {tenantLog.length === 0 ? (
+                {displayLog.length === 0 ? (
                   <tr>
                     <td
                       colSpan={7}
@@ -401,7 +542,7 @@ export default function DistributionPage() {
                     </td>
                   </tr>
                 ) : (
-                  tenantLog.map((row) => {
+                  displayLog.map((row) => {
                     const expanded = openLogPreview === row.id;
                     return (
                       <Fragment key={row.id}>
@@ -585,5 +726,30 @@ export default function DistributionPage() {
       </div>
     </main>
     </WorkspaceShell>
+  );
+}
+
+function MetricCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number;
+  tone: "emerald" | "rose" | "ink";
+}) {
+  const cls =
+    tone === "emerald"
+      ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+      : tone === "rose"
+        ? "border-rose-200 bg-rose-50 text-rose-800"
+        : "border-adisseo-line bg-[#FBFAF6] text-adisseo-ink-strong";
+  return (
+    <div className={`rounded-2xl border px-4 py-3 ${cls}`}>
+      <p className="text-[10px] font-semibold uppercase tracking-widest opacity-75">
+        {label}
+      </p>
+      <p className="mt-1 text-3xl font-black tabular-nums">{value}</p>
+    </div>
   );
 }
